@@ -5,37 +5,37 @@ import pandas as pd
 import plotly.graph_objects as go
 from io import BytesIO
 
-st.set_page_config(page_title="ZS Primary Care - Nurtec", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Nurtec QoQ Report", layout="wide", initial_sidebar_state="collapsed")
 
 # --- Helper: load logo as base64 ---
-def get_logo_base64():
-    logo_path = os.path.join(os.path.dirname(__file__), "..", "assets", "logo.png")
+def get_logo_base64(filename):
+    logo_path = os.path.join(os.path.dirname(__file__), "..", "assets", filename)
     if os.path.exists(logo_path):
         with open(logo_path, "rb") as f:
             return base64.b64encode(f.read()).decode()
     return None
 
-logo_b64 = get_logo_base64()
+logo_b64 = get_logo_base64("nurtec_logo.png")
 
 # --- Market Share Data (Oral CGRP: Nurtec, Ubrelvy, Qulipta) ---
 data = {
-    "BRAND": ["Nurtec"]*9 + ["Ubrelvy"]*9 + ["Qulipta"]*9,
-    "TIME PERIOD": ["2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q2","2025Q3","2025Q4","2026Q1"] * 3,
+    "BRAND": ["Nurtec"]*10 + ["Ubrelvy"]*10 + ["Qulipta"]*10,
+    "TIME PERIOD": ["2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q2","2025Q3","2025Q4","2026Q1","2026Q2"] * 3,
     "TRX MARKET SHARE": [
         # Nurtec
-        45.025415256, 45.312132602, 44.834156823, 44.867017591, 43.395543078, 43.138083617, 42.649666449, 42.600241969, 42.726826141,
+        45.03202855, 45.310734259, 44.854153716, 44.878233389, 43.417141654, 43.151834032, 42.658302322, 42.602420286, 42.73456058, 43.218326869,
         # Ubrelvy
-        33.4923242, 33.385183604, 33.095903737, 32.638831302, 32.953731291, 33.086103502, 33.267190318, 33.327145416, 32.552321909,
+        33.476977336, 33.386971141, 33.082617433, 32.636909822, 32.941842605, 33.082514045, 33.271051199, 33.32705147, 32.542974252, 31.71457499,
         # Qulipta
-        21.482260544, 21.302683794, 22.06993944, 22.494151107, 23.65072563, 23.775812882, 24.083143233, 24.072612615, 24.72085195,
+        21.490994114, 21.3022946, 22.063228851, 22.48485679, 23.641015741, 23.765651923, 24.070646479, 24.070528244, 24.722465168, 25.067098141,
     ],
     "NBRX MARKET SHARE": [
         # Nurtec
-        43.148331514, 44.04842156, 43.942261902, 43.973483567, 42.983481316, 42.567364042, 41.305035262, 42.079096374, 43.183060502,
+        43.06163223, 43.913105269, 43.904322831, 44.003757025, 42.823795796, 42.44585194, 41.285634882, 42.062867157, 43.140675648, 43.209539965,
         # Ubrelvy
-        35.975914219, 35.705385121, 35.328768603, 34.736527781, 35.306921219, 35.844495537, 36.529735772, 36.125426119, 35.436865272,
+        35.965200678, 35.660136027, 35.242338103, 34.630532929, 35.32759875, 35.881633707, 36.514692761, 36.115414899, 35.430778564, 35.511329214,
         # Qulipta
-        20.875754267, 20.246193319, 20.728969494, 21.289988653, 21.709597465, 21.588140421, 22.165228966, 21.795477507, 21.380074225,
+        20.973167092, 20.426758705, 20.853339066, 21.365710046, 21.848605454, 21.672514353, 22.199672357, 21.821717943, 21.428545788, 21.279130821,
     ],
 }
 
@@ -64,14 +64,14 @@ st.markdown("""
     }
 
     .top-ribbon {
-        background: linear-gradient(135deg, #2A5A8C 0%, #3A7BC8 50%, #4A8FD9 100%);
-        padding: 22px 50px;
+        background: linear-gradient(135deg, #5BABDE 0%, #7EC8E3 50%, #A3D9F0 100%);
+        padding: 34px 50px;
         display: flex;
         align-items: center;
         gap: 16px;
         margin: -1rem -1rem 0 -1rem;
         width: calc(100% + 2rem);
-        box-shadow: 0 4px 16px rgba(42, 90, 140, 0.25);
+        box-shadow: 0 4px 16px rgba(91, 171, 222, 0.25);
         position: relative;
         overflow: hidden;
     }
@@ -82,7 +82,7 @@ st.markdown("""
         background: radial-gradient(ellipse at 80% 50%, rgba(255,255,255,0.05) 0%, transparent 50%);
     }
     .top-ribbon img {
-        height: 48px;
+        height: 64px;
         filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
         position: relative;
         z-index: 1;
@@ -98,14 +98,16 @@ st.markdown("""
         font-weight: 800;
         color: #2A5A8C;
         font-size: 11px;
+        letter-spacing: 0.5px;
         position: relative;
         z-index: 1;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     .top-ribbon .title {
         color: #FFFFFF;
-        font-size: 24px;
+        font-size: 30px;
         font-weight: 700;
+        letter-spacing: 0.3px;
         position: relative;
         z-index: 1;
         text-shadow: 0 1px 2px rgba(0,0,0,0.15);
@@ -180,7 +182,7 @@ else:
 st.markdown(f"""
 <div class="top-ribbon">
     {logo_html}
-    <span class="title">ZS Primary Care</span>
+    <span class="title">Nurtec QoQ Report</span>
 </div>
 """, unsafe_allow_html=True)
 
@@ -189,16 +191,16 @@ if st.button("← Back to Home"):
     st.switch_page("app.py")
 
 # --- Latest quarter KPIs for Nurtec ---
-latest_period = "2026Q1"
+latest_period = "2026Q2"
 nurtec_df = df[df["BRAND"] == "Nurtec"]
 nurtec_latest = nurtec_df[nurtec_df["TIME PERIOD"] == latest_period]
 
 trx_val = f"{nurtec_latest['TRX MARKET SHARE'].values[0]:.1f}%"
 nbrx_val = f"{nurtec_latest['NBRX MARKET SHARE'].values[0]:.1f}%"
 
-# Market share difference (YoY) from source
-trx_ms_diff = -0.6687169376
-nbrx_ms_diff = 0.1995791858
+# Market share difference (vs STLY) from source
+trx_ms_diff = 0.06649283700
+nbrx_ms_diff = 0.76368802500
 
 trx_diff_sign = "+" if trx_ms_diff >= 0 else ""
 nbrx_diff_sign = "+" if nbrx_ms_diff >= 0 else ""
@@ -209,12 +211,12 @@ st.markdown(f"""
 <div class="kpi-container">
     <div class="kpi-card">
         <div class="kpi-label">Nurtec TRX Market Share</div>
-        <div class="kpi-value">{trx_val} <span style="font-size:18px; color:{trx_diff_color}; font-weight:600;">({trx_diff_sign}{trx_ms_diff:.1f}pp YoY)</span></div>
+        <div class="kpi-value">{trx_val} <span style="font-size:18px; color:{trx_diff_color}; font-weight:600;">({trx_diff_sign}{trx_ms_diff:.1f}pp vs STLY)</span></div>
         <div class="kpi-period">Latest: {latest_period}</div>
     </div>
     <div class="kpi-card">
         <div class="kpi-label">Nurtec NBRx Market Share</div>
-        <div class="kpi-value">{nbrx_val} <span style="font-size:18px; color:{nbrx_diff_color}; font-weight:600;">({nbrx_diff_sign}{nbrx_ms_diff:.1f}pp YoY)</span></div>
+        <div class="kpi-value">{nbrx_val} <span style="font-size:18px; color:{nbrx_diff_color}; font-weight:600;">({nbrx_diff_sign}{nbrx_ms_diff:.1f}pp vs STLY)</span></div>
         <div class="kpi-period">Latest: {latest_period}</div>
     </div>
 </div>
@@ -282,17 +284,17 @@ st.plotly_chart(fig_nbrx, use_container_width=True)
 
 # --- TRX & NBRX Claims Tables ---
 claims_data = {
-    "Quarter": ["2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q2","2025Q3","2025Q4","2026Q1"],
-    "Nurtec TRX": [676836, 751557, 781636, 838635, 771650, 836950, 874792, 931692, 894989],
-    "Ubrelvy TRX": [503467, 553734, 576992, 610071, 585976, 641925, 682347, 728884, 681866],
-    "Qulipta TRX": [322928, 353331, 384766, 420451, 420552, 461290, 493972, 526482, 517822],
-    "Nurtec NBRx": [101969, 107816, 109806, 110446, 109601, 111641, 112334, 115784, 120080],
-    "Ubrelvy NBRx": [85019, 87395, 88282, 87246, 90027, 94009, 99347, 99402, 98540],
-    "Qulipta NBRx": [49334, 49556, 51799, 53473, 55356, 56619, 60281, 59972, 59452],
+    "Quarter": ["2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q2","2025Q3","2025Q4","2026Q1","2026Q2"],
+    "Nurtec TRX": [676214, 750986, 781454, 838399, 771398, 836705, 874415, 931369, 894657, 315451],
+    "Ubrelvy TRX": [502700, 553360, 576369, 609711, 585282, 641463, 681994, 728592, 681294, 231485],
+    "Qulipta TRX": [322715, 353067, 384388, 420054, 420033, 460811, 493403, 526227, 517570, 182965],
+    "Nurtec NBRx": [102162, 108147, 110278, 111502, 110073, 111782, 112903, 115924, 120180, 42793],
+    "Ubrelvy NBRx": [85326, 87822, 88521, 87751, 90805, 94495, 99856, 99533, 98702, 35169],
+    "Qulipta NBRx": [49758, 50306, 52379, 54139, 56159, 57075, 60709, 60140, 59695, 21074],
 }
 claims_df = pd.DataFrame(claims_data)
 
-st.markdown('<div class="section-title">TRX Claims — Oral CGRP Market</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-title">Raw Data Tables</div>', unsafe_allow_html=True)
 
 trx_claims_df = claims_df[["Quarter", "Nurtec TRX", "Ubrelvy TRX", "Qulipta TRX"]].copy()
 trx_claims_df.columns = ["Quarter", "Nurtec", "Ubrelvy", "Qulipta"]
@@ -301,14 +303,37 @@ trx_display = trx_claims_df.copy()
 for col in ["Nurtec", "Ubrelvy", "Qulipta"]:
     trx_display[col] = trx_display[col].apply(lambda x: f"{x:,.0f}")
 
+nbrx_claims_df = claims_df[["Quarter", "Nurtec NBRx", "Ubrelvy NBRx", "Qulipta NBRx"]].copy()
+nbrx_claims_df.columns = ["Quarter", "Nurtec", "Ubrelvy", "Qulipta"]
+
+quarters = ["2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q2","2025Q3","2025Q4","2026Q1","2026Q2"]
+trx_ms_data = {
+    "Quarter": quarters,
+    "Nurtec": [df[(df["BRAND"]=="Nurtec") & (df["TIME PERIOD"]==q)]["TRX MARKET SHARE"].values[0] for q in quarters],
+    "Ubrelvy": [df[(df["BRAND"]=="Ubrelvy") & (df["TIME PERIOD"]==q)]["TRX MARKET SHARE"].values[0] for q in quarters],
+    "Qulipta": [df[(df["BRAND"]=="Qulipta") & (df["TIME PERIOD"]==q)]["TRX MARKET SHARE"].values[0] for q in quarters],
+}
+trx_ms_display = pd.DataFrame(trx_ms_data)
+for col in ["Nurtec", "Ubrelvy", "Qulipta"]:
+    trx_ms_display[col] = trx_ms_display[col].apply(lambda x: f"{x:.1f}%")
+
+nbrx_ms_data = {
+    "Quarter": quarters,
+    "Nurtec": [df[(df["BRAND"]=="Nurtec") & (df["TIME PERIOD"]==q)]["NBRX MARKET SHARE"].values[0] for q in quarters],
+    "Ubrelvy": [df[(df["BRAND"]=="Ubrelvy") & (df["TIME PERIOD"]==q)]["NBRX MARKET SHARE"].values[0] for q in quarters],
+    "Qulipta": [df[(df["BRAND"]=="Qulipta") & (df["TIME PERIOD"]==q)]["NBRX MARKET SHARE"].values[0] for q in quarters],
+}
+nbrx_ms_display = pd.DataFrame(nbrx_ms_data)
+for col in ["Nurtec", "Ubrelvy", "Qulipta"]:
+    nbrx_ms_display[col] = nbrx_ms_display[col].apply(lambda x: f"{x:.1f}%")
+
 st.markdown("""
 <style>
     .claims-table {
         width: 100%;
         border-collapse: collapse;
-        margin: 10px 50px 30px;
+        margin: 10px 0 30px;
         font-family: 'Inter', sans-serif;
-        max-width: calc(100% - 100px);
     }
     .claims-table th {
         background: #1A3E6E;
@@ -347,66 +372,40 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# TRX table
-trx_html = '<table class="claims-table"><thead><tr><th>Quarter</th><th>Nurtec</th><th>Ubrelvy</th><th>Qulipta</th></tr></thead><tbody>'
-for _, row in trx_display.iterrows():
-    trx_html += f'<tr><td>{row["Quarter"]}</td><td>{row["Nurtec"]}</td><td>{row["Ubrelvy"]}</td><td>{row["Qulipta"]}</td></tr>'
-trx_html += '</tbody></table>'
-st.markdown(trx_html, unsafe_allow_html=True)
+# TRX Claims table (collapsible)
+with st.expander("TRX Claims — Raw Data", expanded=False):
+    trx_html = '<table class="claims-table"><thead><tr><th>Quarter</th><th>Nurtec</th><th>Ubrelvy</th><th>Qulipta</th></tr></thead><tbody>'
+    for _, row in trx_display.iterrows():
+        trx_html += f'<tr><td>{row["Quarter"]}</td><td>{row["Nurtec"]}</td><td>{row["Ubrelvy"]}</td><td>{row["Qulipta"]}</td></tr>'
+    trx_html += '</tbody></table>'
+    st.markdown(trx_html, unsafe_allow_html=True)
 
-# NBRX table
-st.markdown('<div class="section-title">NBRx Claims — Oral CGRP Market</div>', unsafe_allow_html=True)
+# NBRX Claims table (collapsible)
+with st.expander("NBRx Claims — Raw Data", expanded=False):
+    nbrx_display = nbrx_claims_df.copy()
+    for col in ["Nurtec", "Ubrelvy", "Qulipta"]:
+        nbrx_display[col] = nbrx_display[col].apply(lambda x: f"{x:,.0f}")
+    nbrx_html = '<table class="claims-table"><thead><tr><th>Quarter</th><th>Nurtec</th><th>Ubrelvy</th><th>Qulipta</th></tr></thead><tbody>'
+    for _, row in nbrx_display.iterrows():
+        nbrx_html += f'<tr><td>{row["Quarter"]}</td><td>{row["Nurtec"]}</td><td>{row["Ubrelvy"]}</td><td>{row["Qulipta"]}</td></tr>'
+    nbrx_html += '</tbody></table>'
+    st.markdown(nbrx_html, unsafe_allow_html=True)
 
-nbrx_claims_df = claims_df[["Quarter", "Nurtec NBRx", "Ubrelvy NBRx", "Qulipta NBRx"]].copy()
-nbrx_claims_df.columns = ["Quarter", "Nurtec", "Ubrelvy", "Qulipta"]
-nbrx_display = nbrx_claims_df.copy()
-for col in ["Nurtec", "Ubrelvy", "Qulipta"]:
-    nbrx_display[col] = nbrx_display[col].apply(lambda x: f"{x:,.0f}")
+# TRX Market Share table (collapsible)
+with st.expander("TRX Market Share (%) — Raw Data", expanded=False):
+    trx_ms_html = '<table class="claims-table"><thead><tr><th>Quarter</th><th>Nurtec</th><th>Ubrelvy</th><th>Qulipta</th></tr></thead><tbody>'
+    for _, row in trx_ms_display.iterrows():
+        trx_ms_html += f'<tr><td>{row["Quarter"]}</td><td>{row["Nurtec"]}</td><td>{row["Ubrelvy"]}</td><td>{row["Qulipta"]}</td></tr>'
+    trx_ms_html += '</tbody></table>'
+    st.markdown(trx_ms_html, unsafe_allow_html=True)
 
-nbrx_html = '<table class="claims-table"><thead><tr><th>Quarter</th><th>Nurtec</th><th>Ubrelvy</th><th>Qulipta</th></tr></thead><tbody>'
-for _, row in nbrx_display.iterrows():
-    nbrx_html += f'<tr><td>{row["Quarter"]}</td><td>{row["Nurtec"]}</td><td>{row["Ubrelvy"]}</td><td>{row["Qulipta"]}</td></tr>'
-nbrx_html += '</tbody></table>'
-st.markdown(nbrx_html, unsafe_allow_html=True)
-
-# --- TRX Market Share Table ---
-st.markdown('<div class="section-title">TRX Market Share (%) — Oral CGRP Market</div>', unsafe_allow_html=True)
-
-quarters = ["2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q2","2025Q3","2025Q4","2026Q1"]
-trx_ms_data = {
-    "Quarter": quarters,
-    "Nurtec": [df[(df["BRAND"]=="Nurtec") & (df["TIME PERIOD"]==q)]["TRX MARKET SHARE"].values[0] for q in quarters],
-    "Ubrelvy": [df[(df["BRAND"]=="Ubrelvy") & (df["TIME PERIOD"]==q)]["TRX MARKET SHARE"].values[0] for q in quarters],
-    "Qulipta": [df[(df["BRAND"]=="Qulipta") & (df["TIME PERIOD"]==q)]["TRX MARKET SHARE"].values[0] for q in quarters],
-}
-trx_ms_display = pd.DataFrame(trx_ms_data)
-for col in ["Nurtec", "Ubrelvy", "Qulipta"]:
-    trx_ms_display[col] = trx_ms_display[col].apply(lambda x: f"{x:.1f}%")
-
-trx_ms_html = '<table class="claims-table"><thead><tr><th>Quarter</th><th>Nurtec</th><th>Ubrelvy</th><th>Qulipta</th></tr></thead><tbody>'
-for _, row in trx_ms_display.iterrows():
-    trx_ms_html += f'<tr><td>{row["Quarter"]}</td><td>{row["Nurtec"]}</td><td>{row["Ubrelvy"]}</td><td>{row["Qulipta"]}</td></tr>'
-trx_ms_html += '</tbody></table>'
-st.markdown(trx_ms_html, unsafe_allow_html=True)
-
-# --- NBRX Market Share Table ---
-st.markdown('<div class="section-title">NBRx Market Share (%) — Oral CGRP Market</div>', unsafe_allow_html=True)
-
-nbrx_ms_data = {
-    "Quarter": quarters,
-    "Nurtec": [df[(df["BRAND"]=="Nurtec") & (df["TIME PERIOD"]==q)]["NBRX MARKET SHARE"].values[0] for q in quarters],
-    "Ubrelvy": [df[(df["BRAND"]=="Ubrelvy") & (df["TIME PERIOD"]==q)]["NBRX MARKET SHARE"].values[0] for q in quarters],
-    "Qulipta": [df[(df["BRAND"]=="Qulipta") & (df["TIME PERIOD"]==q)]["NBRX MARKET SHARE"].values[0] for q in quarters],
-}
-nbrx_ms_display = pd.DataFrame(nbrx_ms_data)
-for col in ["Nurtec", "Ubrelvy", "Qulipta"]:
-    nbrx_ms_display[col] = nbrx_ms_display[col].apply(lambda x: f"{x:.1f}%")
-
-nbrx_ms_html = '<table class="claims-table"><thead><tr><th>Quarter</th><th>Nurtec</th><th>Ubrelvy</th><th>Qulipta</th></tr></thead><tbody>'
-for _, row in nbrx_ms_display.iterrows():
-    nbrx_ms_html += f'<tr><td>{row["Quarter"]}</td><td>{row["Nurtec"]}</td><td>{row["Ubrelvy"]}</td><td>{row["Qulipta"]}</td></tr>'
-nbrx_ms_html += '</tbody></table>'
-st.markdown(nbrx_ms_html, unsafe_allow_html=True)
+# NBRX Market Share table (collapsible)
+with st.expander("NBRx Market Share (%) — Raw Data", expanded=False):
+    nbrx_ms_html = '<table class="claims-table"><thead><tr><th>Quarter</th><th>Nurtec</th><th>Ubrelvy</th><th>Qulipta</th></tr></thead><tbody>'
+    for _, row in nbrx_ms_display.iterrows():
+        nbrx_ms_html += f'<tr><td>{row["Quarter"]}</td><td>{row["Nurtec"]}</td><td>{row["Ubrelvy"]}</td><td>{row["Qulipta"]}</td></tr>'
+    nbrx_ms_html += '</tbody></table>'
+    st.markdown(nbrx_ms_html, unsafe_allow_html=True)
 
 st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
 
@@ -467,8 +466,8 @@ def generate_pdf():
         elements.append(Paragraph("Nurtec — Oral CGRP Market Report", title_style))
         elements.append(Spacer(1, 10))
         elements.append(Paragraph(f"<b>Latest Quarter:</b> {latest_period}", kpi_style))
-        elements.append(Paragraph(f"<b>Nurtec TRX Market Share:</b> {trx_val}", kpi_style))
-        elements.append(Paragraph(f"<b>Nurtec NBRx Market Share:</b> {nbrx_val}", kpi_style))
+        elements.append(Paragraph(f"<b>Nurtec TRX Market Share:</b> {trx_val} ({trx_diff_sign}{trx_ms_diff:.1f}pp vs STLY)", kpi_style))
+        elements.append(Paragraph(f"<b>Nurtec NBRx Market Share:</b> {nbrx_val} ({nbrx_diff_sign}{nbrx_ms_diff:.1f}pp vs STLY)", kpi_style))
         elements.append(Spacer(1, 10))
 
         # --- TRX Market Share Chart ---

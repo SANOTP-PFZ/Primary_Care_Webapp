@@ -5,27 +5,27 @@ import pandas as pd
 import plotly.graph_objects as go
 from io import BytesIO
 
-st.set_page_config(page_title="ZS Primary Care - Zavzpret", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Zavzpret QoQ Report", layout="wide", initial_sidebar_state="collapsed")
 
 # --- Helper: load logo as base64 ---
-def get_logo_base64():
-    logo_path = os.path.join(os.path.dirname(__file__), "..", "assets", "logo.png")
+def get_logo_base64(filename):
+    logo_path = os.path.join(os.path.dirname(__file__), "..", "assets", filename)
     if os.path.exists(logo_path):
         with open(logo_path, "rb") as f:
             return base64.b64encode(f.read()).decode()
     return None
 
-logo_b64 = get_logo_base64()
+logo_b64 = get_logo_base64("zavz_logo.png")
 
 # --- Zavzpret Data (from source table - Nasal market) ---
-quarters = ["2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q2","2025Q3","2025Q4","2026Q1"]
+quarters = ["2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q2","2025Q3","2025Q4","2026Q1","2026Q2"]
 
 claims_data = {
     "Quarter": quarters,
-    "TRX CLAIMS": [11269, 14324, 16020, 18541, 14455, 16422, 17720, 19505, 17877],
-    "NBRX CLAIMS": [5034, 5828, 5705, 6320, 5082, 5708, 5999, 6223, 5846],
-    "TRX CLAIMS DIFFERENCE": [None, 358000, 184.698773769, 87.093844601, 28.272251309, 14.646746719, 10.611735331, 5.199288064, 23.673469388],
-    "NBRX CLAIMS DIFFERENCE": [None, 291300, 31.3608105, 39.299096319, 0.9535160906, -2.059025395, 5.153374233, -1.534810127, 15.033451397],
+    "TRX CLAIMS": [11205, 14272, 15974, 18508, 14399, 16355, 17641, 19435, 17815, 6498],
+    "NBRX CLAIMS": [4999, 5842, 5718, 6300, 5103, 5756, 5933, 6284, 5742, 2233],
+    "TRX CLAIMS DIFFERENCE": [None, 356700, 186.169831602, 87.327935223, 28.505131638, 14.595011211, 10.435708026, 5.00864491, 23.723869713, -60.269030877],
+    "NBRX CLAIMS DIFFERENCE": [None, 292000, 33.973758201, 40.280561122, 2.080416083, -1.472098596, 3.760055964, -0.253968254, 12.522045855, -61.205698402],
 }
 
 df = pd.DataFrame(claims_data)
@@ -53,14 +53,14 @@ st.markdown("""
     }
 
     .top-ribbon {
-        background: linear-gradient(135deg, #2A5A8C 0%, #3A7BC8 50%, #4A8FD9 100%);
-        padding: 22px 50px;
+        background: linear-gradient(135deg, #5BABDE 0%, #7EC8E3 50%, #A3D9F0 100%);
+        padding: 34px 50px;
         display: flex;
         align-items: center;
         gap: 16px;
         margin: -1rem -1rem 0 -1rem;
         width: calc(100% + 2rem);
-        box-shadow: 0 4px 16px rgba(42, 90, 140, 0.25);
+        box-shadow: 0 4px 16px rgba(91, 171, 222, 0.25);
         position: relative;
         overflow: hidden;
     }
@@ -71,7 +71,7 @@ st.markdown("""
         background: radial-gradient(ellipse at 80% 50%, rgba(255,255,255,0.05) 0%, transparent 50%);
     }
     .top-ribbon img {
-        height: 48px;
+        height: 64px;
         filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
         position: relative;
         z-index: 1;
@@ -87,14 +87,16 @@ st.markdown("""
         font-weight: 800;
         color: #2A5A8C;
         font-size: 11px;
+        letter-spacing: 0.5px;
         position: relative;
         z-index: 1;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     .top-ribbon .title {
         color: #FFFFFF;
-        font-size: 24px;
+        font-size: 30px;
         font-weight: 700;
+        letter-spacing: 0.3px;
         position: relative;
         z-index: 1;
         text-shadow: 0 1px 2px rgba(0,0,0,0.15);
@@ -218,7 +220,7 @@ else:
 st.markdown(f"""
 <div class="top-ribbon">
     {logo_html}
-    <span class="title">ZS Primary Care</span>
+    <span class="title">Zavzpret QoQ Report</span>
 </div>
 """, unsafe_allow_html=True)
 
@@ -227,7 +229,7 @@ if st.button("← Back to Home"):
     st.switch_page("app.py")
 
 # --- Latest quarter KPIs: Claims Difference ---
-latest_period = "2026Q1"
+latest_period = "2026Q2"
 latest_row = df[df["Quarter"] == latest_period].iloc[0]
 
 trx_diff = latest_row["TRX CLAIMS DIFFERENCE"]
@@ -308,21 +310,12 @@ fig_nbrx.update_layout(
 )
 st.plotly_chart(fig_nbrx, use_container_width=True)
 
-# --- Raw Claims Table ---
-st.markdown('<div class="section-title">Zavzpret Claims — Raw Data</div>', unsafe_allow_html=True)
+# --- Raw Data Tables ---
+st.markdown('<div class="section-title">Raw Data Tables</div>', unsafe_allow_html=True)
 
 claims_display = df[["Quarter", "TRX CLAIMS", "NBRX CLAIMS"]].copy()
 claims_display["TRX CLAIMS"] = claims_display["TRX CLAIMS"].apply(lambda x: f"{x:,.0f}")
 claims_display["NBRX CLAIMS"] = claims_display["NBRX CLAIMS"].apply(lambda x: f"{x:,.0f}")
-
-claims_html = '<table class="claims-table"><thead><tr><th>Quarter</th><th>TRX Claims</th><th>NBRx Claims</th></tr></thead><tbody>'
-for _, row in claims_display.iterrows():
-    claims_html += f'<tr><td>{row["Quarter"]}</td><td>{row["TRX CLAIMS"]}</td><td>{row["NBRX CLAIMS"]}</td></tr>'
-claims_html += '</tbody></table>'
-st.markdown(claims_html, unsafe_allow_html=True)
-
-# --- Claims Difference Table ---
-st.markdown('<div class="section-title">Zavzpret Claims Difference (YoY %)</div>', unsafe_allow_html=True)
 
 diff_display = df[["Quarter", "TRX CLAIMS DIFFERENCE", "NBRX CLAIMS DIFFERENCE"]].copy()
 
@@ -334,11 +327,21 @@ def fmt_diff(val):
 diff_display["TRX CLAIMS DIFFERENCE"] = diff_display["TRX CLAIMS DIFFERENCE"].apply(fmt_diff)
 diff_display["NBRX CLAIMS DIFFERENCE"] = diff_display["NBRX CLAIMS DIFFERENCE"].apply(fmt_diff)
 
-diff_html = '<table class="claims-table"><thead><tr><th>Quarter</th><th>TRX Claims Diff (%)</th><th>NBRx Claims Diff (%)</th></tr></thead><tbody>'
-for _, row in diff_display.iterrows():
-    diff_html += f'<tr><td>{row["Quarter"]}</td><td>{row["TRX CLAIMS DIFFERENCE"]}</td><td>{row["NBRX CLAIMS DIFFERENCE"]}</td></tr>'
-diff_html += '</tbody></table>'
-st.markdown(diff_html, unsafe_allow_html=True)
+# Claims table (collapsible)
+with st.expander("Zavzpret Claims — Raw Data", expanded=False):
+    claims_html = '<table class="claims-table"><thead><tr><th>Quarter</th><th>TRX Claims</th><th>NBRx Claims</th></tr></thead><tbody>'
+    for _, row in claims_display.iterrows():
+        claims_html += f'<tr><td>{row["Quarter"]}</td><td>{row["TRX CLAIMS"]}</td><td>{row["NBRX CLAIMS"]}</td></tr>'
+    claims_html += '</tbody></table>'
+    st.markdown(claims_html, unsafe_allow_html=True)
+
+# Claims Difference table (collapsible)
+with st.expander("Zavzpret Claims Difference (vs STLY %)", expanded=False):
+    diff_html = '<table class="claims-table"><thead><tr><th>Quarter</th><th>TRX Claims Diff (%)</th><th>NBRx Claims Diff (%)</th></tr></thead><tbody>'
+    for _, row in diff_display.iterrows():
+        diff_html += f'<tr><td>{row["Quarter"]}</td><td>{row["TRX CLAIMS DIFFERENCE"]}</td><td>{row["NBRX CLAIMS DIFFERENCE"]}</td></tr>'
+    diff_html += '</tbody></table>'
+    st.markdown(diff_html, unsafe_allow_html=True)
 
 st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
 
