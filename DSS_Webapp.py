@@ -217,7 +217,7 @@ def render_brand_page(brand_key_page):
     display_name = config["display_name"]
 
     st.markdown(BRAND_PAGE_CSS, unsafe_allow_html=True)
-    render_ribbon(f"{display_name} QoQ Report")
+    render_ribbon(f"{display_name} Quarter on Quarter Report")
     render_back_button()
 
     # Load data
