@@ -744,27 +744,25 @@ def render_home():
     except Exception:
         max_date = "N/A"
 
-    # Get refresh timestamp
+    # Get refresh timestamp - last build time of the main dataset
     try:
         import pytz
-        dataset_obj = dataiku.Dataset(DATASET_NAME)
-        metadata = dataset_obj.get_metadata()
-        last_modified = metadata.get("chunkLastModificationDate") or metadata.get("lastModifiedOn") or metadata.get("createdOn")
-        if last_modified:
-            if last_modified > 1e12:
-                utc_time = datetime.utcfromtimestamp(last_modified / 1000)
-            else:
-                utc_time = datetime.utcfromtimestamp(last_modified)
+        client = dataiku.api_client()
+        project = client.get_default_project()
+        ds = project.get_dataset(DATASET_NAME)
+        last_metrics = ds.get_last_metric_values()
+        build_date_metric = last_metrics.get_metric_by_id("reporting:BUILD_START_DATE")
+        build_date_val = build_date_metric.get("lastValues", [{}])[0].get("value", None) if build_date_metric else None
+
+        if build_date_val:
+            utc_time = datetime.strptime(build_date_val, "%Y-%m-%dT%H:%M:%S.%fZ")
             ist = pytz.timezone("Asia/Kolkata")
             ist_time = pytz.utc.localize(utc_time).astimezone(ist)
             refresh_ts = ist_time.strftime("%B %d, %Y at %I:%M %p IST")
         else:
-            import pytz
-            ist = pytz.timezone("Asia/Kolkata")
-            ist_time = datetime.now(ist)
-            refresh_ts = ist_time.strftime("%B %d, %Y at %I:%M %p IST")
+            refresh_ts = max_date if max_date != "N/A" else "N/A"
     except Exception:
-        refresh_ts = datetime.now().strftime("%B %d, %Y at %I:%M %p IST")
+        refresh_ts = max_date if max_date != "N/A" else "N/A"
 
     st.markdown(f"""
     <div style="padding: 0 50px;">
