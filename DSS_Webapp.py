@@ -511,13 +511,20 @@ def render_home():
     render_ribbon("Primary Care Monthly Report Dashboard")
     st.markdown("<div style='height:40px'></div>", unsafe_allow_html=True)
 
-    # Refreshed on callout
+    # Data Summary with dynamic values
     try:
         from datetime import datetime
+        df_temp = load_data()
+
+        # Get max quarter per dataset
+        npa_data = df_temp[df_temp["DATASET"].isin(["NPA_TRX", "NPA_NBRX"])]
+        ddd_data = df_temp[df_temp["DATASET"] == "DDD"]
+        npa_max_qtr = npa_data["YR_QTR_TXT"].max() if not npa_data.empty else "N/A"
+        ddd_max_qtr = ddd_data["YR_QTR_TXT"].max() if not ddd_data.empty else "N/A"
+
+        # Get dataset last refresh date
         dataset_obj = dataiku.Dataset(DATASET_NAME)
-        # Try to get last build timestamp from dataset metadata
         metadata = dataset_obj.get_metadata()
-        # Check multiple possible timestamp fields
         last_modified = None
         if "chunkLastModificationDate" in metadata:
             last_modified = metadata["chunkLastModificationDate"]
@@ -525,30 +532,18 @@ def render_home():
             last_modified = metadata["lastModifiedOn"]
 
         if last_modified:
-            # Timestamp could be in milliseconds
             if last_modified > 1e12:
                 refresh_ts = datetime.fromtimestamp(last_modified / 1000).strftime("%B %d, %Y at %I:%M %p")
             else:
                 refresh_ts = datetime.fromtimestamp(last_modified).strftime("%B %d, %Y at %I:%M %p")
         else:
-            # Fallback: get the max quarter from the data itself
-            df_temp = load_data()
-            max_qtr = df_temp["YR_QTR_TXT"].max() if not df_temp.empty else "Unknown"
-            refresh_ts = f"Data available till {max_qtr}"
+            refresh_ts = datetime.now().strftime("%B %d, %Y at %I:%M %p")
     except Exception:
+        npa_max_qtr = "N/A"
+        ddd_max_qtr = "N/A"
         refresh_ts = "Unknown"
 
     st.markdown(f"""
-    <div style="padding: 0 50px; margin-bottom: 16px;">
-        <div style="background: #EBF5FF; border-radius: 10px; padding: 14px 24px; border: 1px solid #B3D9F7; display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 16px;">&#128337;</span>
-            <span style="font-size: 14px; color: #1A3E6E; font-weight: 500; font-family: 'Inter', sans-serif;">Refreshed on: <strong>{refresh_ts}</strong></span>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # Data Summary
-    st.markdown("""
     <div style="padding: 0 50px;">
         <div style="background: #FFFFFF; border-radius: 14px; padding: 24px 32px; box-shadow: 0 2px 12px rgba(26, 62, 110, 0.06); border: 1px solid rgba(26, 62, 110, 0.08); border-left: 5px solid #5BABDE;">
             <div style="font-size: 16px; font-weight: 700; color: #1A3E6E; margin-bottom: 16px; font-family: 'Inter', sans-serif;">Data Summary</div>
@@ -558,8 +553,9 @@ def render_home():
                     <th style="text-align: left; padding: 10px 16px; font-size: 13px; font-weight: 600; color: #6B7C93; text-transform: uppercase; letter-spacing: 0.5px;">Data Availability</th>
                 </tr></thead>
                 <tbody>
-                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">NPA</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Monthly Refresh</td></tr>
-                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">DDD</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Monthly Refresh</td></tr>
+                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">NPA</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Till {npa_max_qtr}</td></tr>
+                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">DDD</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Till {ddd_max_qtr}</td></tr>
+                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50; font-weight: 600;">Refreshed On</td><td style="padding: 12px 16px; font-size: 14px; color: #1A3E6E; font-weight: 600;">{refresh_ts}</td></tr>
                 </tbody>
             </table>
         </div>
