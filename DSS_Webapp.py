@@ -512,25 +512,24 @@ def render_home():
     st.markdown("<div style='height:40px'></div>", unsafe_allow_html=True)
 
     # Data Summary with dynamic values
-    try:
-        from datetime import datetime
-        df_temp = load_data()
+    from datetime import datetime
 
-        # Get max quarter per dataset
+    # Get max quarters from data
+    try:
+        df_temp = load_data()
         npa_data = df_temp[df_temp["DATASET"].isin(["NPA_TRX", "NPA_NBRX"])]
         ddd_data = df_temp[df_temp["DATASET"] == "DDD"]
         npa_max_qtr = npa_data["YR_QTR_TXT"].max() if not npa_data.empty else "N/A"
         ddd_max_qtr = ddd_data["YR_QTR_TXT"].max() if not ddd_data.empty else "N/A"
+    except Exception:
+        npa_max_qtr = "N/A"
+        ddd_max_qtr = "N/A"
 
-        # Get dataset last refresh date
+    # Get refresh timestamp
+    try:
         dataset_obj = dataiku.Dataset(DATASET_NAME)
         metadata = dataset_obj.get_metadata()
-        last_modified = None
-        if "chunkLastModificationDate" in metadata:
-            last_modified = metadata["chunkLastModificationDate"]
-        elif "lastModifiedOn" in metadata:
-            last_modified = metadata["lastModifiedOn"]
-
+        last_modified = metadata.get("chunkLastModificationDate") or metadata.get("lastModifiedOn") or metadata.get("createdOn")
         if last_modified:
             if last_modified > 1e12:
                 refresh_ts = datetime.fromtimestamp(last_modified / 1000).strftime("%B %d, %Y at %I:%M %p")
@@ -539,9 +538,7 @@ def render_home():
         else:
             refresh_ts = datetime.now().strftime("%B %d, %Y at %I:%M %p")
     except Exception:
-        npa_max_qtr = "N/A"
-        ddd_max_qtr = "N/A"
-        refresh_ts = "Unknown"
+        refresh_ts = datetime.now().strftime("%B %d, %Y at %I:%M %p")
 
     st.markdown(f"""
     <div style="padding: 0 50px;">
