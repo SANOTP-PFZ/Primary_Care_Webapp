@@ -202,10 +202,10 @@ brands = [
     {"name": "Nurtec", "logo": nurtec_logo_b64, "page": "pages/nurtec.py"},
     {"name": "Zavzpret", "logo": zavz_logo_b64, "page": "pages/zavzpret.py"},
     {"name": "Eliquis", "logo": eliquis_logo_b64, "page": "pages/eliquis.py"},
-    {"name": "Prevnar", "logo": prevnar_logo_b64, "page": None},
-    {"name": "Comirnaty", "logo": comirnaty_logo_b64, "page": None},
-    {"name": "Abrysvo", "logo": abrysvo_logo_b64, "page": None},
-    {"name": "Paxlovid", "logo": pax_logo_b64, "page": None},
+    {"name": "Prevnar", "logo": prevnar_logo_b64, "page": "pages/prevnar.py"},
+    {"name": "Comirnaty", "logo": comirnaty_logo_b64, "page": "pages/comirnaty.py"},
+    {"name": "Abrysvo", "logo": abrysvo_logo_b64, "page": "pages/abrysvo.py"},
+    {"name": "Paxlovid", "logo": pax_logo_b64, "page": "pages/paxlovid.py"},
 ]
 
 # --- Render brand cards in rows of 3 ---

@@ -5,7 +5,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from io import BytesIO
 
-st.set_page_config(page_title="Eliquis QoQ Report", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Comirnaty QoQ Report", layout="wide", initial_sidebar_state="collapsed")
 
 # --- Helper: load logo as base64 ---
 def get_logo_base64(filename):
@@ -15,43 +15,37 @@ def get_logo_base64(filename):
             return base64.b64encode(f.read()).decode()
     return None
 
-logo_b64 = get_logo_base64("eliquis.png")
+logo_b64 = get_logo_base64("comirnaty.png")
 
-# --- Eliquis Market Share Data ---
+# --- COVID Vaccines Market Share Data ---
 quarters = ["2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q2","2025Q3","2025Q4","2026Q1","2026Q2"]
 
 trx_market_share = {
-    "Eliquis": [63.57, 64.24, 64.91, 65.36, 66.29, 67.19, 68.22, 69.09, 69.32, 69.86],
-    "Xarelto": [19.66, 19.46, 19.23, 19.06, 18.28, 17.69, 17.07, 16.6, 16.1, 15.9],
-    "Warfarin": [14.49, 14.08, 13.6, 13.28, 13.03, 12.69, 12.41, 12.0, 12.41, 12.22],
-    "Dabigatran": [0.65, 0.76, 0.85, 0.95, 1.12, 1.28, 1.37, 1.46, 1.67, 1.76],
-    "Jantoven": [1.26, 1.16, 1.14, 1.13, 1.1, 1.01, 0.82, 0.75, 0.43, 0.19],
-    "Pradaxa": [0.34, 0.28, 0.24, 0.2, 0.14, 0.11, 0.09, 0.07, 0.05, 0.04],
-    "Savaysa": [0.03, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02],
+    "Comirnaty": [51.16, 52.59, 56.96, 57.83, 60.31, 62.46, 58.37, 57.22, 59.72, 56.28],
+    "Spikevax": [47.53, 46.63, 41.34, 39.19, 37.55, 37.3, 20.38, 18.3, 14.69, 10.66],
+    "Novavax": [1.32, 0.78, 1.7, 2.98, 2.14, 0.24, 0.0, 0.0, 0.0, None],
+    "mNexspike": [None, None, None, None, None, None, 21.25, 24.48, 25.58, 33.05],
 }
 
 nbrx_market_share = {
-    "Eliquis": [70.41, 71.72, 71.82, 72.79, 72.07, 73.98, 74.83, 76.01, 74.22, 75.41],
-    "Xarelto": [18.93, 18.57, 18.49, 17.68, 15.95, 14.89, 14.08, 13.78, 13.53, 12.59],
-    "Warfarin": [7.0, 6.57, 6.45, 6.26, 7.29, 6.96, 7.29, 6.35, 8.02, 7.95],
-    "Dabigatran": [1.5, 1.82, 2.05, 2.22, 3.26, 3.06, 2.97, 3.14, 3.8, 3.82],
-    "Jantoven": [1.57, 1.05, 1.0, 0.89, 1.27, 0.98, 0.71, 0.62, 0.37, 0.19],
-    "Pradaxa": [0.57, 0.24, 0.17, 0.14, 0.14, 0.11, 0.1, 0.08, 0.04, 0.03],
-    "Savaysa": [0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.01, 0.02, 0.01],
+    "Comirnaty": [51.74, 54.98, 58.07, 59.49, 60.61, 64.84, 45.7, 51.7, 56.96, 45.81],
+    "Spikevax": [46.63, 43.66, 38.64, 36.4, 36.91, 34.79, 17.96, 16.95, 15.72, 16.5],
+    "Novavax": [1.63, 1.36, 3.28, 4.11, 2.49, 0.37, 0.0, 0.0, 0.0, None],
+    "mNexspike": [None, None, None, None, None, None, 36.34, 31.35, 27.32, 37.69],
 }
 
-# Eliquis claims data
-eliquis_claims = {
+# Comirnaty claims data
+comirnaty_claims = {
     "Quarter": quarters,
-    "TRX CLAIMS": [8166943, 8306783, 8462802, 8660513, 8663784, 8901849, 9150074, 9455957, 9059954, 3129304],
-    "NBRX CLAIMS": [588952, 534822, 514489, 530382, 580618, 549959, 550523, 552535, 622412, 206482],
-    "TRX MARKET SHARE": [63.57, 64.24, 64.91, 65.36, 66.29, 67.19, 68.22, 69.09, 69.32, 69.86],
-    "NBRX MARKET SHARE": [70.41, 71.72, 71.82, 72.79, 72.07, 73.98, 74.83, 76.01, 74.22, 75.41],
-    "TRX MARKET SHARE DIFF": [4.49, 4.17, 3.98, 3.47, 2.72, 2.95, 3.3, 3.73, 3.03, 2.99],
-    "NBRX MARKET SHARE DIFF": [3.79, 3.18, 2.35, 2.17, 1.66, 2.27, 3.01, 3.22, 2.15, 1.65],
+    "TRX CLAIMS": [1810747, 926770, 6318005, 9231509, 1268831, 1148486, 4287950, 7252353, 918723, 371287],
+    "NBRX CLAIMS": [1405390, 440245, 2971756, 6458670, 947985, 421263, 1954950, 5033935, 656542, 108686],
+    "TRX MARKET SHARE": [51.16, 52.59, 56.96, 57.83, 60.31, 62.46, 58.37, 57.22, 59.72, 56.28],
+    "NBRX MARKET SHARE": [51.74, 54.98, 58.07, 59.49, 60.61, 64.84, 45.7, 51.7, 56.96, 45.81],
+    "TRX MARKET SHARE DIFF": [-11.7, -5.99, -2.95, 8.59, 9.16, 9.88, 1.41, -0.62, -0.59, -5.1],
+    "NBRX MARKET SHARE DIFF": [-11.49, -4.3, 1.62, 12.24, 8.86, 9.86, -12.37, -7.79, -3.65, -17.74],
 }
 
-df = pd.DataFrame(eliquis_claims)
+df = pd.DataFrame(comirnaty_claims)
 
 # --- Custom CSS ---
 st.markdown("""
@@ -236,12 +230,12 @@ else:
 st.markdown(f"""
 <div class="top-ribbon">
     {logo_html}
-    <span class="title">Eliquis QoQ Report</span>
+    <span class="title">Comirnaty QoQ Report</span>
 </div>
 """, unsafe_allow_html=True)
 
 # --- Back button ---
-if st.button("← Back to Home"):
+if st.button("\u2190 Back to Home"):
     st.switch_page("app.py")
 
 # --- Latest quarter KPIs ---
@@ -262,12 +256,12 @@ nbrx_diff_color = "#2EAF7D" if nbrx_ms_diff >= 0 else "#E85D4A"
 st.markdown(f"""
 <div class="kpi-container">
     <div class="kpi-card">
-        <div class="kpi-label">Eliquis TRX Market Share</div>
+        <div class="kpi-label">Comirnaty TRX Market Share</div>
         <div class="kpi-value">{trx_val} <span style="font-size:18px; color:{trx_diff_color}; font-weight:600;">({trx_diff_sign}{trx_ms_diff:.1f}pp vs STLY)</span></div>
         <div class="kpi-period">Latest: {latest_period}</div>
     </div>
     <div class="kpi-card">
-        <div class="kpi-label">Eliquis NBRx Market Share</div>
+        <div class="kpi-label">Comirnaty NBRx Market Share</div>
         <div class="kpi-value">{nbrx_val} <span style="font-size:18px; color:{nbrx_diff_color}; font-weight:600;">({nbrx_diff_sign}{nbrx_ms_diff:.1f}pp vs STLY)</span></div>
         <div class="kpi-period">Latest: {latest_period}</div>
     </div>
@@ -275,27 +269,28 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # --- TRX Market Share Trend ---
-st.markdown('<div class="section-title">TRX Market Share Trend — Oral Anticoagulant Market</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-title">TRX Market Share Trend \u2014 COVID Vaccines Market</div>', unsafe_allow_html=True)
 
 brand_colors = {
-    "Eliquis": "#1A3E6E",
-    "Xarelto": "#E85D4A",
-    "Warfarin": "#2EAF7D",
-    "Dabigatran": "#F5A623",
-    "Jantoven": "#9B59B6",
-    "Pradaxa": "#3498DB",
-    "Savaysa": "#95A5A6",
+    "Comirnaty": "#1A3E6E",
+    "Spikevax": "#E85D4A",
+    "Novavax": "#2EAF7D",
+    "mNexspike": "#F5A623",
 }
 
 fig_trx = go.Figure()
-for brand in ["Eliquis", "Xarelto", "Warfarin", "Dabigatran", "Jantoven", "Pradaxa", "Savaysa"]:
+for brand in ["Comirnaty", "Spikevax", "Novavax", "mNexspike"]:
+    y_vals = trx_market_share[brand]
+    # Filter out None values
+    filtered_quarters = [q for q, v in zip(quarters, y_vals) if v is not None]
+    filtered_vals = [v for v in y_vals if v is not None]
     fig_trx.add_trace(go.Scatter(
-        x=quarters,
-        y=trx_market_share[brand],
+        x=filtered_quarters,
+        y=filtered_vals,
         mode="lines+markers",
         name=brand,
-        line=dict(color=brand_colors[brand], width=3 if brand == "Eliquis" else 2),
-        marker=dict(size=7 if brand == "Eliquis" else 5),
+        line=dict(color=brand_colors[brand], width=3 if brand == "Comirnaty" else 2),
+        marker=dict(size=7 if brand == "Comirnaty" else 5),
         hovertemplate=f"<b>{brand}</b><br>%{{x}}<br>%{{y:.1f}}%<extra></extra>"
     ))
 
@@ -313,17 +308,21 @@ fig_trx.update_layout(
 st.plotly_chart(fig_trx, use_container_width=True)
 
 # --- NBRX Market Share Trend ---
-st.markdown('<div class="section-title">NBRx Market Share Trend — Oral Anticoagulant Market</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-title">NBRx Market Share Trend \u2014 COVID Vaccines Market</div>', unsafe_allow_html=True)
 
 fig_nbrx = go.Figure()
-for brand in ["Eliquis", "Xarelto", "Warfarin", "Dabigatran", "Jantoven", "Pradaxa", "Savaysa"]:
+for brand in ["Comirnaty", "Spikevax", "Novavax", "mNexspike"]:
+    y_vals = nbrx_market_share[brand]
+    # Filter out None values
+    filtered_quarters = [q for q, v in zip(quarters, y_vals) if v is not None]
+    filtered_vals = [v for v in y_vals if v is not None]
     fig_nbrx.add_trace(go.Scatter(
-        x=quarters,
-        y=nbrx_market_share[brand],
+        x=filtered_quarters,
+        y=filtered_vals,
         mode="lines+markers",
         name=brand,
-        line=dict(color=brand_colors[brand], width=3 if brand == "Eliquis" else 2),
-        marker=dict(size=7 if brand == "Eliquis" else 5),
+        line=dict(color=brand_colors[brand], width=3 if brand == "Comirnaty" else 2),
+        marker=dict(size=7 if brand == "Comirnaty" else 5),
         hovertemplate=f"<b>{brand}</b><br>%{{x}}<br>%{{y:.1f}}%<extra></extra>"
     ))
 
@@ -344,7 +343,7 @@ st.plotly_chart(fig_nbrx, use_container_width=True)
 st.markdown('<div class="section-title">Raw Data Tables</div>', unsafe_allow_html=True)
 
 # TRX Claims (collapsible)
-with st.expander("Eliquis TRX Claims — Raw Data", expanded=False):
+with st.expander("Comirnaty TRX Claims \u2014 Raw Data", expanded=False):
     trx_html = '<table class="claims-table"><thead><tr><th>Quarter</th><th>TRX Claims</th></tr></thead><tbody>'
     for _, row in df.iterrows():
         trx_html += f'<tr><td>{row["Quarter"]}</td><td>{row["TRX CLAIMS"]:,.0f}</td></tr>'
@@ -352,7 +351,7 @@ with st.expander("Eliquis TRX Claims — Raw Data", expanded=False):
     st.markdown(trx_html, unsafe_allow_html=True)
 
 # NBRX Claims (collapsible)
-with st.expander("Eliquis NBRx Claims — Raw Data", expanded=False):
+with st.expander("Comirnaty NBRx Claims \u2014 Raw Data", expanded=False):
     nbrx_html = '<table class="claims-table"><thead><tr><th>Quarter</th><th>NBRx Claims</th></tr></thead><tbody>'
     for _, row in df.iterrows():
         nbrx_html += f'<tr><td>{row["Quarter"]}</td><td>{row["NBRX CLAIMS"]:,.0f}</td></tr>'
@@ -360,7 +359,7 @@ with st.expander("Eliquis NBRx Claims — Raw Data", expanded=False):
     st.markdown(nbrx_html, unsafe_allow_html=True)
 
 # TRX Market Share (collapsible)
-with st.expander("Eliquis TRX Market Share (%) — Raw Data", expanded=False):
+with st.expander("Comirnaty TRX Market Share (%) \u2014 Raw Data", expanded=False):
     trx_ms_html = '<table class="claims-table"><thead><tr><th>Quarter</th><th>TRX Market Share (%)</th></tr></thead><tbody>'
     for _, row in df.iterrows():
         trx_ms_html += f'<tr><td>{row["Quarter"]}</td><td>{row["TRX MARKET SHARE"]:.1f}%</td></tr>'
@@ -368,7 +367,7 @@ with st.expander("Eliquis TRX Market Share (%) — Raw Data", expanded=False):
     st.markdown(trx_ms_html, unsafe_allow_html=True)
 
 # NBRX Market Share (collapsible)
-with st.expander("Eliquis NBRx Market Share (%) — Raw Data", expanded=False):
+with st.expander("Comirnaty NBRx Market Share (%) \u2014 Raw Data", expanded=False):
     nbrx_ms_html = '<table class="claims-table"><thead><tr><th>Quarter</th><th>NBRx Market Share (%)</th></tr></thead><tbody>'
     for _, row in df.iterrows():
         nbrx_ms_html += f'<tr><td>{row["Quarter"]}</td><td>{row["NBRX MARKET SHARE"]:.1f}%</td></tr>'
@@ -376,7 +375,7 @@ with st.expander("Eliquis NBRx Market Share (%) — Raw Data", expanded=False):
     st.markdown(nbrx_ms_html, unsafe_allow_html=True)
 
 # TRX Market Share Diff vs STLY (collapsible)
-with st.expander("Eliquis TRX Market Share Diff (vs STLY) — Raw Data", expanded=False):
+with st.expander("Comirnaty TRX Market Share Diff (vs STLY) \u2014 Raw Data", expanded=False):
     trx_diff_html = '<table class="claims-table"><thead><tr><th>Quarter</th><th>TRX MS Diff (pp)</th></tr></thead><tbody>'
     for _, row in df.iterrows():
         val = row["TRX MARKET SHARE DIFF"]
@@ -386,7 +385,7 @@ with st.expander("Eliquis TRX Market Share Diff (vs STLY) — Raw Data", expande
     st.markdown(trx_diff_html, unsafe_allow_html=True)
 
 # NBRX Market Share Diff vs STLY (collapsible)
-with st.expander("Eliquis NBRx Market Share Diff (vs STLY) — Raw Data", expanded=False):
+with st.expander("Comirnaty NBRx Market Share Diff (vs STLY) \u2014 Raw Data", expanded=False):
     nbrx_diff_html = '<table class="claims-table"><thead><tr><th>Quarter</th><th>NBRx MS Diff (pp)</th></tr></thead><tbody>'
     for _, row in df.iterrows():
         val = row["NBRX MARKET SHARE DIFF"]
@@ -413,7 +412,7 @@ export_df = df.rename(columns={
 def generate_excel():
     output = BytesIO()
     with pd.ExcelWriter(output, engine="openpyxl") as writer:
-        export_df.to_excel(writer, sheet_name="Eliquis Report", index=False)
+        export_df.to_excel(writer, sheet_name="Comirnaty Report", index=False)
     return output.getvalue()
 
 def generate_pdf():
@@ -449,27 +448,27 @@ def generate_pdf():
         ])
 
         # Title & KPIs
-        elements.append(Paragraph("Eliquis — Oral Anticoagulant Market Report", title_style))
+        elements.append(Paragraph("Comirnaty \u2014 COVID Vaccines Market Report", title_style))
         elements.append(Spacer(1, 10))
         elements.append(Paragraph(f"<b>Latest Quarter:</b> {latest_period}", kpi_style))
-        elements.append(Paragraph(f"<b>Eliquis TRX Market Share:</b> {trx_val} ({trx_diff_sign}{trx_ms_diff:.1f}pp vs STLY)", kpi_style))
-        elements.append(Paragraph(f"<b>Eliquis NBRx Market Share:</b> {nbrx_val} ({nbrx_diff_sign}{nbrx_ms_diff:.1f}pp vs STLY)", kpi_style))
+        elements.append(Paragraph(f"<b>Comirnaty TRX Market Share:</b> {trx_val} ({trx_diff_sign}{trx_ms_diff:.1f}pp vs STLY)", kpi_style))
+        elements.append(Paragraph(f"<b>Comirnaty NBRx Market Share:</b> {nbrx_val} ({nbrx_diff_sign}{nbrx_ms_diff:.1f}pp vs STLY)", kpi_style))
         elements.append(Spacer(1, 10))
 
         # TRX Market Share Chart
-        elements.append(Paragraph("TRX Market Share Trend — Oral Anticoagulant Market", heading_style))
+        elements.append(Paragraph("TRX Market Share Trend \u2014 COVID Vaccines Market", heading_style))
         trx_img_bytes = BytesIO(fig_trx.to_image(format="png", width=900, height=380, scale=2))
         elements.append(Image(trx_img_bytes, width=7.5*inch, height=2.8*inch))
         elements.append(Spacer(1, 10))
 
         # NBRX Market Share Chart
-        elements.append(Paragraph("NBRx Market Share Trend — Oral Anticoagulant Market", heading_style))
+        elements.append(Paragraph("NBRx Market Share Trend \u2014 COVID Vaccines Market", heading_style))
         nbrx_img_bytes = BytesIO(fig_nbrx.to_image(format="png", width=900, height=380, scale=2))
         elements.append(Image(nbrx_img_bytes, width=7.5*inch, height=2.8*inch))
         elements.append(Spacer(1, 10))
 
         # Claims Table
-        elements.append(Paragraph("Eliquis Claims Data", heading_style))
+        elements.append(Paragraph("Comirnaty Claims Data", heading_style))
         claims_table_data = [["Quarter", "TRX Claims", "NBRx Claims"]]
         for _, row in df.iterrows():
             claims_table_data.append([row["Quarter"], f"{row['TRX CLAIMS']:,.0f}", f"{row['NBRX CLAIMS']:,.0f}"])
@@ -479,7 +478,7 @@ def generate_pdf():
         elements.append(Spacer(1, 10))
 
         # Market Share Table
-        elements.append(Paragraph("Eliquis Market Share & Diff vs STLY", heading_style))
+        elements.append(Paragraph("Comirnaty Market Share & Diff vs STLY", heading_style))
         ms_table_data = [["Quarter", "TRX MS (%)", "NBRx MS (%)", "TRX Diff (pp)", "NBRx Diff (pp)"]]
         for _, row in df.iterrows():
             trx_s = "+" if row["TRX MARKET SHARE DIFF"] >= 0 else ""
@@ -503,18 +502,18 @@ def generate_pdf():
 col1, col2, col3 = st.columns([1, 1, 3])
 with col1:
     st.download_button(
-        label="📥 Download Excel",
+        label="\U0001f4e5 Download Excel",
         data=generate_excel(),
-        file_name="eliquis_report.xlsx",
+        file_name="comirnaty_report.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
 with col2:
     pdf_data = generate_pdf()
     if pdf_data:
         st.download_button(
-            label="📄 Download PDF",
+            label="\U0001f4c4 Download PDF",
             data=pdf_data,
-            file_name="eliquis_report.pdf",
+            file_name="comirnaty_report.pdf",
             mime="application/pdf"
         )
     else:
