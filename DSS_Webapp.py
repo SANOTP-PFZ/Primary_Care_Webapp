@@ -265,12 +265,12 @@ def render_brand_page(brand_key_page):
     st.markdown(f"""
     <div class="kpi-container">
         <div class="kpi-card">
-            <div class="kpi-label">{display_name} TRX Market Share</div>
+            <div class="kpi-label">{display_name} TRX Market Share <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(NPA)</span></div>
             <div class="kpi-value">{trx_str} {trx_diff_html}</div>
             <div class="kpi-period">Latest: {latest_qtr}</div>
         </div>
         <div class="kpi-card">
-            <div class="kpi-label">{display_name} NBRX Market Share</div>
+            <div class="kpi-label">{display_name} NBRX Market Share <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(NPA)</span></div>
             <div class="kpi-value">{nbrx_str} {nbrx_diff_html}</div>
             <div class="kpi-period">Latest: {latest_qtr}</div>
         </div>
@@ -278,12 +278,12 @@ def render_brand_page(brand_key_page):
     """, unsafe_allow_html=True)
 
     # --- TRX Market Share Trend ---
-    st.markdown(f'<div class="section-title">TRX Market Share Trend \u2014 {market} Market</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-title">TRX Market Share Trend \u2014 {market} Market <span style="font-size:13px; color:#9EAAB8; font-weight:400;">(NPA)</span></div>', unsafe_allow_html=True)
     brands_order = [brand_name] + [b for b in trx_ms.columns if b != brand_name]
     render_trend_chart(trx_ms, "TRX Market Share", brands_order)
 
     # --- NBRX Market Share Trend ---
-    st.markdown(f'<div class="section-title">NBRX Market Share Trend \u2014 {market} Market</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-title">NBRX Market Share Trend \u2014 {market} Market <span style="font-size:13px; color:#9EAAB8; font-weight:400;">(NPA)</span></div>', unsafe_allow_html=True)
     brands_order_nbrx = [brand_name] + [b for b in nbrx_ms.columns if b != brand_name]
     render_trend_chart(nbrx_ms, "NBRX Market Share", brands_order_nbrx)
 
@@ -300,6 +300,35 @@ def render_brand_page(brand_key_page):
             shipment_ms = pivot_market_share(ddd_data, "OVERALL_MS")
 
             if not shipment_ms.empty:
+                # KPI card for Shipment MS
+                latest_ship_qtr = shipment_ms.index[-1]
+                abrysvo_ship_ms = shipment_ms.loc[latest_ship_qtr, ddd_brand] if ddd_brand in shipment_ms.columns else None
+                ship_str = f"{abrysvo_ship_ms:.2f}%" if pd.notna(abrysvo_ship_ms) else "N/A"
+
+                # Show previous quarter diff
+                if len(shipment_ms.index) > 1 and ddd_brand in shipment_ms.columns:
+                    prev_ship_qtr = shipment_ms.index[-2]
+                    prev_ship_ms = shipment_ms.loc[prev_ship_qtr, ddd_brand]
+                    ship_diff = abrysvo_ship_ms - prev_ship_ms if pd.notna(prev_ship_ms) and pd.notna(abrysvo_ship_ms) else None
+                else:
+                    ship_diff = None
+
+                ship_diff_html = ""
+                if ship_diff is not None and pd.notna(ship_diff):
+                    sign = "+" if ship_diff >= 0 else ""
+                    color = "#2EAF7D" if ship_diff >= 0 else "#E85D4A"
+                    ship_diff_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">({sign}{ship_diff:.2f}pp vs prev qtr)</span>'
+
+                st.markdown(f"""
+                <div class="kpi-container">
+                    <div class="kpi-card">
+                        <div class="kpi-label">{config["display_name"]} Shipment Market Share (DDD)</div>
+                        <div class="kpi-value">{ship_str} {ship_diff_html}</div>
+                        <div class="kpi-period">Latest: {latest_ship_qtr}</div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+
                 st.markdown(f'<div class="section-title">Shipment Market Share Trend \u2014 {ddd_market} Market (DDD)</div>', unsafe_allow_html=True)
                 ddd_brands_order = [ddd_brand] + [b for b in shipment_ms.columns if b != ddd_brand]
                 render_trend_chart(shipment_ms, "Shipment Market Share", ddd_brands_order)
@@ -424,9 +453,9 @@ def render_brand_page(brand_key_page):
             oa_contrib = pivot_market_share(ddd_data, "OA_CONTRIBUTION")
 
             if not oa_ms.empty:
-                st.markdown('<div class="section-title">Office-Administered Market Share Trend \u2014 RSV Market</div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">OA Market Share Trend \u2014 RSV Market</div>', unsafe_allow_html=True)
                 oa_order = ["ABRYSVO"] + [b for b in oa_ms.columns if b != "ABRYSVO"]
-                render_trend_chart(oa_ms, "Office-Administered Market Share", oa_order)
+                render_trend_chart(oa_ms, "OA Market Share", oa_order)
 
             if not oa_contrib.empty or not ma_contrib.empty:
                 st.markdown('<div class="section-title">Abrysvo OA vs MA Contribution</div>', unsafe_allow_html=True)
