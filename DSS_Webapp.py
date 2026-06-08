@@ -517,24 +517,33 @@ def render_home():
     try:
         date_dataset = dataiku.Dataset("SQL_NPA_MAX_DATE_SF")
         date_df = date_dataset.get_dataframe()
-        max_date = str(date_df.iloc[0, 0])
+        max_date_raw = str(date_df.iloc[0, 0])
+        # Extract only the date part (YYYY-MM-DD)
+        max_date = max_date_raw.split(" ")[0]
     except Exception:
         max_date = "N/A"
 
     # Get refresh timestamp
     try:
+        import pytz
         dataset_obj = dataiku.Dataset(DATASET_NAME)
         metadata = dataset_obj.get_metadata()
         last_modified = metadata.get("chunkLastModificationDate") or metadata.get("lastModifiedOn") or metadata.get("createdOn")
         if last_modified:
             if last_modified > 1e12:
-                refresh_ts = datetime.fromtimestamp(last_modified / 1000).strftime("%B %d, %Y at %I:%M %p")
+                utc_time = datetime.utcfromtimestamp(last_modified / 1000)
             else:
-                refresh_ts = datetime.fromtimestamp(last_modified).strftime("%B %d, %Y at %I:%M %p")
+                utc_time = datetime.utcfromtimestamp(last_modified)
+            ist = pytz.timezone("Asia/Kolkata")
+            ist_time = pytz.utc.localize(utc_time).astimezone(ist)
+            refresh_ts = ist_time.strftime("%B %d, %Y at %I:%M %p IST")
         else:
-            refresh_ts = datetime.now().strftime("%B %d, %Y at %I:%M %p")
+            import pytz
+            ist = pytz.timezone("Asia/Kolkata")
+            ist_time = datetime.now(ist)
+            refresh_ts = ist_time.strftime("%B %d, %Y at %I:%M %p IST")
     except Exception:
-        refresh_ts = datetime.now().strftime("%B %d, %Y at %I:%M %p")
+        refresh_ts = datetime.now().strftime("%B %d, %Y at %I:%M %p IST")
 
     st.markdown(f"""
     <div style="padding: 0 50px;">
@@ -546,8 +555,8 @@ def render_home():
                     <th style="text-align: left; padding: 10px 16px; font-size: 13px; font-weight: 600; color: #6B7C93; text-transform: uppercase; letter-spacing: 0.5px;">Data Availability</th>
                 </tr></thead>
                 <tbody>
-                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">NPA</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Data available till {max_date}</td></tr>
-                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">DDD</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Data available till {max_date}</td></tr>
+                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">NPA</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Till {max_date}</td></tr>
+                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">DDD</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Till {max_date}</td></tr>
                     <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50; font-weight: 600;">Refreshed On</td><td style="padding: 12px 16px; font-size: 14px; color: #1A3E6E; font-weight: 600;">{refresh_ts}</td></tr>
                 </tbody>
             </table>
