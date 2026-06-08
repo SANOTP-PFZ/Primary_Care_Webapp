@@ -525,6 +525,234 @@ def render_brand_page(brand_key_page):
                     except TypeError:
                         st.plotly_chart(fig_oa_ma, use_container_width=True)
 
+        # --- Prevnar-specific DDD metrics ---
+        if brand_key_page == "prevnar":
+            # Retail MS - all brands in market
+            retail_ms = pivot_market_share(ddd_data, "RETAIL_MS")
+            non_retail_ms = pivot_market_share(ddd_data, "NON_RETAIL_MS")
+
+            # KPI cards for Prevnar Retail and Non-Retail MS
+            if not retail_ms.empty or not non_retail_ms.empty:
+                latest_ddd_qtr = retail_ms.index[-1] if not retail_ms.empty else non_retail_ms.index[-1]
+                prevnar_retail = retail_ms.loc[latest_ddd_qtr, "PREVNAR"] if (not retail_ms.empty and "PREVNAR" in retail_ms.columns) else None
+                prevnar_non_retail = non_retail_ms.loc[latest_ddd_qtr, "PREVNAR"] if (not non_retail_ms.empty and "PREVNAR" in non_retail_ms.columns) else None
+
+                retail_str = f"{prevnar_retail:.2f}%" if pd.notna(prevnar_retail) else "N/A"
+                non_retail_str = f"{prevnar_non_retail:.2f}%" if pd.notna(prevnar_non_retail) else "N/A"
+
+                st.markdown(f"""
+                <div class="kpi-container">
+                    <div class="kpi-card">
+                        <div class="kpi-label">Prevnar Retail Market Share <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>
+                        <div class="kpi-value">{retail_str}</div>
+                        <div class="kpi-period">Latest: {latest_ddd_qtr}</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Prevnar Non-Retail Market Share <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>
+                        <div class="kpi-value">{non_retail_str}</div>
+                        <div class="kpi-period">Latest: {latest_ddd_qtr}</div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+
+            # Retail MS trend - all brands compared
+            if not retail_ms.empty:
+                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>', unsafe_allow_html=True)
+                retail_order = ["PREVNAR"] + [b for b in retail_ms.columns if b != "PREVNAR"]
+                render_trend_chart(retail_ms, "Retail Market Share", retail_order)
+
+            # Non-Retail MS trend - all brands compared
+            if not non_retail_ms.empty:
+                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>', unsafe_allow_html=True)
+                non_retail_order = ["PREVNAR"] + [b for b in non_retail_ms.columns if b != "PREVNAR"]
+                render_trend_chart(non_retail_ms, "Non-Retail Market Share", non_retail_order)
+
+            # Retail and Non-Retail Contribution for Prevnar
+            retail_contrib = pivot_market_share(ddd_data, "RETAIL_CONTRIBUTION")
+            non_retail_contrib = pivot_market_share(ddd_data, "NON_RETAIL_CONTRIBUTION")
+
+            if not retail_contrib.empty or not non_retail_contrib.empty:
+                st.markdown('<div class="section-title">Prevnar Channel Contribution <span style="font-size:13px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>', unsafe_allow_html=True)
+
+                # Pie chart for latest quarter + trend chart side by side
+                latest_contrib_qtr = retail_contrib.index[-1] if not retail_contrib.empty else non_retail_contrib.index[-1]
+                prevnar_retail_c = retail_contrib.loc[latest_contrib_qtr, "PREVNAR"] if (not retail_contrib.empty and "PREVNAR" in retail_contrib.columns) else 0
+                prevnar_non_retail_c = non_retail_contrib.loc[latest_contrib_qtr, "PREVNAR"] if (not non_retail_contrib.empty and "PREVNAR" in non_retail_contrib.columns) else 0
+
+                col_pie, col_trend = st.columns([1, 2])
+
+                with col_pie:
+                    import plotly.io as pio
+                    pio.templates.default = "plotly_white"
+                    fig_pie = go.Figure(data=[go.Pie(
+                        labels=["Retail", "Non-Retail"],
+                        values=[prevnar_retail_c if pd.notna(prevnar_retail_c) else 0, prevnar_non_retail_c if pd.notna(prevnar_non_retail_c) else 0],
+                        marker=dict(colors=["#1A3E6E", "#5BABDE"]),
+                        textinfo="label+percent",
+                        textfont=dict(size=13, color="#000000"),
+                        hole=0.4
+                    )])
+                    fig_pie.update_layout(
+                        template="plotly_white", height=350,
+                        margin=dict(l=20, r=20, t=30, b=20),
+                        plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
+                        title=dict(text=f"Latest: {latest_contrib_qtr}", font=dict(size=13, color="#1A3E6E")),
+                        showlegend=False
+                    )
+                    try:
+                        st.plotly_chart(fig_pie, use_container_width=True, theme=None)
+                    except TypeError:
+                        st.plotly_chart(fig_pie, use_container_width=True)
+
+                with col_trend:
+                    import plotly.io as pio
+                    pio.templates.default = "plotly_white"
+                    fig_contrib = go.Figure()
+
+                    if not retail_contrib.empty and "PREVNAR" in retail_contrib.columns:
+                        fig_contrib.add_trace(go.Scatter(
+                            x=retail_contrib.index.tolist(), y=retail_contrib["PREVNAR"].tolist(),
+                            mode="lines+markers", name="Retail Contribution",
+                            line=dict(color="#1A3E6E", width=3), marker=dict(size=7),
+                            hovertemplate="<b>Retail Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
+                        ))
+                    if not non_retail_contrib.empty and "PREVNAR" in non_retail_contrib.columns:
+                        fig_contrib.add_trace(go.Scatter(
+                            x=non_retail_contrib.index.tolist(), y=non_retail_contrib["PREVNAR"].tolist(),
+                            mode="lines+markers", name="Non-Retail Contribution",
+                            line=dict(color="#5BABDE", width=3), marker=dict(size=7),
+                            hovertemplate="<b>Non-Retail Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
+                        ))
+
+                    fig_contrib.update_layout(
+                        template="plotly_white", height=350,
+                        margin=dict(l=60, r=30, t=20, b=50),
+                        plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
+                        font=dict(family="Inter, sans-serif", size=13, color="#000000"),
+                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#000000")),
+                        hovermode="x unified"
+                    )
+                    fig_contrib.update_xaxes(showgrid=False, tickfont=dict(size=12, color="#000000"), linecolor="#333333", tickcolor="#333333", ticks="outside", title_text="")
+                    fig_contrib.update_yaxes(showgrid=True, gridcolor="#E0E0E0", ticksuffix="%", tickfont=dict(size=12, color="#000000"), linecolor="#333333", tickcolor="#333333", ticks="outside", title_text="")
+                    try:
+                        st.plotly_chart(fig_contrib, use_container_width=True, theme=None)
+                    except TypeError:
+                        st.plotly_chart(fig_contrib, use_container_width=True)
+
+        # --- Comirnaty-specific DDD metrics ---
+        if brand_key_page == "comirnaty":
+            # Retail MS - all brands in market
+            retail_ms = pivot_market_share(ddd_data, "RETAIL_MS")
+            non_retail_ms = pivot_market_share(ddd_data, "NON_RETAIL_MS")
+
+            # KPI cards for Comirnaty Retail and Non-Retail MS
+            if not retail_ms.empty or not non_retail_ms.empty:
+                latest_ddd_qtr = retail_ms.index[-1] if not retail_ms.empty else non_retail_ms.index[-1]
+                comirnaty_retail = retail_ms.loc[latest_ddd_qtr, "COMIRNATY"] if (not retail_ms.empty and "COMIRNATY" in retail_ms.columns) else None
+                comirnaty_non_retail = non_retail_ms.loc[latest_ddd_qtr, "COMIRNATY"] if (not non_retail_ms.empty and "COMIRNATY" in non_retail_ms.columns) else None
+
+                retail_str = f"{comirnaty_retail:.2f}%" if pd.notna(comirnaty_retail) else "N/A"
+                non_retail_str = f"{comirnaty_non_retail:.2f}%" if pd.notna(comirnaty_non_retail) else "N/A"
+
+                st.markdown(f"""
+                <div class="kpi-container">
+                    <div class="kpi-card">
+                        <div class="kpi-label">Comirnaty Retail Market Share <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>
+                        <div class="kpi-value">{retail_str}</div>
+                        <div class="kpi-period">Latest: {latest_ddd_qtr}</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Comirnaty Non-Retail Market Share <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>
+                        <div class="kpi-value">{non_retail_str}</div>
+                        <div class="kpi-period">Latest: {latest_ddd_qtr}</div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+
+            # Retail MS trend - all brands compared
+            if not retail_ms.empty:
+                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 COVID Market <span style="font-size:13px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>', unsafe_allow_html=True)
+                retail_order = ["COMIRNATY"] + [b for b in retail_ms.columns if b != "COMIRNATY"]
+                render_trend_chart(retail_ms, "Retail Market Share", retail_order)
+
+            # Non-Retail MS trend - all brands compared
+            if not non_retail_ms.empty:
+                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 COVID Market <span style="font-size:13px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>', unsafe_allow_html=True)
+                non_retail_order = ["COMIRNATY"] + [b for b in non_retail_ms.columns if b != "COMIRNATY"]
+                render_trend_chart(non_retail_ms, "Non-Retail Market Share", non_retail_order)
+
+            # Retail and Non-Retail Contribution for Comirnaty
+            retail_contrib = pivot_market_share(ddd_data, "RETAIL_CONTRIBUTION")
+            non_retail_contrib = pivot_market_share(ddd_data, "NON_RETAIL_CONTRIBUTION")
+
+            if not retail_contrib.empty or not non_retail_contrib.empty:
+                st.markdown('<div class="section-title">Comirnaty Channel Contribution <span style="font-size:13px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>', unsafe_allow_html=True)
+
+                # Pie chart for latest quarter + trend chart side by side
+                latest_contrib_qtr = retail_contrib.index[-1] if not retail_contrib.empty else non_retail_contrib.index[-1]
+                comirnaty_retail_c = retail_contrib.loc[latest_contrib_qtr, "COMIRNATY"] if (not retail_contrib.empty and "COMIRNATY" in retail_contrib.columns) else 0
+                comirnaty_non_retail_c = non_retail_contrib.loc[latest_contrib_qtr, "COMIRNATY"] if (not non_retail_contrib.empty and "COMIRNATY" in non_retail_contrib.columns) else 0
+
+                col_pie, col_trend = st.columns([1, 2])
+
+                with col_pie:
+                    import plotly.io as pio
+                    pio.templates.default = "plotly_white"
+                    fig_pie = go.Figure(data=[go.Pie(
+                        labels=["Retail", "Non-Retail"],
+                        values=[comirnaty_retail_c if pd.notna(comirnaty_retail_c) else 0, comirnaty_non_retail_c if pd.notna(comirnaty_non_retail_c) else 0],
+                        marker=dict(colors=["#1A3E6E", "#5BABDE"]),
+                        textinfo="label+percent",
+                        textfont=dict(size=13, color="#000000"),
+                        hole=0.4
+                    )])
+                    fig_pie.update_layout(
+                        template="plotly_white", height=350,
+                        margin=dict(l=20, r=20, t=30, b=20),
+                        plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
+                        title=dict(text=f"Latest: {latest_contrib_qtr}", font=dict(size=13, color="#1A3E6E")),
+                        showlegend=False
+                    )
+                    try:
+                        st.plotly_chart(fig_pie, use_container_width=True, theme=None)
+                    except TypeError:
+                        st.plotly_chart(fig_pie, use_container_width=True)
+
+                with col_trend:
+                    import plotly.io as pio
+                    pio.templates.default = "plotly_white"
+                    fig_contrib = go.Figure()
+
+                    if not retail_contrib.empty and "COMIRNATY" in retail_contrib.columns:
+                        fig_contrib.add_trace(go.Scatter(
+                            x=retail_contrib.index.tolist(), y=retail_contrib["COMIRNATY"].tolist(),
+                            mode="lines+markers", name="Retail Contribution",
+                            line=dict(color="#1A3E6E", width=3), marker=dict(size=7),
+                            hovertemplate="<b>Retail Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
+                        ))
+                    if not non_retail_contrib.empty and "COMIRNATY" in non_retail_contrib.columns:
+                        fig_contrib.add_trace(go.Scatter(
+                            x=non_retail_contrib.index.tolist(), y=non_retail_contrib["COMIRNATY"].tolist(),
+                            mode="lines+markers", name="Non-Retail Contribution",
+                            line=dict(color="#5BABDE", width=3), marker=dict(size=7),
+                            hovertemplate="<b>Non-Retail Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
+                        ))
+
+                    fig_contrib.update_layout(
+                        template="plotly_white", height=350,
+                        margin=dict(l=60, r=30, t=20, b=50),
+                        plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
+                        font=dict(family="Inter, sans-serif", size=13, color="#000000"),
+                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#000000")),
+                        hovermode="x unified"
+                    )
+                    fig_contrib.update_xaxes(showgrid=False, tickfont=dict(size=12, color="#000000"), linecolor="#333333", tickcolor="#333333", ticks="outside", title_text="")
+                    fig_contrib.update_yaxes(showgrid=True, gridcolor="#E0E0E0", ticksuffix="%", tickfont=dict(size=12, color="#000000"), linecolor="#333333", tickcolor="#333333", ticks="outside", title_text="")
+                    try:
+                        st.plotly_chart(fig_contrib, use_container_width=True, theme=None)
+                    except TypeError:
+                        st.plotly_chart(fig_contrib, use_container_width=True)
+
     # --- Raw Data Tables ---
     st.markdown('<div class="section-title">Raw Data Tables</div>', unsafe_allow_html=True)
 
