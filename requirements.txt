@@ -1,5 +1,5 @@
-plotly>=5.18.0
 pandas
+plotly>=5.18.0
 openpyxl
 reportlab
 kaleido
