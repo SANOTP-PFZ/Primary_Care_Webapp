@@ -26,13 +26,12 @@ DATASET_NAME = "SQL_EARNINGS_REPORT_MASTER_DATASET_SF"  # <-- Your Dataiku datas
 
 # Primary brands and their markets (these become the brand cards on home page)
 BRAND_CONFIG = {
-    "nurtec": {"display_name": "Nurtec", "brand_key": "NURTEC", "market": "CGRP", "source": "NPA"},
-    "eliquis": {"display_name": "Eliquis", "brand_key": "ELIQUIS", "market": "OAC", "source": "NPA"},
-    "prevnar": {"display_name": "Prevnar", "brand_key": "PREVNAR 20", "market": "PCV", "source": "NPA"},
-    "comirnaty": {"display_name": "Comirnaty", "brand_key": "COMIRNATY", "market": "COVID_VACCINES", "source": "NPA"},
-    "abrysvo": {"display_name": "Abrysvo", "brand_key": "ABRYSVO", "market": "RSV", "source": "NPA"},
-    "paxlovid": {"display_name": "Paxlovid", "brand_key": "PAXLOVID", "market": "COVID_ORAL", "source": "NPA"},
-    "zavzpret": {"display_name": "Zavzpret", "brand_key": "ZAVZPRET", "market": "NASAL", "source": "NPA"},
+    "nurtec": {"display_name": "Nurtec", "brand_key": "NURTEC", "market": "CGRP", "market_display": "Oral CGRP", "source": "NPA"},
+    "eliquis": {"display_name": "Eliquis", "brand_key": "ELIQUIS", "market": "OAC", "market_display": "Oral Anticoagulant", "source": "NPA"},
+    "prevnar": {"display_name": "Prevnar", "brand_key": "PREVNAR 20", "market": "PCV", "market_display": "PCV", "source": "NPA", "ddd_market": "PCV", "ddd_brand": "PREVNAR"},
+    "comirnaty": {"display_name": "Comirnaty", "brand_key": "COMIRNATY", "market": "COVID_VACCINES", "market_display": "COVID Vaccines", "source": "NPA", "ddd_market": "COVID", "ddd_brand": "COMIRNATY"},
+    "abrysvo": {"display_name": "Abrysvo", "brand_key": "ABRYSVO", "market": "RSV", "market_display": "RSV", "source": "NPA", "ddd_market": "RSV", "ddd_brand": "ABRYSVO"},
+    "paxlovid": {"display_name": "Paxlovid", "brand_key": "PAXLOVID", "market": "COVID_ORAL", "market_display": "COVID Oral Treatment", "source": "NPA"},
 }
 
 # =====================================================
@@ -248,20 +247,20 @@ def render_brand_page(brand_key_page):
     nbrx_diff_val = nbrx_diff.loc[latest_qtr, brand_name] if (not nbrx_diff.empty and brand_name in nbrx_diff.columns) else None
 
     # Format KPI values
-    trx_str = f"{trx_val:.1f}%" if pd.notna(trx_val) else "N/A"
-    nbrx_str = f"{nbrx_val:.1f}%" if pd.notna(nbrx_val) else "N/A"
+    trx_str = f"{trx_val:.2f}%" if pd.notna(trx_val) else "N/A"
+    nbrx_str = f"{nbrx_val:.2f}%" if pd.notna(nbrx_val) else "N/A"
 
     trx_diff_html = ""
     if pd.notna(trx_diff_val):
         sign = "+" if trx_diff_val >= 0 else ""
         color = "#2EAF7D" if trx_diff_val >= 0 else "#E85D4A"
-        trx_diff_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">({sign}{trx_diff_val:.1f}pp vs STLY)</span>'
+        trx_diff_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">({sign}{trx_diff_val:.2f}pp vs STLY)</span>'
 
     nbrx_diff_html = ""
     if pd.notna(nbrx_diff_val):
         sign = "+" if nbrx_diff_val >= 0 else ""
         color = "#2EAF7D" if nbrx_diff_val >= 0 else "#E85D4A"
-        nbrx_diff_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">({sign}{nbrx_diff_val:.1f}pp vs STLY)</span>'
+        nbrx_diff_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">({sign}{nbrx_diff_val:.2f}pp vs STLY)</span>'
 
     st.markdown(f"""
     <div class="kpi-container">
@@ -334,13 +333,13 @@ def render_brand_page(brand_key_page):
     if not trx_ms.empty:
         display_df = trx_ms.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
         for col in display_df.columns[1:]:
-            display_df[col] = display_df[col].apply(lambda x: f"{x:.1f}%" if pd.notna(x) else "-")
+            display_df[col] = display_df[col].apply(lambda x: f"{x:.2f}%" if pd.notna(x) else "-")
         render_styled_table(display_df, "TRX Market Share (%)")
 
     if not nbrx_ms.empty:
         display_df = nbrx_ms.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
         for col in display_df.columns[1:]:
-            display_df[col] = display_df[col].apply(lambda x: f"{x:.1f}%" if pd.notna(x) else "-")
+            display_df[col] = display_df[col].apply(lambda x: f"{x:.2f}%" if pd.notna(x) else "-")
         render_styled_table(display_df, "NBRX Market Share (%)")
 
     if not trx_claims.empty:
@@ -455,7 +454,7 @@ def render_brand_page(brand_key_page):
                 header = ["Quarter"] + list(trx_ms.columns)
                 table_data = [header]
                 for qtr in trx_ms.index:
-                    row = [qtr] + [f"{v:.1f}" if pd.notna(v) else "-" for v in trx_ms.loc[qtr]]
+                    row = [qtr] + [f"{v:.2f}" if pd.notna(v) else "-" for v in trx_ms.loc[qtr]]
                     table_data.append(row)
                 col_widths = [1.2*inch] + [1.3*inch] * len(trx_ms.columns)
                 t = Table(table_data, colWidths=col_widths[:8])
@@ -469,7 +468,7 @@ def render_brand_page(brand_key_page):
                 header = ["Quarter"] + list(nbrx_ms.columns)
                 table_data = [header]
                 for qtr in nbrx_ms.index:
-                    row = [qtr] + [f"{v:.1f}" if pd.notna(v) else "-" for v in nbrx_ms.loc[qtr]]
+                    row = [qtr] + [f"{v:.2f}" if pd.notna(v) else "-" for v in nbrx_ms.loc[qtr]]
                     table_data.append(row)
                 col_widths = [1.2*inch] + [1.3*inch] * len(nbrx_ms.columns)
                 t = Table(table_data, colWidths=col_widths[:8])
@@ -514,16 +513,13 @@ def render_home():
     # Data Summary with dynamic values
     from datetime import datetime
 
-    # Get max quarters from data
+    # Get max date from SQL_NPA_MAX_DATE_SF dataset
     try:
-        df_temp = load_data()
-        npa_data = df_temp[df_temp["DATASET"].isin(["NPA_TRX", "NPA_NBRX"])]
-        ddd_data = df_temp[df_temp["DATASET"] == "DDD"]
-        npa_max_qtr = npa_data["YR_QTR_TXT"].max() if not npa_data.empty else "N/A"
-        ddd_max_qtr = ddd_data["YR_QTR_TXT"].max() if not ddd_data.empty else "N/A"
+        date_dataset = dataiku.Dataset("SQL_NPA_MAX_DATE_SF")
+        date_df = date_dataset.get_dataframe()
+        max_date = str(date_df.iloc[0, 0])
     except Exception:
-        npa_max_qtr = "N/A"
-        ddd_max_qtr = "N/A"
+        max_date = "N/A"
 
     # Get refresh timestamp
     try:
@@ -550,8 +546,8 @@ def render_home():
                     <th style="text-align: left; padding: 10px 16px; font-size: 13px; font-weight: 600; color: #6B7C93; text-transform: uppercase; letter-spacing: 0.5px;">Data Availability</th>
                 </tr></thead>
                 <tbody>
-                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">NPA</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Till {npa_max_qtr}</td></tr>
-                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">DDD</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Till {ddd_max_qtr}</td></tr>
+                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">NPA</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Data available till {max_date}</td></tr>
+                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">DDD</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Data available till {max_date}</td></tr>
                     <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50; font-weight: 600;">Refreshed On</td><td style="padding: 12px 16px; font-size: 14px; color: #1A3E6E; font-weight: 600;">{refresh_ts}</td></tr>
                 </tbody>
             </table>
