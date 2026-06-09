@@ -11,18 +11,19 @@ import dataiku
 
 st.set_page_config(page_title="Primary Care Monthly Report Dashboard", layout="wide", initial_sidebar_state="collapsed")
 
-# Compatibility: st.rerun() was added in Streamlit 1.27, older versions use st.experimental_rerun()
+# Compatibility for caching - st.cache_data was added in 1.18, older versions use st.cache
+if not hasattr(st, 'cache_data'):
+    st.cache_data = st.cache
+
+# Compatibility: safe_rerun() was added in Streamlit 1.27, older versions use st.experimental_rerun()
 def safe_rerun():
     """Safely trigger a rerun compatible with all Streamlit versions."""
     if hasattr(st, 'rerun'):
-        st.rerun()
+        safe_rerun()
     elif hasattr(st, 'experimental_rerun'):
         st.experimental_rerun()
     else:
-        # Fallback: raise an exception that Streamlit catches to trigger rerun
-        from streamlit.script_runner import RerunException
-        from streamlit.script_request_queue import RerunData
-        raise RerunException(RerunData(None))
+        pass  # Do nothing - let Streamlit handle it naturally
 
 # =====================================================
 # PFIZER LOGO (base64) - loaded from file at build time
@@ -170,7 +171,7 @@ def render_back_button():
     """, unsafe_allow_html=True)
     if st.button("\u2190 Back to Home"):
         st.session_state["current_page"] = "home"
-        st.rerun()
+        safe_rerun()
 
 
 def render_trend_chart(pivoted_df, title, brands_order=None):
@@ -1171,7 +1172,7 @@ def render_home():
             with cols[i]:
                 if st.button(brand["name"], key=f'{brand["key"]}_btn', use_container_width=True):
                     st.session_state["current_page"] = brand["key"]
-                    st.rerun()
+                    safe_rerun()
         st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
 
     st.markdown("""
