@@ -872,6 +872,40 @@ def render_brand_page(brand_key_page):
             from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
             from reportlab.lib import colors
             from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+            import matplotlib
+            matplotlib.use('Agg')
+            import matplotlib.pyplot as plt
+
+            def make_chart_image(pivoted_df, chart_title, primary_brand):
+                """Render a line chart using matplotlib and return as BytesIO."""
+                fig, ax = plt.subplots(figsize=(9, 3.5))
+                brands_list = [primary_brand] + [b for b in pivoted_df.columns if b != primary_brand]
+                for i, brand in enumerate(brands_list):
+                    if brand in pivoted_df.columns:
+                        color = CHART_COLORS[i % len(CHART_COLORS)]
+                        lw = 2.5 if i == 0 else 1.5
+                        ms = 6 if i == 0 else 4
+                        ax.plot(pivoted_df.index.tolist(), pivoted_df[brand].tolist(),
+                                marker='o', linewidth=lw, markersize=ms, color=color, label=brand)
+                        if i == 0:
+                            for x, y in zip(pivoted_df.index.tolist(), pivoted_df[brand].tolist()):
+                                if pd.notna(y):
+                                    ax.annotate(f"{y:.2f}", (x, y), textcoords="offset points",
+                                                xytext=(0, 8), ha='center', fontsize=7, color=color)
+                ax.set_title(chart_title, fontsize=11, color="#1A3E6E", fontweight='bold', pad=10)
+                ax.set_ylabel("Market Share (%)", fontsize=9, color="#333333")
+                ax.tick_params(axis='x', rotation=45, labelsize=8)
+                ax.tick_params(axis='y', labelsize=8)
+                ax.grid(axis='y', alpha=0.3)
+                ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), ncol=min(len(brands_list), 4), fontsize=8)
+                ax.spines['top'].set_visible(False)
+                ax.spines['right'].set_visible(False)
+                plt.tight_layout()
+                img_buf = BytesIO()
+                plt.savefig(img_buf, format='png', dpi=150, bbox_inches='tight')
+                plt.close(fig)
+                img_buf.seek(0)
+                return img_buf
 
             output = BytesIO()
             doc = SimpleDocTemplate(output, pagesize=landscape(letter), leftMargin=40, rightMargin=40, topMargin=30, bottomMargin=30)
@@ -905,27 +939,19 @@ def render_brand_page(brand_key_page):
             elements.append(Paragraph(f"<b>{display_name} NBRX Market Share:</b> {nbrx_str}", kpi_style))
             elements.append(Spacer(1, 10))
 
-            # TRX Chart as image
-            elements.append(Paragraph(f"TRX Market Share Trend \u2014 {market} Market", heading_style))
-            fig_trx_pdf = go.Figure()
-            for i, brand in enumerate(brands_order):
-                if brand in trx_ms.columns:
-                    fig_trx_pdf.add_trace(go.Scatter(x=trx_ms.index.tolist(), y=trx_ms[brand].tolist(), mode="lines+markers", name=brand, line=dict(color=CHART_COLORS[i % len(CHART_COLORS)], width=3 if i == 0 else 2)))
-            fig_trx_pdf.update_layout(height=350, width=900, margin=dict(l=50, r=30, t=20, b=40), plot_bgcolor="white", font=dict(size=10), legend=dict(orientation="h", y=-0.15))
-            trx_img = BytesIO(fig_trx_pdf.to_image(format="png", scale=2))
-            elements.append(Image(trx_img, width=7.5*inch, height=2.8*inch))
-            elements.append(Spacer(1, 10))
+            # TRX Chart as image (matplotlib)
+            if not trx_ms.empty:
+                elements.append(Paragraph(f"TRX Market Share Trend \u2014 {market} Market (NPA)", heading_style))
+                trx_img = make_chart_image(trx_ms, f"TRX Market Share \u2014 {market}", brand_name)
+                elements.append(Image(trx_img, width=7.5*inch, height=3*inch))
+                elements.append(Spacer(1, 10))
 
-            # NBRX Chart as image
-            elements.append(Paragraph(f"NBRX Market Share Trend \u2014 {market} Market", heading_style))
-            fig_nbrx_pdf = go.Figure()
-            for i, brand in enumerate(brands_order_nbrx):
-                if brand in nbrx_ms.columns:
-                    fig_nbrx_pdf.add_trace(go.Scatter(x=nbrx_ms.index.tolist(), y=nbrx_ms[brand].tolist(), mode="lines+markers", name=brand, line=dict(color=CHART_COLORS[i % len(CHART_COLORS)], width=3 if i == 0 else 2)))
-            fig_nbrx_pdf.update_layout(height=350, width=900, margin=dict(l=50, r=30, t=20, b=40), plot_bgcolor="white", font=dict(size=10), legend=dict(orientation="h", y=-0.15))
-            nbrx_img = BytesIO(fig_nbrx_pdf.to_image(format="png", scale=2))
-            elements.append(Image(nbrx_img, width=7.5*inch, height=2.8*inch))
-            elements.append(Spacer(1, 10))
+            # NBRX Chart as image (matplotlib)
+            if not nbrx_ms.empty:
+                elements.append(Paragraph(f"NBRX Market Share Trend \u2014 {market} Market (NPA)", heading_style))
+                nbrx_img = make_chart_image(nbrx_ms, f"NBRX Market Share \u2014 {market}", brand_name)
+                elements.append(Image(nbrx_img, width=7.5*inch, height=3*inch))
+                elements.append(Spacer(1, 10))
 
             # TRX Market Share Table
             if not trx_ms.empty:
