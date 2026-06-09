@@ -12,8 +12,17 @@ import dataiku
 st.set_page_config(page_title="Primary Care Monthly Report Dashboard", layout="wide", initial_sidebar_state="collapsed")
 
 # Compatibility: st.rerun() was added in Streamlit 1.27, older versions use st.experimental_rerun()
-if not hasattr(st, 'rerun'):
-    st.rerun = st.experimental_rerun
+def safe_rerun():
+    """Safely trigger a rerun compatible with all Streamlit versions."""
+    if hasattr(st, 'rerun'):
+        st.rerun()
+    elif hasattr(st, 'experimental_rerun'):
+        st.experimental_rerun()
+    else:
+        # Fallback: raise an exception that Streamlit catches to trigger rerun
+        from streamlit.script_runner import RerunException
+        from streamlit.script_request_queue import RerunData
+        raise RerunException(RerunData(None))
 
 # =====================================================
 # PFIZER LOGO (base64) - loaded from file at build time
@@ -876,61 +885,36 @@ def render_brand_page(brand_key_page):
             from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image, PageBreak
             from reportlab.lib import colors
             from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-            import matplotlib
-            matplotlib.use('Agg')
-            import matplotlib.pyplot as plt
 
             def make_chart_image(pivoted_df, chart_title, primary_brand):
-                """Render a line chart using matplotlib and return as BytesIO."""
-                fig, ax = plt.subplots(figsize=(9, 3.5))
+                """Render a Plotly line chart and return as BytesIO PNG using kaleido."""
+                fig = go.Figure()
                 brands_list = [primary_brand] + [b for b in pivoted_df.columns if b != primary_brand]
                 for i, brand in enumerate(brands_list):
                     if brand in pivoted_df.columns:
-                        color = CHART_COLORS[i % len(CHART_COLORS)]
-                        lw = 2.5 if i == 0 else 1.5
-                        ms = 6 if i == 0 else 4
-                        ax.plot(pivoted_df.index.tolist(), pivoted_df[brand].tolist(),
-                                marker='o', linewidth=lw, markersize=ms, color=color, label=brand)
+                        y_vals = pivoted_df[brand].tolist()
                         if i == 0:
-                            for x, y in zip(pivoted_df.index.tolist(), pivoted_df[brand].tolist()):
-                                if pd.notna(y):
-                                    ax.annotate(f"{y:.2f}", (x, y), textcoords="offset points",
-                                                xytext=(0, 8), ha='center', fontsize=7, color=color)
-                ax.set_title(chart_title, fontsize=11, color="#1A3E6E", fontweight='bold', pad=10)
-                ax.set_ylabel("Market Share (%)", fontsize=9, color="#333333")
-                ax.tick_params(axis='x', rotation=45, labelsize=8)
-                ax.tick_params(axis='y', labelsize=8)
-                ax.grid(axis='y', alpha=0.3)
-                ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), ncol=min(len(brands_list), 4), fontsize=8)
-                ax.spines['top'].set_visible(False)
-                ax.spines['right'].set_visible(False)
-                plt.tight_layout()
-                img_buf = BytesIO()
-                plt.savefig(img_buf, format='png', dpi=150, bbox_inches='tight')
-                plt.close(fig)
-                img_buf.seek(0)
+                            text_vals = [f"{v:.2f}" if pd.notna(v) else "" for v in y_vals]
+                            fig.add_trace(go.Scatter(x=pivoted_df.index.tolist(), y=y_vals, mode="lines+markers+text", name=brand, text=text_vals, textposition="top center", textfont=dict(size=9, color=CHART_COLORS[0]), line=dict(color=CHART_COLORS[0], width=3), marker=dict(size=7)))
+                        else:
+                            fig.add_trace(go.Scatter(x=pivoted_df.index.tolist(), y=y_vals, mode="lines+markers", name=brand, line=dict(color=CHART_COLORS[i % len(CHART_COLORS)], width=2), marker=dict(size=5)))
+                fig.update_layout(title=dict(text=chart_title, font=dict(size=13, color="#1A3E6E")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"), legend=dict(orientation="h", y=-0.2, font=dict(size=9, color="#000000")))
+                fig.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
+                fig.update_yaxes(ticksuffix="%", tickfont=dict(size=9, color="#000000"))
+                img_buf = BytesIO(fig.to_image(format="png", scale=2))
                 return img_buf
 
             def make_dual_line_image(data1, data2, label1, label2, chart_title, color1="#1A3E6E", color2="#5BABDE"):
-                """Render a dual-line chart (e.g., Retail vs Non-Retail contribution)."""
-                fig, ax = plt.subplots(figsize=(9, 3.5))
+                """Render a dual-line Plotly chart and return as BytesIO PNG."""
+                fig = go.Figure()
                 if data1 is not None:
-                    ax.plot(data1.index.tolist(), data1.tolist(), marker='o', linewidth=2.5, markersize=6, color=color1, label=label1)
+                    fig.add_trace(go.Scatter(x=data1.index.tolist(), y=data1.tolist(), mode="lines+markers", name=label1, line=dict(color=color1, width=3), marker=dict(size=7)))
                 if data2 is not None:
-                    ax.plot(data2.index.tolist(), data2.tolist(), marker='o', linewidth=2.5, markersize=6, color=color2, label=label2)
-                ax.set_title(chart_title, fontsize=11, color="#1A3E6E", fontweight='bold', pad=10)
-                ax.set_ylabel("%", fontsize=9, color="#333333")
-                ax.tick_params(axis='x', rotation=45, labelsize=8)
-                ax.tick_params(axis='y', labelsize=8)
-                ax.grid(axis='y', alpha=0.3)
-                ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), ncol=2, fontsize=8)
-                ax.spines['top'].set_visible(False)
-                ax.spines['right'].set_visible(False)
-                plt.tight_layout()
-                img_buf = BytesIO()
-                plt.savefig(img_buf, format='png', dpi=150, bbox_inches='tight')
-                plt.close(fig)
-                img_buf.seek(0)
+                    fig.add_trace(go.Scatter(x=data2.index.tolist(), y=data2.tolist(), mode="lines+markers", name=label2, line=dict(color=color2, width=3), marker=dict(size=7)))
+                fig.update_layout(title=dict(text=chart_title, font=dict(size=13, color="#1A3E6E")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"), legend=dict(orientation="h", y=-0.2, font=dict(size=9, color="#000000")))
+                fig.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
+                fig.update_yaxes(ticksuffix="%", tickfont=dict(size=9, color="#000000"))
+                img_buf = BytesIO(fig.to_image(format="png", scale=2))
                 return img_buf
 
             def make_table(pivoted_df, title_text, fmt=".2f"):
@@ -940,10 +924,7 @@ def render_brand_page(brand_key_page):
                 header = ["Quarter"] + list(pivoted_df.columns)
                 table_data = [header]
                 for qtr in pivoted_df.index:
-                    if fmt == ",.0f":
-                        row = [qtr] + [f"{v:{fmt}}" if pd.notna(v) else "-" for v in pivoted_df.loc[qtr]]
-                    else:
-                        row = [qtr] + [f"{v:{fmt}}" if pd.notna(v) else "-" for v in pivoted_df.loc[qtr]]
+                    row = [qtr] + [f"{v:{fmt}}" if pd.notna(v) else "-" for v in pivoted_df.loc[qtr]]
                     table_data.append(row)
                 col_widths = [1.2*inch] + [1.3*inch] * len(pivoted_df.columns)
                 t = Table(table_data, colWidths=col_widths[:8])
@@ -987,7 +968,7 @@ def render_brand_page(brand_key_page):
             # --- TRX Chart & Table ---
             if not trx_ms.empty:
                 trx_img = make_chart_image(trx_ms, f"TRX Market Share Trend \u2014 {config['market_display']} (NPA)", brand_name)
-                elements.append(Image(trx_img, width=7.5*inch, height=3*inch))
+                elements.append(Image(trx_img, width=7.5*inch, height=2.8*inch))
                 elements.append(Spacer(1, 5))
                 elements.extend(make_table(trx_ms, "TRX Market Share (%)"))
 
@@ -995,7 +976,7 @@ def render_brand_page(brand_key_page):
             if not nbrx_ms.empty:
                 elements.append(PageBreak())
                 nbrx_img = make_chart_image(nbrx_ms, f"NBRX Market Share Trend \u2014 {config['market_display']} (NPA)", brand_name)
-                elements.append(Image(nbrx_img, width=7.5*inch, height=3*inch))
+                elements.append(Image(nbrx_img, width=7.5*inch, height=2.8*inch))
                 elements.append(Spacer(1, 5))
                 elements.extend(make_table(nbrx_ms, "NBRX Market Share (%)"))
 
@@ -1033,7 +1014,7 @@ def render_brand_page(brand_key_page):
                     shipment_ms_pdf = pivot_market_share(ddd_data_pdf, "OVERALL_MS")
                     if not shipment_ms_pdf.empty:
                         ship_img = make_chart_image(shipment_ms_pdf, f"Shipment Market Share Trend \u2014 {ddd_market_pdf} (DDD)", ddd_brand_pdf)
-                        elements.append(Image(ship_img, width=7.5*inch, height=3*inch))
+                        elements.append(Image(ship_img, width=7.5*inch, height=2.8*inch))
                         elements.append(Spacer(1, 5))
                         elements.extend(make_table(shipment_ms_pdf, "Shipment Market Share (%)"))
 
@@ -1042,7 +1023,7 @@ def render_brand_page(brand_key_page):
                     if not retail_ms_pdf.empty:
                         elements.append(PageBreak())
                         retail_img = make_chart_image(retail_ms_pdf, f"Retail Market Share Trend \u2014 {ddd_market_pdf} (DDD)", ddd_brand_pdf)
-                        elements.append(Image(retail_img, width=7.5*inch, height=3*inch))
+                        elements.append(Image(retail_img, width=7.5*inch, height=2.8*inch))
                         elements.append(Spacer(1, 5))
                         elements.extend(make_table(retail_ms_pdf, "Retail Market Share (%)"))
 
@@ -1050,19 +1031,19 @@ def render_brand_page(brand_key_page):
                     non_retail_ms_pdf = pivot_market_share(ddd_data_pdf, "NON_RETAIL_MS")
                     if not non_retail_ms_pdf.empty:
                         non_retail_img = make_chart_image(non_retail_ms_pdf, f"Non-Retail Market Share Trend \u2014 {ddd_market_pdf} (DDD)", ddd_brand_pdf)
-                        elements.append(Image(non_retail_img, width=7.5*inch, height=3*inch))
+                        elements.append(Image(non_retail_img, width=7.5*inch, height=2.8*inch))
                         elements.append(Spacer(1, 5))
                         elements.extend(make_table(non_retail_ms_pdf, "Non-Retail Market Share (%)"))
 
-                    # Channel Contribution (Retail vs Non-Retail)
+                    # Channel Contribution
                     retail_contrib_pdf = pivot_market_share(ddd_data_pdf, "RETAIL_CONTRIBUTION")
                     non_retail_contrib_pdf = pivot_market_share(ddd_data_pdf, "NON_RETAIL_CONTRIBUTION")
                     if not retail_contrib_pdf.empty and ddd_brand_pdf in retail_contrib_pdf.columns:
                         elements.append(PageBreak())
-                        contrib_data1 = retail_contrib_pdf[ddd_brand_pdf] if ddd_brand_pdf in retail_contrib_pdf.columns else None
+                        contrib_data1 = retail_contrib_pdf[ddd_brand_pdf]
                         contrib_data2 = non_retail_contrib_pdf[ddd_brand_pdf] if (not non_retail_contrib_pdf.empty and ddd_brand_pdf in non_retail_contrib_pdf.columns) else None
                         contrib_img = make_dual_line_image(contrib_data1, contrib_data2, "Retail Contribution", "Non-Retail Contribution", f"{display_name} Channel Contribution (DDD)")
-                        elements.append(Image(contrib_img, width=7.5*inch, height=3*inch))
+                        elements.append(Image(contrib_img, width=7.5*inch, height=2.8*inch))
                         elements.append(Spacer(1, 10))
 
                     # OA MS (Abrysvo only)
@@ -1070,7 +1051,7 @@ def render_brand_page(brand_key_page):
                         oa_ms_pdf = pivot_market_share(ddd_data_pdf, "OA_MS")
                         if not oa_ms_pdf.empty:
                             oa_img = make_chart_image(oa_ms_pdf, f"OA Market Share Trend \u2014 RSV (DDD)", ddd_brand_pdf)
-                            elements.append(Image(oa_img, width=7.5*inch, height=3*inch))
+                            elements.append(Image(oa_img, width=7.5*inch, height=2.8*inch))
                             elements.append(Spacer(1, 5))
                             elements.extend(make_table(oa_ms_pdf, "OA Market Share (%)"))
 
@@ -1081,12 +1062,12 @@ def render_brand_page(brand_key_page):
                             oa_data = oa_contrib_pdf[ddd_brand_pdf]
                             ma_data = ma_contrib_pdf[ddd_brand_pdf] if (not ma_contrib_pdf.empty and ddd_brand_pdf in ma_contrib_pdf.columns) else None
                             oa_ma_img = make_dual_line_image(oa_data, ma_data, "OA Contribution", "MA Contribution", f"{display_name} OA vs MA Contribution (DDD)", "#1A3E6E", "#2EAF7D")
-                            elements.append(Image(oa_ma_img, width=7.5*inch, height=3*inch))
+                            elements.append(Image(oa_ma_img, width=7.5*inch, height=2.8*inch))
                             elements.append(Spacer(1, 10))
 
             doc.build(elements)
             return output.getvalue()
-        except ImportError:
+        except Exception:
             return None
 
     col1, col2, col3 = st.columns([1, 1, 3])
