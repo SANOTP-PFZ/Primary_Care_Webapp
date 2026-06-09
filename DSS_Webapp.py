@@ -11,6 +11,10 @@ import dataiku
 
 st.set_page_config(page_title="Primary Care Monthly Report Dashboard", layout="wide", initial_sidebar_state="collapsed")
 
+# Compatibility: st.rerun() was added in Streamlit 1.27, older versions use st.experimental_rerun()
+if not hasattr(st, 'rerun'):
+    st.rerun = st.experimental_rerun
+
 # =====================================================
 # PFIZER LOGO (base64) - loaded from file at build time
 # To regenerate: import base64; base64.b64encode(open('logo.png','rb').read()).decode()
