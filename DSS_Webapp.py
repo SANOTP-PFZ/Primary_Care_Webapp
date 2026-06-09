@@ -38,7 +38,7 @@ BRAND_CONFIG = {
 # DATA LOADING
 # =====================================================
 
-@st.cache(ttl=3600, allow_output_mutation=True)
+@st.cache_data(ttl=3600)
 def load_data():
     """Load full dataset from Dataiku."""
     dataset = dataiku.Dataset(DATASET_NAME)
