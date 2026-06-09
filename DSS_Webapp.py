@@ -139,6 +139,7 @@ def render_ribbon(title):
 
 
 def render_back_button():
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     if st.button("\u2190 Back to Home"):
         st.session_state["current_page"] = "home"
         st.rerun()
@@ -158,15 +159,33 @@ def render_trend_chart(pivoted_df, title, brands_order=None):
 
     for i, brand in enumerate(brands):
         if brand in pivoted_df.columns:
-            fig.add_trace(go.Scatter(
-                x=pivoted_df.index.tolist(),
-                y=pivoted_df[brand].tolist(),
-                mode="lines+markers",
-                name=brand,
-                line=dict(color=CHART_COLORS[i % len(CHART_COLORS)], width=3 if i == 0 else 2),
-                marker=dict(size=7 if i == 0 else 5),
-                hovertemplate=f"<b>{brand}</b><br>%{{x}}<br>%{{y:.1f}}%<extra></extra>"
-            ))
+            y_vals = pivoted_df[brand].tolist()
+            if i == 0:
+                # Primary brand - show data labels
+                text_vals = [f"{v:.2f}" if pd.notna(v) else "" for v in y_vals]
+                fig.add_trace(go.Scatter(
+                    x=pivoted_df.index.tolist(),
+                    y=y_vals,
+                    mode="lines+markers+text",
+                    name=brand,
+                    text=text_vals,
+                    textposition="top center",
+                    textfont=dict(size=10, color="#1A3E6E"),
+                    line=dict(color=CHART_COLORS[0], width=3),
+                    marker=dict(size=7),
+                    hovertemplate=f"<b>{brand}</b><br>%{{x}}<br>%{{y:.2f}}%<extra></extra>"
+                ))
+            else:
+                # Competitor brands - no data labels
+                fig.add_trace(go.Scatter(
+                    x=pivoted_df.index.tolist(),
+                    y=y_vals,
+                    mode="lines+markers",
+                    name=brand,
+                    line=dict(color=CHART_COLORS[i % len(CHART_COLORS)], width=2),
+                    marker=dict(size=5),
+                    hovertemplate=f"<b>{brand}</b><br>%{{x}}<br>%{{y:.2f}}%<extra></extra>"
+                ))
 
     fig.update_layout(
         template="plotly_white",
@@ -278,12 +297,12 @@ def render_brand_page(brand_key_page):
     """, unsafe_allow_html=True)
 
     # --- TRX Market Share Trend ---
-    st.markdown(f'<div class="section-title">TRX Market Share Trend \u2014 {market} Market <span style="font-size:13px; color:#9EAAB8; font-weight:400;">(NPA)</span></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-title">TRX Market Share Trend \u2014 {market} Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
     brands_order = [brand_name] + [b for b in trx_ms.columns if b != brand_name]
     render_trend_chart(trx_ms, "TRX Market Share", brands_order)
 
     # --- NBRX Market Share Trend ---
-    st.markdown(f'<div class="section-title">NBRX Market Share Trend \u2014 {market} Market <span style="font-size:13px; color:#9EAAB8; font-weight:400;">(NPA)</span></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-title">NBRX Market Share Trend \u2014 {market} Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
     brands_order_nbrx = [brand_name] + [b for b in nbrx_ms.columns if b != brand_name]
     render_trend_chart(nbrx_ms, "NBRX Market Share", brands_order_nbrx)
 
@@ -322,14 +341,14 @@ def render_brand_page(brand_key_page):
                 st.markdown(f"""
                 <div class="kpi-container">
                     <div class="kpi-card">
-                        <div class="kpi-label">{config["display_name"]} Shipment Market Share (DDD)</div>
+                        <div class="kpi-label">{config["display_name"]} Shipment Market Share <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>
                         <div class="kpi-value">{ship_str} {ship_diff_html}</div>
                         <div class="kpi-period">Latest: {latest_ship_qtr}</div>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
 
-                st.markdown(f'<div class="section-title">Shipment Market Share Trend \u2014 {ddd_market} Market (DDD)</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="section-title">Shipment Market Share Trend \u2014 {ddd_market} Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 ddd_brands_order = [ddd_brand] + [b for b in shipment_ms.columns if b != ddd_brand]
                 render_trend_chart(shipment_ms, "Shipment Market Share", ddd_brands_order)
 
@@ -351,12 +370,12 @@ def render_brand_page(brand_key_page):
                 st.markdown(f"""
                 <div class="kpi-container">
                     <div class="kpi-card">
-                        <div class="kpi-label">Abrysvo Retail Market Share</div>
+                        <div class="kpi-label">Abrysvo Retail Market Share <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>
                         <div class="kpi-value">{retail_str}</div>
                         <div class="kpi-period">Latest: {latest_ddd_qtr}</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-label">Abrysvo Non-Retail Market Share</div>
+                        <div class="kpi-label">Abrysvo Non-Retail Market Share <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>
                         <div class="kpi-value">{non_retail_str}</div>
                         <div class="kpi-period">Latest: {latest_ddd_qtr}</div>
                     </div>
@@ -365,13 +384,13 @@ def render_brand_page(brand_key_page):
 
             # Retail MS trend - all brands compared
             if not retail_ms.empty:
-                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 RSV Market</div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 RSV Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 retail_order = ["ABRYSVO"] + [b for b in retail_ms.columns if b != "ABRYSVO"]
                 render_trend_chart(retail_ms, "Retail Market Share", retail_order)
 
             # Non-Retail MS trend - all brands compared
             if not non_retail_ms.empty:
-                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 RSV Market</div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 RSV Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 non_retail_order = ["ABRYSVO"] + [b for b in non_retail_ms.columns if b != "ABRYSVO"]
                 render_trend_chart(non_retail_ms, "Non-Retail Market Share", non_retail_order)
 
@@ -380,7 +399,7 @@ def render_brand_page(brand_key_page):
             non_retail_contrib = pivot_market_share(ddd_data, "NON_RETAIL_CONTRIBUTION")
 
             if not retail_contrib.empty or not non_retail_contrib.empty:
-                st.markdown('<div class="section-title">Abrysvo Channel Contribution</div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Abrysvo Channel Contribution <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
 
                 # Pie chart for latest quarter + trend chart side by side
                 latest_contrib_qtr = retail_contrib.index[-1] if not retail_contrib.empty else non_retail_contrib.index[-1]
@@ -395,14 +414,16 @@ def render_brand_page(brand_key_page):
                     fig_pie = go.Figure(data=[go.Pie(
                         labels=["Retail", "Non-Retail"],
                         values=[abrysvo_retail_c if pd.notna(abrysvo_retail_c) else 0, abrysvo_non_retail_c if pd.notna(abrysvo_non_retail_c) else 0],
-                        marker=dict(colors=["#1A3E6E", "#5BABDE"]),
+                        marker=dict(colors=["#1A3E6E", "#A3D9F0"], line=dict(color="#FFFFFF", width=2)),
                         textinfo="label+percent",
-                        textfont=dict(size=13, color="#000000"),
-                        hole=0.4
+                        textposition="outside",
+                        textfont=dict(size=12, color="#1A1A2E"),
+                        hole=0.4,
+                        pull=[0.03, 0.03]
                     )])
                     fig_pie.update_layout(
                         template="plotly_white", height=350,
-                        margin=dict(l=20, r=20, t=30, b=20),
+                        margin=dict(l=30, r=30, t=40, b=30),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
                         title=dict(text=f"Latest: {latest_contrib_qtr}", font=dict(size=13, color="#1A3E6E")),
                         showlegend=False
@@ -453,12 +474,12 @@ def render_brand_page(brand_key_page):
             oa_contrib = pivot_market_share(ddd_data, "OA_CONTRIBUTION")
 
             if not oa_ms.empty:
-                st.markdown('<div class="section-title">OA Market Share Trend \u2014 RSV Market</div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">OA Market Share Trend \u2014 RSV Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 oa_order = ["ABRYSVO"] + [b for b in oa_ms.columns if b != "ABRYSVO"]
                 render_trend_chart(oa_ms, "OA Market Share", oa_order)
 
             if not oa_contrib.empty or not ma_contrib.empty:
-                st.markdown('<div class="section-title">Abrysvo OA vs MA Contribution</div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Abrysvo OA vs MA Contribution <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
 
                 # Pie chart for latest quarter + trend chart side by side
                 latest_oa_qtr = oa_contrib.index[-1] if not oa_contrib.empty else ma_contrib.index[-1]
@@ -473,14 +494,16 @@ def render_brand_page(brand_key_page):
                     fig_pie2 = go.Figure(data=[go.Pie(
                         labels=["OA Contribution", "MA Contribution"],
                         values=[abrysvo_oa_c if pd.notna(abrysvo_oa_c) else 0, abrysvo_ma_c if pd.notna(abrysvo_ma_c) else 0],
-                        marker=dict(colors=["#1A3E6E", "#2EAF7D"]),
+                        marker=dict(colors=["#2A5A8C", "#7EDDB5"], line=dict(color="#FFFFFF", width=2)),
                         textinfo="label+percent",
-                        textfont=dict(size=13, color="#000000"),
-                        hole=0.4
+                        textposition="outside",
+                        textfont=dict(size=12, color="#1A1A2E"),
+                        hole=0.4,
+                        pull=[0.03, 0.03]
                     )])
                     fig_pie2.update_layout(
                         template="plotly_white", height=350,
-                        margin=dict(l=20, r=20, t=30, b=20),
+                        margin=dict(l=30, r=30, t=40, b=30),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
                         title=dict(text=f"Latest: {latest_oa_qtr}", font=dict(size=13, color="#1A3E6E")),
                         showlegend=False
@@ -557,13 +580,13 @@ def render_brand_page(brand_key_page):
 
             # Retail MS trend - all brands compared
             if not retail_ms.empty:
-                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 retail_order = ["PREVNAR"] + [b for b in retail_ms.columns if b != "PREVNAR"]
                 render_trend_chart(retail_ms, "Retail Market Share", retail_order)
 
             # Non-Retail MS trend - all brands compared
             if not non_retail_ms.empty:
-                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 non_retail_order = ["PREVNAR"] + [b for b in non_retail_ms.columns if b != "PREVNAR"]
                 render_trend_chart(non_retail_ms, "Non-Retail Market Share", non_retail_order)
 
@@ -572,7 +595,7 @@ def render_brand_page(brand_key_page):
             non_retail_contrib = pivot_market_share(ddd_data, "NON_RETAIL_CONTRIBUTION")
 
             if not retail_contrib.empty or not non_retail_contrib.empty:
-                st.markdown('<div class="section-title">Prevnar Channel Contribution <span style="font-size:13px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Prevnar Channel Contribution <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
 
                 # Pie chart for latest quarter + trend chart side by side
                 latest_contrib_qtr = retail_contrib.index[-1] if not retail_contrib.empty else non_retail_contrib.index[-1]
@@ -587,14 +610,16 @@ def render_brand_page(brand_key_page):
                     fig_pie = go.Figure(data=[go.Pie(
                         labels=["Retail", "Non-Retail"],
                         values=[prevnar_retail_c if pd.notna(prevnar_retail_c) else 0, prevnar_non_retail_c if pd.notna(prevnar_non_retail_c) else 0],
-                        marker=dict(colors=["#1A3E6E", "#5BABDE"]),
+                        marker=dict(colors=["#1A3E6E", "#A3D9F0"], line=dict(color="#FFFFFF", width=2)),
                         textinfo="label+percent",
-                        textfont=dict(size=13, color="#000000"),
-                        hole=0.4
+                        textposition="outside",
+                        textfont=dict(size=12, color="#1A1A2E"),
+                        hole=0.4,
+                        pull=[0.03, 0.03]
                     )])
                     fig_pie.update_layout(
                         template="plotly_white", height=350,
-                        margin=dict(l=20, r=20, t=30, b=20),
+                        margin=dict(l=30, r=30, t=40, b=30),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
                         title=dict(text=f"Latest: {latest_contrib_qtr}", font=dict(size=13, color="#1A3E6E")),
                         showlegend=False
@@ -671,13 +696,13 @@ def render_brand_page(brand_key_page):
 
             # Retail MS trend - all brands compared
             if not retail_ms.empty:
-                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 COVID Market <span style="font-size:13px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 COVID Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 retail_order = ["COMIRNATY"] + [b for b in retail_ms.columns if b != "COMIRNATY"]
                 render_trend_chart(retail_ms, "Retail Market Share", retail_order)
 
             # Non-Retail MS trend - all brands compared
             if not non_retail_ms.empty:
-                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 COVID Market <span style="font-size:13px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 COVID Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 non_retail_order = ["COMIRNATY"] + [b for b in non_retail_ms.columns if b != "COMIRNATY"]
                 render_trend_chart(non_retail_ms, "Non-Retail Market Share", non_retail_order)
 
@@ -686,7 +711,7 @@ def render_brand_page(brand_key_page):
             non_retail_contrib = pivot_market_share(ddd_data, "NON_RETAIL_CONTRIBUTION")
 
             if not retail_contrib.empty or not non_retail_contrib.empty:
-                st.markdown('<div class="section-title">Comirnaty Channel Contribution <span style="font-size:13px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Comirnaty Channel Contribution <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
 
                 # Pie chart for latest quarter + trend chart side by side
                 latest_contrib_qtr = retail_contrib.index[-1] if not retail_contrib.empty else non_retail_contrib.index[-1]
@@ -701,14 +726,16 @@ def render_brand_page(brand_key_page):
                     fig_pie = go.Figure(data=[go.Pie(
                         labels=["Retail", "Non-Retail"],
                         values=[comirnaty_retail_c if pd.notna(comirnaty_retail_c) else 0, comirnaty_non_retail_c if pd.notna(comirnaty_non_retail_c) else 0],
-                        marker=dict(colors=["#1A3E6E", "#5BABDE"]),
+                        marker=dict(colors=["#1A3E6E", "#A3D9F0"], line=dict(color="#FFFFFF", width=2)),
                         textinfo="label+percent",
-                        textfont=dict(size=13, color="#000000"),
-                        hole=0.4
+                        textposition="outside",
+                        textfont=dict(size=12, color="#1A1A2E"),
+                        hole=0.4,
+                        pull=[0.03, 0.03]
                     )])
                     fig_pie.update_layout(
                         template="plotly_white", height=350,
-                        margin=dict(l=20, r=20, t=30, b=20),
+                        margin=dict(l=30, r=30, t=40, b=30),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
                         title=dict(text=f"Latest: {latest_contrib_qtr}", font=dict(size=13, color="#1A3E6E")),
                         showlegend=False
