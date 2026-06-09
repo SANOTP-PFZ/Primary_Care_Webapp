@@ -869,7 +869,7 @@ def render_brand_page(brand_key_page):
         try:
             from reportlab.lib.pagesizes import letter, landscape
             from reportlab.lib.units import inch
-            from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
+            from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image, PageBreak
             from reportlab.lib import colors
             from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
             import matplotlib
@@ -907,6 +907,47 @@ def render_brand_page(brand_key_page):
                 img_buf.seek(0)
                 return img_buf
 
+            def make_dual_line_image(data1, data2, label1, label2, chart_title, color1="#1A3E6E", color2="#5BABDE"):
+                """Render a dual-line chart (e.g., Retail vs Non-Retail contribution)."""
+                fig, ax = plt.subplots(figsize=(9, 3.5))
+                if data1 is not None:
+                    ax.plot(data1.index.tolist(), data1.tolist(), marker='o', linewidth=2.5, markersize=6, color=color1, label=label1)
+                if data2 is not None:
+                    ax.plot(data2.index.tolist(), data2.tolist(), marker='o', linewidth=2.5, markersize=6, color=color2, label=label2)
+                ax.set_title(chart_title, fontsize=11, color="#1A3E6E", fontweight='bold', pad=10)
+                ax.set_ylabel("%", fontsize=9, color="#333333")
+                ax.tick_params(axis='x', rotation=45, labelsize=8)
+                ax.tick_params(axis='y', labelsize=8)
+                ax.grid(axis='y', alpha=0.3)
+                ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), ncol=2, fontsize=8)
+                ax.spines['top'].set_visible(False)
+                ax.spines['right'].set_visible(False)
+                plt.tight_layout()
+                img_buf = BytesIO()
+                plt.savefig(img_buf, format='png', dpi=150, bbox_inches='tight')
+                plt.close(fig)
+                img_buf.seek(0)
+                return img_buf
+
+            def make_table(pivoted_df, title_text, fmt=".2f"):
+                """Create a reportlab Table from pivoted DataFrame."""
+                elems = []
+                elems.append(Paragraph(title_text, heading_style))
+                header = ["Quarter"] + list(pivoted_df.columns)
+                table_data = [header]
+                for qtr in pivoted_df.index:
+                    if fmt == ",.0f":
+                        row = [qtr] + [f"{v:{fmt}}" if pd.notna(v) else "-" for v in pivoted_df.loc[qtr]]
+                    else:
+                        row = [qtr] + [f"{v:{fmt}}" if pd.notna(v) else "-" for v in pivoted_df.loc[qtr]]
+                    table_data.append(row)
+                col_widths = [1.2*inch] + [1.3*inch] * len(pivoted_df.columns)
+                t = Table(table_data, colWidths=col_widths[:8])
+                t.setStyle(table_style)
+                elems.append(t)
+                elems.append(Spacer(1, 10))
+                return elems
+
             output = BytesIO()
             doc = SimpleDocTemplate(output, pagesize=landscape(letter), leftMargin=40, rightMargin=40, topMargin=30, bottomMargin=30)
             elements = []
@@ -931,54 +972,113 @@ def render_brand_page(brand_key_page):
                 ("BOTTOMPADDING", (0, 1), (-1, -1), 5),
             ])
 
-            # Title & KPIs
-            elements.append(Paragraph(f"{display_name} \u2014 {market} Market Report", title_style))
+            # --- Title & KPIs ---
+            elements.append(Paragraph(f"{display_name} \u2014 {config['market_display']} Market Report", title_style))
             elements.append(Spacer(1, 10))
             elements.append(Paragraph(f"<b>Latest Quarter:</b> {latest_qtr}", kpi_style))
-            elements.append(Paragraph(f"<b>{display_name} TRX Market Share:</b> {trx_str}", kpi_style))
-            elements.append(Paragraph(f"<b>{display_name} NBRX Market Share:</b> {nbrx_str}", kpi_style))
+            elements.append(Paragraph(f"<b>{display_name} TRX Market Share (NPA):</b> {trx_str}", kpi_style))
+            elements.append(Paragraph(f"<b>{display_name} NBRX Market Share (NPA):</b> {nbrx_str}", kpi_style))
             elements.append(Spacer(1, 10))
 
-            # TRX Chart as image (matplotlib)
+            # --- TRX Chart & Table ---
             if not trx_ms.empty:
-                elements.append(Paragraph(f"TRX Market Share Trend \u2014 {market} Market (NPA)", heading_style))
-                trx_img = make_chart_image(trx_ms, f"TRX Market Share \u2014 {market}", brand_name)
+                trx_img = make_chart_image(trx_ms, f"TRX Market Share Trend \u2014 {config['market_display']} (NPA)", brand_name)
                 elements.append(Image(trx_img, width=7.5*inch, height=3*inch))
-                elements.append(Spacer(1, 10))
+                elements.append(Spacer(1, 5))
+                elements.extend(make_table(trx_ms, "TRX Market Share (%)"))
 
-            # NBRX Chart as image (matplotlib)
+            # --- NBRX Chart & Table ---
             if not nbrx_ms.empty:
-                elements.append(Paragraph(f"NBRX Market Share Trend \u2014 {market} Market (NPA)", heading_style))
-                nbrx_img = make_chart_image(nbrx_ms, f"NBRX Market Share \u2014 {market}", brand_name)
+                elements.append(PageBreak())
+                nbrx_img = make_chart_image(nbrx_ms, f"NBRX Market Share Trend \u2014 {config['market_display']} (NPA)", brand_name)
                 elements.append(Image(nbrx_img, width=7.5*inch, height=3*inch))
-                elements.append(Spacer(1, 10))
+                elements.append(Spacer(1, 5))
+                elements.extend(make_table(nbrx_ms, "NBRX Market Share (%)"))
 
-            # TRX Market Share Table
-            if not trx_ms.empty:
-                elements.append(Paragraph("TRX Market Share (%)", heading_style))
-                header = ["Quarter"] + list(trx_ms.columns)
-                table_data = [header]
-                for qtr in trx_ms.index:
-                    row = [qtr] + [f"{v:.2f}" if pd.notna(v) else "-" for v in trx_ms.loc[qtr]]
-                    table_data.append(row)
-                col_widths = [1.2*inch] + [1.3*inch] * len(trx_ms.columns)
-                t = Table(table_data, colWidths=col_widths[:8])
-                t.setStyle(table_style)
-                elements.append(t)
-                elements.append(Spacer(1, 10))
+            # --- TRX Claims Table ---
+            if not trx_claims.empty:
+                elements.extend(make_table(trx_claims, "TRX Claims", fmt=",.0f"))
 
-            # NBRX Market Share Table
-            if not nbrx_ms.empty:
-                elements.append(Paragraph("NBRX Market Share (%)", heading_style))
-                header = ["Quarter"] + list(nbrx_ms.columns)
-                table_data = [header]
-                for qtr in nbrx_ms.index:
-                    row = [qtr] + [f"{v:.2f}" if pd.notna(v) else "-" for v in nbrx_ms.loc[qtr]]
-                    table_data.append(row)
-                col_widths = [1.2*inch] + [1.3*inch] * len(nbrx_ms.columns)
-                t = Table(table_data, colWidths=col_widths[:8])
-                t.setStyle(table_style)
-                elements.append(t)
+            # --- NBRX Claims Table ---
+            if not nbrx_claims.empty:
+                elements.extend(make_table(nbrx_claims, "NBRX Claims", fmt=",.0f"))
+
+            # --- TRX Diff Table ---
+            if not trx_diff.empty:
+                elements.extend(make_table(trx_diff, "TRX MS Diff vs STLY (pp)"))
+
+            # --- NBRX Diff Table ---
+            if not nbrx_diff.empty:
+                elements.extend(make_table(nbrx_diff, "NBRX MS Diff vs STLY (pp)"))
+
+            # --- DDD Metrics (for Abrysvo, Prevnar, Comirnaty) ---
+            ddd_brands_pdf = {"abrysvo": "ABRYSVO", "comirnaty": "COMIRNATY", "prevnar": "PREVNAR"}
+            ddd_market_map_pdf = {"abrysvo": "RSV", "comirnaty": "COVID", "prevnar": "PCV"}
+
+            if brand_key_page in ddd_brands_pdf:
+                ddd_brand_pdf = ddd_brands_pdf[brand_key_page]
+                ddd_market_pdf = ddd_market_map_pdf[brand_key_page]
+                ddd_data_pdf = df[(df["DATASET"] == "DDD") & (df["MARKET"] == ddd_market_pdf)]
+
+                if not ddd_data_pdf.empty:
+                    elements.append(PageBreak())
+                    elements.append(Paragraph(f"DDD Metrics \u2014 {config['market_display']} Market", title_style))
+                    elements.append(Spacer(1, 10))
+
+                    # Shipment MS
+                    shipment_ms_pdf = pivot_market_share(ddd_data_pdf, "OVERALL_MS")
+                    if not shipment_ms_pdf.empty:
+                        ship_img = make_chart_image(shipment_ms_pdf, f"Shipment Market Share Trend \u2014 {ddd_market_pdf} (DDD)", ddd_brand_pdf)
+                        elements.append(Image(ship_img, width=7.5*inch, height=3*inch))
+                        elements.append(Spacer(1, 5))
+                        elements.extend(make_table(shipment_ms_pdf, "Shipment Market Share (%)"))
+
+                    # Retail MS
+                    retail_ms_pdf = pivot_market_share(ddd_data_pdf, "RETAIL_MS")
+                    if not retail_ms_pdf.empty:
+                        elements.append(PageBreak())
+                        retail_img = make_chart_image(retail_ms_pdf, f"Retail Market Share Trend \u2014 {ddd_market_pdf} (DDD)", ddd_brand_pdf)
+                        elements.append(Image(retail_img, width=7.5*inch, height=3*inch))
+                        elements.append(Spacer(1, 5))
+                        elements.extend(make_table(retail_ms_pdf, "Retail Market Share (%)"))
+
+                    # Non-Retail MS
+                    non_retail_ms_pdf = pivot_market_share(ddd_data_pdf, "NON_RETAIL_MS")
+                    if not non_retail_ms_pdf.empty:
+                        non_retail_img = make_chart_image(non_retail_ms_pdf, f"Non-Retail Market Share Trend \u2014 {ddd_market_pdf} (DDD)", ddd_brand_pdf)
+                        elements.append(Image(non_retail_img, width=7.5*inch, height=3*inch))
+                        elements.append(Spacer(1, 5))
+                        elements.extend(make_table(non_retail_ms_pdf, "Non-Retail Market Share (%)"))
+
+                    # Channel Contribution (Retail vs Non-Retail)
+                    retail_contrib_pdf = pivot_market_share(ddd_data_pdf, "RETAIL_CONTRIBUTION")
+                    non_retail_contrib_pdf = pivot_market_share(ddd_data_pdf, "NON_RETAIL_CONTRIBUTION")
+                    if not retail_contrib_pdf.empty and ddd_brand_pdf in retail_contrib_pdf.columns:
+                        elements.append(PageBreak())
+                        contrib_data1 = retail_contrib_pdf[ddd_brand_pdf] if ddd_brand_pdf in retail_contrib_pdf.columns else None
+                        contrib_data2 = non_retail_contrib_pdf[ddd_brand_pdf] if (not non_retail_contrib_pdf.empty and ddd_brand_pdf in non_retail_contrib_pdf.columns) else None
+                        contrib_img = make_dual_line_image(contrib_data1, contrib_data2, "Retail Contribution", "Non-Retail Contribution", f"{display_name} Channel Contribution (DDD)")
+                        elements.append(Image(contrib_img, width=7.5*inch, height=3*inch))
+                        elements.append(Spacer(1, 10))
+
+                    # OA MS (Abrysvo only)
+                    if brand_key_page == "abrysvo":
+                        oa_ms_pdf = pivot_market_share(ddd_data_pdf, "OA_MS")
+                        if not oa_ms_pdf.empty:
+                            oa_img = make_chart_image(oa_ms_pdf, f"OA Market Share Trend \u2014 RSV (DDD)", ddd_brand_pdf)
+                            elements.append(Image(oa_img, width=7.5*inch, height=3*inch))
+                            elements.append(Spacer(1, 5))
+                            elements.extend(make_table(oa_ms_pdf, "OA Market Share (%)"))
+
+                        # OA vs MA Contribution
+                        oa_contrib_pdf = pivot_market_share(ddd_data_pdf, "OA_CONTRIBUTION")
+                        ma_contrib_pdf = pivot_market_share(ddd_data_pdf, "MA_CONTRIBUTION")
+                        if not oa_contrib_pdf.empty and ddd_brand_pdf in oa_contrib_pdf.columns:
+                            oa_data = oa_contrib_pdf[ddd_brand_pdf]
+                            ma_data = ma_contrib_pdf[ddd_brand_pdf] if (not ma_contrib_pdf.empty and ddd_brand_pdf in ma_contrib_pdf.columns) else None
+                            oa_ma_img = make_dual_line_image(oa_data, ma_data, "OA Contribution", "MA Contribution", f"{display_name} OA vs MA Contribution (DDD)", "#1A3E6E", "#2EAF7D")
+                            elements.append(Image(oa_ma_img, width=7.5*inch, height=3*inch))
+                            elements.append(Spacer(1, 10))
 
             doc.build(elements)
             return output.getvalue()
@@ -1003,7 +1103,7 @@ def render_brand_page(brand_key_page):
                 mime="application/pdf"
             )
         else:
-            st.info("PDF export requires `reportlab` and `kaleido` packages.")
+            st.info("PDF export requires `reportlab` and `matplotlib` packages in your code environment.")
 
 
 # =====================================================
