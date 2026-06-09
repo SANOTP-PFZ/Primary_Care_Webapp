@@ -95,6 +95,7 @@ BRAND_PAGE_CSS = """
     .section-title { padding: 20px 50px 5px; color: #1A3E6E; font-size: 18px; font-weight: 700; }
     .stButton > button, .stDownloadButton > button { background: #FFFFFF !important; border: 1px solid rgba(26, 62, 110, 0.15) !important; border-radius: 10px !important; color: #1A3E6E !important; font-weight: 600 !important; padding: 8px 20px !important; }
     .stButton > button:hover, .stDownloadButton > button:hover { background: #F0F4F8 !important; box-shadow: 0 4px 12px rgba(26, 62, 110, 0.1) !important; }
+    .chart-container { background: #FFFFFF; border-radius: 14px; padding: 20px 24px 10px; margin: 10px 0 20px; box-shadow: 0 2px 12px rgba(26, 62, 110, 0.06); border: 1px solid rgba(26, 62, 110, 0.08); }
 </style>
 """
 
@@ -216,11 +217,13 @@ def render_trend_chart(pivoted_df, title, brands_order=None):
         title_text=""
     )
     # Use theme=None to prevent Streamlit from overriding Plotly colors
+    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
     try:
         st.plotly_chart(fig, use_container_width=True, theme=None)
     except TypeError:
         # Older Streamlit versions don't support theme parameter
         st.plotly_chart(fig, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # =====================================================
@@ -273,13 +276,15 @@ def render_brand_page(brand_key_page):
     if pd.notna(trx_diff_val):
         sign = "+" if trx_diff_val >= 0 else ""
         color = "#2EAF7D" if trx_diff_val >= 0 else "#E85D4A"
-        trx_diff_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">({sign}{trx_diff_val:.2f}pp vs STLY)</span>'
+        arrow = "&#9650;" if trx_diff_val >= 0 else "&#9660;"
+        trx_diff_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">{arrow} {sign}{trx_diff_val:.2f}pp vs STLY</span>'
 
     nbrx_diff_html = ""
     if pd.notna(nbrx_diff_val):
         sign = "+" if nbrx_diff_val >= 0 else ""
         color = "#2EAF7D" if nbrx_diff_val >= 0 else "#E85D4A"
-        nbrx_diff_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">({sign}{nbrx_diff_val:.2f}pp vs STLY)</span>'
+        arrow = "&#9650;" if nbrx_diff_val >= 0 else "&#9660;"
+        nbrx_diff_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">{arrow} {sign}{nbrx_diff_val:.2f}pp vs STLY</span>'
 
     st.markdown(f"""
     <div class="kpi-container">
@@ -324,25 +329,11 @@ def render_brand_page(brand_key_page):
                 abrysvo_ship_ms = shipment_ms.loc[latest_ship_qtr, ddd_brand] if ddd_brand in shipment_ms.columns else None
                 ship_str = f"{abrysvo_ship_ms:.2f}%" if pd.notna(abrysvo_ship_ms) else "N/A"
 
-                # Show previous quarter diff
-                if len(shipment_ms.index) > 1 and ddd_brand in shipment_ms.columns:
-                    prev_ship_qtr = shipment_ms.index[-2]
-                    prev_ship_ms = shipment_ms.loc[prev_ship_qtr, ddd_brand]
-                    ship_diff = abrysvo_ship_ms - prev_ship_ms if pd.notna(prev_ship_ms) and pd.notna(abrysvo_ship_ms) else None
-                else:
-                    ship_diff = None
-
-                ship_diff_html = ""
-                if ship_diff is not None and pd.notna(ship_diff):
-                    sign = "+" if ship_diff >= 0 else ""
-                    color = "#2EAF7D" if ship_diff >= 0 else "#E85D4A"
-                    ship_diff_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">({sign}{ship_diff:.2f}pp vs prev qtr)</span>'
-
                 st.markdown(f"""
                 <div class="kpi-container">
                     <div class="kpi-card">
                         <div class="kpi-label">{config["display_name"]} Shipment Market Share <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>
-                        <div class="kpi-value">{ship_str} {ship_diff_html}</div>
+                        <div class="kpi-value">{ship_str}</div>
                         <div class="kpi-period">Latest: {latest_ship_qtr}</div>
                     </div>
                 </div>
