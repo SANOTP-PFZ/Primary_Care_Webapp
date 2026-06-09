@@ -95,7 +95,6 @@ BRAND_PAGE_CSS = """
     .section-title { padding: 20px 50px 5px; color: #1A3E6E; font-size: 18px; font-weight: 700; }
     .stButton > button, .stDownloadButton > button { background: #FFFFFF !important; border: 1px solid rgba(26, 62, 110, 0.15) !important; border-radius: 10px !important; color: #1A3E6E !important; font-weight: 600 !important; padding: 8px 20px !important; }
     .stButton > button:hover, .stDownloadButton > button:hover { background: #F0F4F8 !important; box-shadow: 0 4px 12px rgba(26, 62, 110, 0.1) !important; }
-    .chart-container { background: #FFFFFF; border-radius: 14px; padding: 20px 24px 10px; margin: 10px 0 20px; box-shadow: 0 2px 12px rgba(26, 62, 110, 0.06); border: 1px solid rgba(26, 62, 110, 0.08); }
 </style>
 """
 
@@ -141,6 +140,21 @@ def render_ribbon(title):
 
 def render_back_button():
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+    st.markdown("""
+    <style>
+        div[data-testid="stButton"]:first-of-type button {
+            min-height: auto !important;
+            padding: 8px 20px !important;
+            font-size: 14px !important;
+            border-radius: 10px !important;
+            transition: none !important;
+            transform: none !important;
+        }
+        div[data-testid="stButton"]:first-of-type button:hover {
+            transform: none !important;
+        }
+    </style>
+    """, unsafe_allow_html=True)
     if st.button("\u2190 Back to Home"):
         st.session_state["current_page"] = "home"
         st.rerun()
@@ -217,13 +231,11 @@ def render_trend_chart(pivoted_df, title, brands_order=None):
         title_text=""
     )
     # Use theme=None to prevent Streamlit from overriding Plotly colors
-    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
     try:
         st.plotly_chart(fig, use_container_width=True, theme=None)
     except TypeError:
         # Older Streamlit versions don't support theme parameter
         st.plotly_chart(fig, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # =====================================================
