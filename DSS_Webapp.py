@@ -948,8 +948,10 @@ def render_brand_page(brand_key_page):
             elements.append(Paragraph(f"{display_name} \u2014 {config['market_display']} Market Report", title_style))
             elements.append(Spacer(1, 10))
             elements.append(Paragraph(f"<b>Latest Quarter:</b> {latest_qtr}", kpi_style))
-            elements.append(Paragraph(f"<b>{display_name} TRX Market Share (NPA):</b> {trx_str}", kpi_style))
-            elements.append(Paragraph(f"<b>{display_name} NBRX Market Share (NPA):</b> {nbrx_str}", kpi_style))
+            trx_diff_str = f" ({'+' if trx_diff_val >= 0 else ''}{trx_diff_val:.2f}pp vs STLY)" if pd.notna(trx_diff_val) else ""
+            nbrx_diff_str = f" ({'+' if nbrx_diff_val >= 0 else ''}{nbrx_diff_val:.2f}pp vs STLY)" if pd.notna(nbrx_diff_val) else ""
+            elements.append(Paragraph(f"<b>{display_name} TRX Market Share (NPA):</b> {trx_str}{trx_diff_str}", kpi_style))
+            elements.append(Paragraph(f"<b>{display_name} NBRX Market Share (NPA):</b> {nbrx_str}{nbrx_diff_str}", kpi_style))
             elements.append(Spacer(1, 10))
 
             # --- TRX Chart & Table ---
