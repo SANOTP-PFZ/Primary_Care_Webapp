@@ -970,7 +970,7 @@ def render_brand_page(brand_key_page):
                         fig_contrib.add_trace(go.Scatter(
                             x=non_retail_contrib.index.tolist(), y=non_retail_contrib["ABRYSVO"].tolist(),
                             mode="lines+markers", name="Non-Retail Contribution",
-                            line=dict(color="#00AEEF", width=3), marker=dict(size=7),
+                            line=dict(color="#F8971D", width=3), marker=dict(size=7),
                             hovertemplate="<b>Non-Retail Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
                         ))
 
@@ -1168,7 +1168,7 @@ def render_brand_page(brand_key_page):
                         fig_contrib.add_trace(go.Scatter(
                             x=non_retail_contrib.index.tolist(), y=non_retail_contrib["PREVNAR"].tolist(),
                             mode="lines+markers", name="Non-Retail Contribution",
-                            line=dict(color="#00AEEF", width=3), marker=dict(size=7),
+                            line=dict(color="#F8971D", width=3), marker=dict(size=7),
                             hovertemplate="<b>Non-Retail Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
                         ))
 
@@ -1285,7 +1285,7 @@ def render_brand_page(brand_key_page):
                         fig_contrib.add_trace(go.Scatter(
                             x=non_retail_contrib.index.tolist(), y=non_retail_contrib["COMIRNATY"].tolist(),
                             mode="lines+markers", name="Non-Retail Contribution",
-                            line=dict(color="#00AEEF", width=3), marker=dict(size=7),
+                            line=dict(color="#F8971D", width=3), marker=dict(size=7),
                             hovertemplate="<b>Non-Retail Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
                         ))
 
