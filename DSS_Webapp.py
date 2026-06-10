@@ -32,6 +32,7 @@ BRAND_CONFIG = {
     "comirnaty": {"display_name": "Comirnaty", "brand_key": "COMIRNATY", "market": "COVID_VACCINES", "market_display": "COVID Vaccines", "source": "NPA", "ddd_market": "COVID", "ddd_brand": "COMIRNATY"},
     "abrysvo": {"display_name": "Abrysvo", "brand_key": "ABRYSVO", "market": "RSV", "market_display": "RSV", "source": "NPA", "ddd_market": "RSV", "ddd_brand": "ABRYSVO"},
     "paxlovid": {"display_name": "Paxlovid", "brand_key": "PAXLOVID", "market": "COVID_ORAL", "market_display": "COVID Oral Treatment", "source": "NPA"},
+    "zavzpret": {"display_name": "Zavzpret", "brand_key": "ZAVZPRET", "market": "ZAVZPRET", "market_display": "Zavzpret", "source": "NPA"},
 }
 
 # =====================================================
@@ -255,6 +256,144 @@ def render_brand_page(brand_key_page):
 
     # Load data
     df = load_data()
+
+    # --- ZAVZPRET: Special handler (claims only, no market share) ---
+    if brand_key_page == "zavzpret":
+        trx_data = get_npa_trx_data(df, market)
+        nbrx_data = get_npa_nbrx_data(df, market)
+
+        if trx_data.empty and nbrx_data.empty:
+            st.warning(f"No data available for {display_name}. Check the dataset.")
+            return
+
+        # Pivot claims and growth
+        trx_claims = pivot_market_share(trx_data, "TRX CLAIMS")
+        nbrx_claims = pivot_market_share(nbrx_data, "NBRX CLAIMS")
+        trx_growth = pivot_market_share(trx_data, "TRX CLAIMS GROWTH PCT")
+        nbrx_growth = pivot_market_share(nbrx_data, "NBRX CLAIMS GROWTH PCT")
+
+        # Latest quarter values
+        latest_qtr = trx_claims.index[-1] if not trx_claims.empty else (nbrx_claims.index[-1] if not nbrx_claims.empty else "N/A")
+
+        trx_claims_val = trx_claims.loc[latest_qtr, brand_name] if (not trx_claims.empty and brand_name in trx_claims.columns) else None
+        nbrx_claims_val = nbrx_claims.loc[latest_qtr, brand_name] if (not nbrx_claims.empty and brand_name in nbrx_claims.columns) else None
+        trx_growth_val = trx_growth.loc[latest_qtr, brand_name] if (not trx_growth.empty and brand_name in trx_growth.columns) else None
+        nbrx_growth_val = nbrx_growth.loc[latest_qtr, brand_name] if (not nbrx_growth.empty and brand_name in nbrx_growth.columns) else None
+
+        # Format values
+        trx_claims_str = f"{trx_claims_val:,.0f}" if pd.notna(trx_claims_val) else "N/A"
+        nbrx_claims_str = f"{nbrx_claims_val:,.0f}" if pd.notna(nbrx_claims_val) else "N/A"
+
+        trx_growth_html = ""
+        if pd.notna(trx_growth_val):
+            sign = "+" if trx_growth_val >= 0 else ""
+            color = "#2EAF7D" if trx_growth_val >= 0 else "#E85D4A"
+            arrow = "&#9650;" if trx_growth_val >= 0 else "&#9660;"
+            trx_growth_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">{arrow} {sign}{trx_growth_val:.2f}% vs STLY</span>'
+
+        nbrx_growth_html = ""
+        if pd.notna(nbrx_growth_val):
+            sign = "+" if nbrx_growth_val >= 0 else ""
+            color = "#2EAF7D" if nbrx_growth_val >= 0 else "#E85D4A"
+            arrow = "&#9650;" if nbrx_growth_val >= 0 else "&#9660;"
+            nbrx_growth_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">{arrow} {sign}{nbrx_growth_val:.2f}% vs STLY</span>'
+
+        # KPI Cards
+        st.markdown(f"""
+        <div class="kpi-container">
+            <div class="kpi-card">
+                <div class="kpi-label">{display_name} TRX Claims <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(NPA)</span></div>
+                <div class="kpi-value">{trx_claims_str} {trx_growth_html}</div>
+                <div class="kpi-period">Latest: {latest_qtr}</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">{display_name} NBRX Claims <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(NPA)</span></div>
+                <div class="kpi-value">{nbrx_claims_str} {nbrx_growth_html}</div>
+                <div class="kpi-period">Latest: {latest_qtr}</div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # TRX Claims Trend
+        if not trx_claims.empty:
+            st.markdown(f'<div class="section-title">TRX Claims Trend <span style="font-size:13px; color:#5BABDE; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
+            render_trend_chart(trx_claims, "TRX Claims", [brand_name])
+
+        # NBRX Claims Trend
+        if not nbrx_claims.empty:
+            st.markdown(f'<div class="section-title">NBRX Claims Trend <span style="font-size:13px; color:#5BABDE; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
+            render_trend_chart(nbrx_claims, "NBRX Claims", [brand_name])
+
+        # Raw Data Tables
+        st.markdown('<div class="section-title">Raw Data Tables</div>', unsafe_allow_html=True)
+
+        def render_styled_table_zavz(df_to_render, title):
+            if df_to_render.empty:
+                return
+            with st.expander(title, expanded=False):
+                html = '<table style="width:100%; border-collapse:collapse; font-family:Inter,sans-serif; margin:10px 0;">'
+                html += '<thead><tr>'
+                for col in df_to_render.columns:
+                    html += f'<th style="background:#1A3E6E; color:#FFFFFF; padding:10px 14px; text-align:right; font-size:12px; font-weight:600;">{col}</th>'
+                html += '</tr></thead><tbody>'
+                for idx, row in df_to_render.iterrows():
+                    bg = "#F8FAFD" if idx % 2 == 0 else "#FFFFFF"
+                    html += f'<tr style="background:{bg};">'
+                    for j, val in enumerate(row):
+                        align = "left" if j == 0 else "right"
+                        font_weight = "600" if j == 0 else "400"
+                        html += f'<td style="padding:9px 14px; text-align:{align}; font-size:12px; color:#2C3E50; font-weight:{font_weight}; border-bottom:1px solid #EEF2F7;">{val}</td>'
+                    html += '</tr>'
+                html += '</tbody></table>'
+                st.markdown(html, unsafe_allow_html=True)
+
+        if not trx_claims.empty:
+            display_df = trx_claims.reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
+            for col in display_df.columns[1:]:
+                display_df[col] = display_df[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            render_styled_table_zavz(display_df, "TRX Claims")
+
+        if not nbrx_claims.empty:
+            display_df = nbrx_claims.reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
+            for col in display_df.columns[1:]:
+                display_df[col] = display_df[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            render_styled_table_zavz(display_df, "NBRX Claims")
+
+        if not trx_growth.empty:
+            display_df = trx_growth.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
+            for col in display_df.columns[1:]:
+                display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table_zavz(display_df, "TRX Claims Growth (% vs STLY)")
+
+        if not nbrx_growth.empty:
+            display_df = nbrx_growth.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
+            for col in display_df.columns[1:]:
+                display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table_zavz(display_df, "NBRX Claims Growth (% vs STLY)")
+
+        # Downloads
+        st.markdown('<div class="section-title">Download Reports</div>', unsafe_allow_html=True)
+
+        def generate_excel_zavz():
+            output = BytesIO()
+            with pd.ExcelWriter(output, engine="openpyxl") as writer:
+                if not trx_claims.empty:
+                    trx_claims.to_excel(writer, sheet_name="TRX Claims")
+                if not nbrx_claims.empty:
+                    nbrx_claims.to_excel(writer, sheet_name="NBRX Claims")
+                if not trx_growth.empty:
+                    trx_growth.round(2).to_excel(writer, sheet_name="TRX Growth vs STLY")
+                if not nbrx_growth.empty:
+                    nbrx_growth.round(2).to_excel(writer, sheet_name="NBRX Growth vs STLY")
+            return output.getvalue()
+
+        st.download_button(
+            label="\U0001f4e5 Download Excel",
+            data=generate_excel_zavz(),
+            file_name="zavzpret_report.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+        return  # End Zavzpret rendering here
 
     # Get TRX and NBRX data for this market
     trx_data = get_npa_trx_data(df, market)
@@ -1151,6 +1290,7 @@ def render_home():
         {"name": "Comirnaty", "key": "comirnaty"},
         {"name": "Abrysvo", "key": "abrysvo"},
         {"name": "Paxlovid", "key": "paxlovid"},
+        {"name": "Zavzpret", "key": "zavzpret"},
     ]
 
     for row_start in range(0, len(brands), 3):
