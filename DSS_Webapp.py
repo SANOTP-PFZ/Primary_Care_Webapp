@@ -1651,6 +1651,7 @@ def render_home():
                 <tbody>
                     <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">NPA</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Till {max_date}</td></tr>
                     <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">DDD</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Till {max_date}</td></tr>
+                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">ELAAD</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Till {max_date}</td></tr>
                     <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50; font-weight: 600;">Refreshed On</td><td style="padding: 12px 16px; font-size: 14px; color: #1A3E6E; font-weight: 600;">{refresh_ts}</td></tr>
                 </tbody>
             </table>
