@@ -161,7 +161,7 @@ def render_back_button():
         st.rerun()
 
 
-def render_trend_chart(pivoted_df, title, brands_order=None):
+def render_trend_chart(pivoted_df, title, brands_order=None, is_percentage=True):
     """Render a Plotly line chart from a pivoted DataFrame (quarters x brands)."""
     if pivoted_df.empty:
         st.info(f"No data available for: {title}")
@@ -224,12 +224,13 @@ def render_trend_chart(pivoted_df, title, brands_order=None):
     fig.update_yaxes(
         showgrid=True,
         gridcolor="#E0E0E0",
-        ticksuffix="%",
+        ticksuffix="%" if is_percentage else "",
         tickfont=dict(size=12, color="#000000"),
         linecolor="#333333",
         tickcolor="#333333",
         ticks="outside",
-        title_text=""
+        title_text="",
+        separatethousands=True
     )
     # Use theme=None to prevent Streamlit from overriding Plotly colors
     try:
@@ -317,12 +318,12 @@ def render_brand_page(brand_key_page):
         # TRX Claims Trend
         if not trx_claims.empty:
             st.markdown(f'<div class="section-title">TRX Claims Trend <span style="font-size:13px; color:#5BABDE; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
-            render_trend_chart(trx_claims, "TRX Claims", [brand_name])
+            render_trend_chart(trx_claims, "TRX Claims", [brand_name], is_percentage=False)
 
         # NBRX Claims Trend
         if not nbrx_claims.empty:
             st.markdown(f'<div class="section-title">NBRX Claims Trend <span style="font-size:13px; color:#5BABDE; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
-            render_trend_chart(nbrx_claims, "NBRX Claims", [brand_name])
+            render_trend_chart(nbrx_claims, "NBRX Claims", [brand_name], is_percentage=False)
 
         # Raw Data Tables
         st.markdown('<div class="section-title">Raw Data Tables</div>', unsafe_allow_html=True)
@@ -387,12 +388,144 @@ def render_brand_page(brand_key_page):
                     nbrx_growth.round(2).to_excel(writer, sheet_name="NBRX Growth vs STLY")
             return output.getvalue()
 
-        st.download_button(
-            label="\U0001f4e5 Download Excel",
-            data=generate_excel_zavz(),
-            file_name="zavzpret_report.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        )
+        def generate_pdf_zavz():
+            try:
+                from reportlab.lib.pagesizes import letter, landscape
+                from reportlab.lib.units import inch
+                from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image, PageBreak
+                from reportlab.lib import colors
+                from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+
+                output = BytesIO()
+                doc = SimpleDocTemplate(output, pagesize=landscape(letter), leftMargin=40, rightMargin=40, topMargin=30, bottomMargin=30)
+                elements = []
+                styles = getSampleStyleSheet()
+
+                title_style = ParagraphStyle("CustomTitle", parent=styles["Title"], fontSize=20, textColor=colors.HexColor("#1A3E6E"), spaceAfter=6)
+                heading_style = ParagraphStyle("CustomHeading", parent=styles["Heading2"], fontSize=14, textColor=colors.HexColor("#1A3E6E"), spaceBefore=16, spaceAfter=8)
+                kpi_style = ParagraphStyle("KPI", parent=styles["Normal"], fontSize=12, textColor=colors.HexColor("#1A3E6E"), spaceAfter=4)
+
+                table_style = TableStyle([
+                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1A3E6E")),
+                    ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                    ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                    ("FONTSIZE", (0, 0), (-1, 0), 9),
+                    ("BOTTOMPADDING", (0, 0), (-1, 0), 8),
+                    ("TOPPADDING", (0, 0), (-1, 0), 8),
+                    ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#D0D8E0")),
+                    ("FONTSIZE", (0, 1), (-1, -1), 8),
+                    ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F0F4F8")]),
+                    ("ALIGN", (1, 0), (-1, -1), "RIGHT"),
+                    ("TOPPADDING", (0, 1), (-1, -1), 5),
+                    ("BOTTOMPADDING", (0, 1), (-1, -1), 5),
+                ])
+
+                # Title & KPIs
+                elements.append(Paragraph(f"{display_name} \u2014 Claims Report", title_style))
+                elements.append(Spacer(1, 10))
+                elements.append(Paragraph(f"<b>Latest Quarter:</b> {latest_qtr}", kpi_style))
+                trx_g_str = f" ({'+' if trx_growth_val >= 0 else ''}{trx_growth_val:.2f}% vs STLY)" if pd.notna(trx_growth_val) else ""
+                nbrx_g_str = f" ({'+' if nbrx_growth_val >= 0 else ''}{nbrx_growth_val:.2f}% vs STLY)" if pd.notna(nbrx_growth_val) else ""
+                elements.append(Paragraph(f"<b>{display_name} TRX Claims (NPA):</b> {trx_claims_str}{trx_g_str}", kpi_style))
+                elements.append(Paragraph(f"<b>{display_name} NBRX Claims (NPA):</b> {nbrx_claims_str}{nbrx_g_str}", kpi_style))
+                elements.append(Spacer(1, 10))
+
+                # TRX Claims Chart
+                if not trx_claims.empty:
+                    fig_trx = go.Figure()
+                    fig_trx.add_trace(go.Scatter(x=trx_claims.index.tolist(), y=trx_claims[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in trx_claims[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#1A3E6E", width=3), marker=dict(size=7)))
+                    fig_trx.update_layout(title=dict(text="TRX Claims Trend (NPA)", font=dict(size=13, color="#1A3E6E")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
+                    fig_trx.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
+                    fig_trx.update_yaxes(tickfont=dict(size=9, color="#000000"), separatethousands=True)
+                    trx_img = BytesIO(fig_trx.to_image(format="png", scale=2))
+                    elements.append(Image(trx_img, width=7.5*inch, height=2.8*inch))
+                    elements.append(Spacer(1, 10))
+
+                # NBRX Claims Chart
+                if not nbrx_claims.empty:
+                    fig_nbrx = go.Figure()
+                    fig_nbrx.add_trace(go.Scatter(x=nbrx_claims.index.tolist(), y=nbrx_claims[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in nbrx_claims[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#1A3E6E", width=3), marker=dict(size=7)))
+                    fig_nbrx.update_layout(title=dict(text="NBRX Claims Trend (NPA)", font=dict(size=13, color="#1A3E6E")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
+                    fig_nbrx.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
+                    fig_nbrx.update_yaxes(tickfont=dict(size=9, color="#000000"), separatethousands=True)
+                    nbrx_img = BytesIO(fig_nbrx.to_image(format="png", scale=2))
+                    elements.append(Image(nbrx_img, width=7.5*inch, height=2.8*inch))
+                    elements.append(Spacer(1, 10))
+
+                # TRX Claims Table
+                if not trx_claims.empty:
+                    elements.append(Paragraph("TRX Claims", heading_style))
+                    header = ["Quarter"] + list(trx_claims.columns)
+                    table_data = [header]
+                    for qtr in trx_claims.index:
+                        row = [qtr] + [f"{v:,.0f}" if pd.notna(v) else "-" for v in trx_claims.loc[qtr]]
+                        table_data.append(row)
+                    t = Table(table_data, colWidths=[1.5*inch] + [2*inch] * len(trx_claims.columns))
+                    t.setStyle(table_style)
+                    elements.append(t)
+                    elements.append(Spacer(1, 10))
+
+                # NBRX Claims Table
+                if not nbrx_claims.empty:
+                    elements.append(Paragraph("NBRX Claims", heading_style))
+                    header = ["Quarter"] + list(nbrx_claims.columns)
+                    table_data = [header]
+                    for qtr in nbrx_claims.index:
+                        row = [qtr] + [f"{v:,.0f}" if pd.notna(v) else "-" for v in nbrx_claims.loc[qtr]]
+                        table_data.append(row)
+                    t = Table(table_data, colWidths=[1.5*inch] + [2*inch] * len(nbrx_claims.columns))
+                    t.setStyle(table_style)
+                    elements.append(t)
+                    elements.append(Spacer(1, 10))
+
+                # Growth Tables
+                if not trx_growth.empty:
+                    elements.append(Paragraph("TRX Claims Growth (% vs STLY)", heading_style))
+                    header = ["Quarter"] + list(trx_growth.columns)
+                    table_data = [header]
+                    for qtr in trx_growth.index:
+                        row = [qtr] + [f"{v:+.2f}%" if pd.notna(v) else "-" for v in trx_growth.loc[qtr]]
+                        table_data.append(row)
+                    t = Table(table_data, colWidths=[1.5*inch] + [2*inch] * len(trx_growth.columns))
+                    t.setStyle(table_style)
+                    elements.append(t)
+                    elements.append(Spacer(1, 10))
+
+                if not nbrx_growth.empty:
+                    elements.append(Paragraph("NBRX Claims Growth (% vs STLY)", heading_style))
+                    header = ["Quarter"] + list(nbrx_growth.columns)
+                    table_data = [header]
+                    for qtr in nbrx_growth.index:
+                        row = [qtr] + [f"{v:+.2f}%" if pd.notna(v) else "-" for v in nbrx_growth.loc[qtr]]
+                        table_data.append(row)
+                    t = Table(table_data, colWidths=[1.5*inch] + [2*inch] * len(nbrx_growth.columns))
+                    t.setStyle(table_style)
+                    elements.append(t)
+
+                doc.build(elements)
+                return output.getvalue()
+            except Exception:
+                return None
+
+        col1, col2, col3 = st.columns([1, 1, 3])
+        with col1:
+            st.download_button(
+                label="\U0001f4e5 Download Excel",
+                data=generate_excel_zavz(),
+                file_name="zavzpret_report.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
+        with col2:
+            pdf_data = generate_pdf_zavz()
+            if pdf_data:
+                st.download_button(
+                    label="\U0001f4c4 Download PDF",
+                    data=pdf_data,
+                    file_name="zavzpret_report.pdf",
+                    mime="application/pdf"
+                )
+            else:
+                st.info("PDF export requires `reportlab` and `kaleido` packages.")
         return  # End Zavzpret rendering here
 
     # Get TRX and NBRX data for this market
