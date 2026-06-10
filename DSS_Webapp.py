@@ -33,6 +33,7 @@ BRAND_CONFIG = {
     "abrysvo": {"display_name": "Abrysvo", "brand_key": "ABRYSVO", "market": "RSV", "market_display": "RSV", "source": "NPA", "ddd_market": "RSV", "ddd_brand": "ABRYSVO"},
     "paxlovid": {"display_name": "Paxlovid", "brand_key": "PAXLOVID", "market": "COVID_ORAL", "market_display": "COVID Oral Treatment", "source": "NPA"},
     "zavzpret": {"display_name": "Zavzpret", "brand_key": "ZAVZPRET", "market": "ZAVZPRET", "market_display": "Zavzpret", "source": "NPA"},
+    "beyfortus": {"display_name": "Beyfortus", "brand_key": "BEYFORTUS", "market": "BEYFORTUS", "market_display": "Beyfortus", "source": "ELAAD"},
 }
 
 # =====================================================
@@ -527,6 +528,250 @@ def render_brand_page(brand_key_page):
             else:
                 st.info("PDF export requires `reportlab` and `kaleido` packages.")
         return  # End Zavzpret rendering here
+
+    # --- BEYFORTUS: Special handler (claims + patients, no market share) ---
+    if brand_key_page == "beyfortus":
+        elaad_data = df[(df["DATASET"] == "ELAAD") & (df["MARKET"] == "BEYFORTUS")]
+
+        if elaad_data.empty:
+            st.warning(f"No data available for {display_name}. Check the dataset.")
+            return
+
+        # Pivot claims, patients, and growth
+        claims = pivot_market_share(elaad_data, "CLAIMS")
+        patients = pivot_market_share(elaad_data, "PATIENTS")
+        claims_growth = pivot_market_share(elaad_data, "CLAIMS GROWTH PCT STLY")
+        patients_growth = pivot_market_share(elaad_data, "PATIENTS GROWTH PCT STLY")
+
+        # Latest quarter values
+        latest_qtr = claims.index[-1] if not claims.empty else (patients.index[-1] if not patients.empty else "N/A")
+
+        claims_val = claims.loc[latest_qtr, brand_name] if (not claims.empty and brand_name in claims.columns) else None
+        patients_val = patients.loc[latest_qtr, brand_name] if (not patients.empty and brand_name in patients.columns) else None
+        claims_growth_val = claims_growth.loc[latest_qtr, brand_name] if (not claims_growth.empty and brand_name in claims_growth.columns) else None
+        patients_growth_val = patients_growth.loc[latest_qtr, brand_name] if (not patients_growth.empty and brand_name in patients_growth.columns) else None
+
+        # Format values
+        claims_str = f"{claims_val:,.0f}" if pd.notna(claims_val) else "N/A"
+        patients_str = f"{patients_val:,.0f}" if pd.notna(patients_val) else "N/A"
+
+        claims_growth_html = ""
+        if pd.notna(claims_growth_val):
+            sign = "+" if claims_growth_val >= 0 else ""
+            color = "#2EAF7D" if claims_growth_val >= 0 else "#E85D4A"
+            arrow = "&#9650;" if claims_growth_val >= 0 else "&#9660;"
+            claims_growth_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">{arrow} {sign}{claims_growth_val:.2f}% vs STLY</span>'
+
+        patients_growth_html = ""
+        if pd.notna(patients_growth_val):
+            sign = "+" if patients_growth_val >= 0 else ""
+            color = "#2EAF7D" if patients_growth_val >= 0 else "#E85D4A"
+            arrow = "&#9650;" if patients_growth_val >= 0 else "&#9660;"
+            patients_growth_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">{arrow} {sign}{patients_growth_val:.2f}% vs STLY</span>'
+
+        # KPI Cards
+        st.markdown(f"""
+        <div class="kpi-container">
+            <div class="kpi-card">
+                <div class="kpi-label">{display_name} Claims <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(ELAAD)</span></div>
+                <div class="kpi-value">{claims_str} {claims_growth_html}</div>
+                <div class="kpi-period">Latest: {latest_qtr}</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">{display_name} Patients <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(ELAAD)</span></div>
+                <div class="kpi-value">{patients_str} {patients_growth_html}</div>
+                <div class="kpi-period">Latest: {latest_qtr}</div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # Claims Trend
+        if not claims.empty:
+            st.markdown(f'<div class="section-title">Claims Trend <span style="font-size:13px; color:#5BABDE; font-weight:500;">(ELAAD)</span></div>', unsafe_allow_html=True)
+            render_trend_chart(claims, "Claims", [brand_name], is_percentage=False)
+
+        # Patients Trend
+        if not patients.empty:
+            st.markdown(f'<div class="section-title">Patients Trend <span style="font-size:13px; color:#5BABDE; font-weight:500;">(ELAAD)</span></div>', unsafe_allow_html=True)
+            render_trend_chart(patients, "Patients", [brand_name], is_percentage=False)
+
+        # Raw Data Tables
+        st.markdown('<div class="section-title">Raw Data Tables</div>', unsafe_allow_html=True)
+
+        def render_styled_table_bey(df_to_render, title):
+            if df_to_render.empty:
+                return
+            with st.expander(title, expanded=False):
+                html = '<table style="width:100%; border-collapse:collapse; font-family:Inter,sans-serif; margin:10px 0;">'
+                html += '<thead><tr>'
+                for col in df_to_render.columns:
+                    html += f'<th style="background:#1A3E6E; color:#FFFFFF; padding:10px 14px; text-align:right; font-size:12px; font-weight:600;">{col}</th>'
+                html += '</tr></thead><tbody>'
+                for idx, row in df_to_render.iterrows():
+                    bg = "#F8FAFD" if idx % 2 == 0 else "#FFFFFF"
+                    html += f'<tr style="background:{bg};">'
+                    for j, val in enumerate(row):
+                        align = "left" if j == 0 else "right"
+                        font_weight = "600" if j == 0 else "400"
+                        html += f'<td style="padding:9px 14px; text-align:{align}; font-size:12px; color:#2C3E50; font-weight:{font_weight}; border-bottom:1px solid #EEF2F7;">{val}</td>'
+                    html += '</tr>'
+                html += '</tbody></table>'
+                st.markdown(html, unsafe_allow_html=True)
+
+        if not claims.empty:
+            display_df = claims.reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
+            for col in display_df.columns[1:]:
+                display_df[col] = display_df[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            render_styled_table_bey(display_df, "Claims")
+
+        if not patients.empty:
+            display_df = patients.reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
+            for col in display_df.columns[1:]:
+                display_df[col] = display_df[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            render_styled_table_bey(display_df, "Patients")
+
+        if not claims_growth.empty:
+            display_df = claims_growth.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
+            for col in display_df.columns[1:]:
+                display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table_bey(display_df, "Claims Growth (% vs STLY)")
+
+        if not patients_growth.empty:
+            display_df = patients_growth.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
+            for col in display_df.columns[1:]:
+                display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table_bey(display_df, "Patients Growth (% vs STLY)")
+
+        # Downloads
+        st.markdown('<div class="section-title">Download Reports</div>', unsafe_allow_html=True)
+
+        def generate_excel_bey():
+            output = BytesIO()
+            with pd.ExcelWriter(output, engine="openpyxl") as writer:
+                if not claims.empty:
+                    claims.to_excel(writer, sheet_name="Claims")
+                if not patients.empty:
+                    patients.to_excel(writer, sheet_name="Patients")
+                if not claims_growth.empty:
+                    claims_growth.round(2).to_excel(writer, sheet_name="Claims Growth vs STLY")
+                if not patients_growth.empty:
+                    patients_growth.round(2).to_excel(writer, sheet_name="Patients Growth vs STLY")
+            return output.getvalue()
+
+        def generate_pdf_bey():
+            try:
+                from reportlab.lib.pagesizes import letter, landscape
+                from reportlab.lib.units import inch
+                from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
+                from reportlab.lib import colors
+                from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+
+                output = BytesIO()
+                doc = SimpleDocTemplate(output, pagesize=landscape(letter), leftMargin=40, rightMargin=40, topMargin=30, bottomMargin=30)
+                elements = []
+                styles = getSampleStyleSheet()
+
+                title_style = ParagraphStyle("CustomTitle", parent=styles["Title"], fontSize=20, textColor=colors.HexColor("#1A3E6E"), spaceAfter=6)
+                heading_style = ParagraphStyle("CustomHeading", parent=styles["Heading2"], fontSize=14, textColor=colors.HexColor("#1A3E6E"), spaceBefore=16, spaceAfter=8)
+                kpi_style = ParagraphStyle("KPI", parent=styles["Normal"], fontSize=12, textColor=colors.HexColor("#1A3E6E"), spaceAfter=4)
+
+                table_style = TableStyle([
+                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1A3E6E")),
+                    ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                    ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                    ("FONTSIZE", (0, 0), (-1, 0), 9),
+                    ("BOTTOMPADDING", (0, 0), (-1, 0), 8),
+                    ("TOPPADDING", (0, 0), (-1, 0), 8),
+                    ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#D0D8E0")),
+                    ("FONTSIZE", (0, 1), (-1, -1), 8),
+                    ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F0F4F8")]),
+                    ("ALIGN", (1, 0), (-1, -1), "RIGHT"),
+                    ("TOPPADDING", (0, 1), (-1, -1), 5),
+                    ("BOTTOMPADDING", (0, 1), (-1, -1), 5),
+                ])
+
+                # Title & KPIs
+                elements.append(Paragraph(f"{display_name} \u2014 Claims & Patients Report", title_style))
+                elements.append(Spacer(1, 10))
+                elements.append(Paragraph(f"<b>Latest Quarter:</b> {latest_qtr}", kpi_style))
+                c_g_str = f" ({'+' if claims_growth_val >= 0 else ''}{claims_growth_val:.2f}% vs STLY)" if pd.notna(claims_growth_val) else ""
+                p_g_str = f" ({'+' if patients_growth_val >= 0 else ''}{patients_growth_val:.2f}% vs STLY)" if pd.notna(patients_growth_val) else ""
+                elements.append(Paragraph(f"<b>{display_name} Claims (ELAAD):</b> {claims_str}{c_g_str}", kpi_style))
+                elements.append(Paragraph(f"<b>{display_name} Patients (ELAAD):</b> {patients_str}{p_g_str}", kpi_style))
+                elements.append(Spacer(1, 10))
+
+                # Claims Chart
+                if not claims.empty and brand_name in claims.columns:
+                    fig_c = go.Figure()
+                    fig_c.add_trace(go.Scatter(x=claims.index.tolist(), y=claims[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in claims[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#1A3E6E", width=3), marker=dict(size=7)))
+                    fig_c.update_layout(title=dict(text="Claims Trend (ELAAD)", font=dict(size=13, color="#1A3E6E")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
+                    fig_c.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
+                    fig_c.update_yaxes(tickfont=dict(size=9, color="#000000"), separatethousands=True)
+                    c_img = BytesIO(fig_c.to_image(format="png", scale=2))
+                    elements.append(Image(c_img, width=7.5*inch, height=2.8*inch))
+                    elements.append(Spacer(1, 10))
+
+                # Patients Chart
+                if not patients.empty and brand_name in patients.columns:
+                    fig_p = go.Figure()
+                    fig_p.add_trace(go.Scatter(x=patients.index.tolist(), y=patients[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in patients[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#1A3E6E", width=3), marker=dict(size=7)))
+                    fig_p.update_layout(title=dict(text="Patients Trend (ELAAD)", font=dict(size=13, color="#1A3E6E")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
+                    fig_p.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
+                    fig_p.update_yaxes(tickfont=dict(size=9, color="#000000"), separatethousands=True)
+                    p_img = BytesIO(fig_p.to_image(format="png", scale=2))
+                    elements.append(Image(p_img, width=7.5*inch, height=2.8*inch))
+                    elements.append(Spacer(1, 10))
+
+                # Claims Table
+                if not claims.empty:
+                    elements.append(Paragraph("Claims", heading_style))
+                    header = ["Quarter"] + list(claims.columns)
+                    table_data = [header]
+                    for qtr in claims.index:
+                        row = [qtr] + [f"{v:,.0f}" if pd.notna(v) else "-" for v in claims.loc[qtr]]
+                        table_data.append(row)
+                    t = Table(table_data, colWidths=[1.5*inch] + [2*inch] * len(claims.columns))
+                    t.setStyle(table_style)
+                    elements.append(t)
+                    elements.append(Spacer(1, 10))
+
+                # Patients Table
+                if not patients.empty:
+                    elements.append(Paragraph("Patients", heading_style))
+                    header = ["Quarter"] + list(patients.columns)
+                    table_data = [header]
+                    for qtr in patients.index:
+                        row = [qtr] + [f"{v:,.0f}" if pd.notna(v) else "-" for v in patients.loc[qtr]]
+                        table_data.append(row)
+                    t = Table(table_data, colWidths=[1.5*inch] + [2*inch] * len(patients.columns))
+                    t.setStyle(table_style)
+                    elements.append(t)
+
+                doc.build(elements)
+                return output.getvalue()
+            except Exception:
+                return None
+
+        col1, col2, col3 = st.columns([1, 1, 3])
+        with col1:
+            st.download_button(
+                label="\U0001f4e5 Download Excel",
+                data=generate_excel_bey(),
+                file_name="beyfortus_report.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
+        with col2:
+            pdf_data = generate_pdf_bey()
+            if pdf_data:
+                st.download_button(
+                    label="\U0001f4c4 Download PDF",
+                    data=pdf_data,
+                    file_name="beyfortus_report.pdf",
+                    mime="application/pdf"
+                )
+            else:
+                st.info("PDF export requires `reportlab` and `kaleido` packages.")
+        return  # End Beyfortus rendering here
 
     # Get TRX and NBRX data for this market
     trx_data = get_npa_trx_data(df, market)
@@ -1424,6 +1669,7 @@ def render_home():
         {"name": "Abrysvo", "key": "abrysvo"},
         {"name": "Paxlovid", "key": "paxlovid"},
         {"name": "Zavzpret", "key": "zavzpret"},
+        {"name": "Beyfortus", "key": "beyfortus"},
     ]
 
     for row_start in range(0, len(brands), 3):
