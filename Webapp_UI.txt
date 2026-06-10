@@ -1,0 +1,143 @@
+# Visual Restyle Brief — Brand Performance Reporting App
+
+> **App:** Streamlit web app deployed on Dataiku DSS
+> **Client:** Pfizer
+> **Scope of this brief:** Aesthetics only. Apply a Pfizer-aligned, industry-standard visual skin to the **existing** app. Do not redesign it.
+
+---
+
+## 1. What this is — and what it is not
+
+This app reports performance for 6–7 brands across 2–3 markets, used by commercial/brand teams. It already works and is laid out the way the team wants it. The goal here is **purely cosmetic**: make it look sharper, calmer, and more "Pfizer," in line with how polished pharma analytics tools look — without changing what's on the screen or how it behaves.
+
+**This is a restyle, not a redesign.** Think of it as new paint, type, and spacing on the same building — not moving any walls.
+
+## 2. Hard constraints — read first
+
+Non-negotiable.
+
+- **Do not change the frontend structure.** Keep the existing layout, page/tab organization, navigation, component order, and interactions exactly as they are. No new landing pages, no card-grid navigation, no rearranged sections, no added or removed screens.
+- **Do not change behavior.** Same widgets, same filters, same flows, same click paths. You are styling what exists, not rebuilding it.
+- **Do not touch the data layer.** Do not modify any function that loads, cleans, computes, aggregates, joins, or transforms data. You may read its outputs to style how they render, nothing more.
+- **Do not change copy, labels, or field names.** Leave text as-is unless explicitly asked.
+- **Keep it deployable on Dataiku DSS.** No build steps or bundlers. Inline CSS, a Streamlit config file, and pip-installable libraries only.
+- **No new third-party calls or trackers.** Regulated-industry internal tool.
+
+Everything below changes only *how things look*, never *what they are or where they sit*.
+
+## 3. What "aesthetics" means here
+
+Limit changes to this visual layer:
+
+- **Color** — apply the Pfizer palette below to existing elements (accents, headers, KPIs, chart series, status indicators).
+- **Typography** — set the brand typeface and a clean type scale on text that already exists.
+- **Spacing & rhythm** — tighten or open padding/margins so the existing layout breathes and feels deliberate.
+- **Surfaces** — give existing cards/panels a consistent, quiet treatment (background, radius, hairline border, subtle lift).
+- **Charts** — restyle existing charts for a single consistent look (fonts, gridlines, colors). Do not change which charts exist or what they plot.
+
+If a change would alter structure, layout, navigation, behavior, or data — it's out of scope.
+
+## 4. Color system
+
+Anchor on Pfizer's brand blue with a disciplined neutral set. Accents are reserved for encoding brands and status — never decoration.
+
+> **Source note:** these hex values come from Pfizer's published brand identity palette. Confirm against the client's current internal brand guidelines before final handoff, since approved tokens can differ from public references.
+
+### Core palette
+
+| Role | Hex | Use |
+|---|---|---|
+| Pfizer Blue (primary) | `#0093D0` | Primary accents, active states, key headers, links |
+| Bright Blue (secondary) | `#00AEEF` | Hover/active highlights, secondary emphasis |
+| Ink (text) | `#1A1A1A` | Primary text (softer than pure black for reading) |
+| Slate (muted) | `#616365` | Secondary text, captions, axis labels |
+| Hairline | `#E6E9EC` | Dividers, table borders, chart gridlines |
+| Surface | `#FFFFFF` | Card/panel backgrounds |
+| Canvas | `#F5F7FA` | App background behind cards |
+
+### Brand colors (apply to existing brand series consistently)
+
+Give each brand one fixed color and use it everywhere that brand already appears — every chart series, legend, and metric. Adjust names to the real brand list; keep the principle of one fixed, distinct, accessible color per brand.
+
+| Brand slot | Color | Hex |
+|---|---|---|
+| Brand 1 | Pfizer Blue | `#0093D0` |
+| Brand 2 | Magenta | `#D6006E` |
+| Brand 3 | Green | `#00A950` |
+| Brand 4 | Orange | `#F8971D` |
+| Brand 5 | Purple | `#4A245E` |
+| Brand 6 | Coral | `#F26649` |
+| Brand 7 | Teal | `#75D1E0` |
+
+Define once as `BRAND_COLORS = {...}` and have every existing chart read from it. Don't let any plot fall back to a default color cycle.
+
+### Status colors (deltas / indicators only)
+
+| Meaning | Hex |
+|---|---|
+| Positive / growth | `#00A950` |
+| Negative / decline | `#CC292B` |
+| Neutral / flat | `#616365` |
+| Warning / attention | `#F8971D` |
+
+## 5. Typography
+
+Pfizer's brand typeface is **Noto Sans**. Apply it app-wide with a safe fallback.
+
+- **Font stack:** `"Noto Sans", "Inter", "Segoe UI", system-ui, sans-serif`
+- **Page/section titles:** 600–700 weight
+- **Body / labels:** 400–500 weight, ~14–15px
+- **KPI numbers:** 600–700 weight, large, with **tabular figures** (`font-variant-numeric: tabular-nums`) so digits align and don't jitter on update
+- **Captions / deltas:** ~12–13px in Slate `#616365`
+
+Set the base font in `.streamlit/config.toml`, reinforce in the CSS block. Don't restructure any text — just restyle it.
+
+## 6. Styling the existing elements
+
+Apply consistently to whatever is already on screen. Do not add or move elements.
+
+**Existing cards / KPI tiles.** Sit them on white Surface over the Canvas background, consistent padding, soft radius (~8px), and at most a 1px hairline border or a very subtle shadow — not both, not heavy. Make KPI numbers large with tabular figures; color deltas with the status colors and pair every up/down with an arrow or sign (never color alone).
+
+**Existing charts.** This is where consistency matters most. One shared theme for all of them: Noto Sans labels, Slate `#616365` axis text, hairline `#E6E9EC` horizontal gridlines only (drop vertical gridlines and chart junk), no chart border or background fill, series colors from `BRAND_COLORS`. Use whichever library the app already uses (Plotly or Altair) and define the theme once so no chart styles itself ad hoc. Keep every existing chart's type and data exactly as-is.
+
+**Existing tables.** Hairline row separators, right-aligned numbers with tabular figures, colored deltas, optional subtle zebra striping using Canvas `#F5F7FA`. Format numbers in the display layer only (separators, consistent decimals, %) — never by altering source data.
+
+**Existing filters / widgets.** Restyle for the theme (accent color, spacing, focus state). Do not change their labels, order, options, or behavior.
+
+## 7. Streamlit implementation — theming layer only
+
+Do this lightest-touch first, all in a separated styling layer so business logic stays untouched:
+
+1. **`.streamlit/config.toml`** — set the base theme so most of the app inherits it without DOM hacks:
+   ```toml
+   [theme]
+   primaryColor = "#0093D0"
+   backgroundColor = "#FFFFFF"
+   secondaryBackgroundColor = "#F5F7FA"
+   textColor = "#1A1A1A"
+   font = "sans serif"
+   ```
+2. **One CSS block** injected once (`st.markdown("<style>…</style>", unsafe_allow_html=True)`) for what config.toml can't reach: the Noto Sans web font import, card/surface styling, KPI tabular figures, tightened spacing. Keep it all in one place (e.g. `inject_css()` in a new `theme.py`) so selectors don't fight each other.
+3. **A `theme.py` module** holding `BRAND_COLORS`, status colors, and the shared chart template. Existing pages import from it; no business logic moves into it.
+
+Watch CSS specificity — Streamlit regenerates class names, so prefer targeting your own wrapper classes and stable structures over brittle auto-generated ones, and avoid rules that cancel each other on padding/margins.
+
+## 8. Quality floor
+
+- All brand and text colors meet WCAG AA contrast against their backgrounds.
+- Meaning is never color-only — deltas pair color with an arrow or sign.
+- No layout shift when numbers update (tabular figures help).
+- Respect reduced-motion preferences; keep motion minimal.
+
+## 9. Acceptance checklist
+
+- [ ] No frontend structure, layout, navigation, or behavior changed.
+- [ ] No data-processing function changed.
+- [ ] No labels, copy, or field names changed.
+- [ ] Pfizer blue `#0093D0` is the single primary accent; neutrals carry the rest.
+- [ ] Each brand keeps one fixed color across every chart, legend, and tile.
+- [ ] All charts share one theme (fonts, gridlines, colors) — no default color cycles.
+- [ ] KPI numbers use tabular figures; deltas use status colors + an arrow/sign.
+- [ ] Color/contrast meets AA; meaning is never color-only.
+- [ ] All styling lives in `config.toml` + one CSS block + `theme.py`, separate from logic.
+- [ ] App still deploys and runs on Dataiku DSS with no new build step.
