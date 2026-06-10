@@ -777,6 +777,14 @@ def render_brand_page(brand_key_page):
     trx_data = get_npa_trx_data(df, market)
     nbrx_data = get_npa_nbrx_data(df, market)
 
+    # Combine PREVNAR 13 into PREVNAR 20 for PCV market
+    if brand_key_page == "prevnar":
+        trx_data.loc[trx_data["BRAND"] == "PREVNAR 13", "BRAND"] = "PREVNAR 20"
+        nbrx_data.loc[nbrx_data["BRAND"] == "PREVNAR 13", "BRAND"] = "PREVNAR 20"
+        # Sum values for same quarter + metric where both exist
+        trx_data = trx_data.groupby(["YR_QTR_TXT", "DATASET", "MARKET", "BRAND", "METRICS"], as_index=False)["VALUE"].sum()
+        nbrx_data = nbrx_data.groupby(["YR_QTR_TXT", "DATASET", "MARKET", "BRAND", "METRICS"], as_index=False)["VALUE"].sum()
+
     if trx_data.empty and nbrx_data.empty:
         st.warning(f"No NPA data available for {display_name} in market '{market}'. Check the dataset.")
         return
