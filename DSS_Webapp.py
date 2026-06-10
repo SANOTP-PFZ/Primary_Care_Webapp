@@ -934,7 +934,7 @@ def render_brand_page(brand_key_page):
                     fig_pie = go.Figure(data=[go.Pie(
                         labels=["Retail", "Non-Retail"],
                         values=[abrysvo_retail_c if pd.notna(abrysvo_retail_c) else 0, abrysvo_non_retail_c if pd.notna(abrysvo_non_retail_c) else 0],
-                        marker=dict(colors=["#0093D0", "#E6E9EC"], line=dict(color="#FFFFFF", width=2)),
+                        marker=dict(colors=["#0093D0", "#F8971D"], line=dict(color="#FFFFFF", width=2)),
                         textinfo="text",
                         text=[f"Retail<br>{abrysvo_retail_c:.2f}%" if pd.notna(abrysvo_retail_c) else "Retail<br>N/A", f"Non-Retail<br>{abrysvo_non_retail_c:.2f}%" if pd.notna(abrysvo_non_retail_c) else "Non-Retail<br>N/A"],
                         textposition="outside",
@@ -1132,7 +1132,7 @@ def render_brand_page(brand_key_page):
                     fig_pie = go.Figure(data=[go.Pie(
                         labels=["Retail", "Non-Retail"],
                         values=[prevnar_retail_c if pd.notna(prevnar_retail_c) else 0, prevnar_non_retail_c if pd.notna(prevnar_non_retail_c) else 0],
-                        marker=dict(colors=["#0093D0", "#E6E9EC"], line=dict(color="#FFFFFF", width=2)),
+                        marker=dict(colors=["#0093D0", "#F8971D"], line=dict(color="#FFFFFF", width=2)),
                         textinfo="text",
                         text=[f"Retail<br>{prevnar_retail_c:.2f}%" if pd.notna(prevnar_retail_c) else "Retail<br>N/A", f"Non-Retail<br>{prevnar_non_retail_c:.2f}%" if pd.notna(prevnar_non_retail_c) else "Non-Retail<br>N/A"],
                         textposition="outside",
@@ -1249,7 +1249,7 @@ def render_brand_page(brand_key_page):
                     fig_pie = go.Figure(data=[go.Pie(
                         labels=["Retail", "Non-Retail"],
                         values=[comirnaty_retail_c if pd.notna(comirnaty_retail_c) else 0, comirnaty_non_retail_c if pd.notna(comirnaty_non_retail_c) else 0],
-                        marker=dict(colors=["#0093D0", "#E6E9EC"], line=dict(color="#FFFFFF", width=2)),
+                        marker=dict(colors=["#0093D0", "#F8971D"], line=dict(color="#FFFFFF", width=2)),
                         textinfo="text",
                         text=[f"Retail<br>{comirnaty_retail_c:.2f}%" if pd.notna(comirnaty_retail_c) else "Retail<br>N/A", f"Non-Retail<br>{comirnaty_non_retail_c:.2f}%" if pd.notna(comirnaty_non_retail_c) else "Non-Retail<br>N/A"],
                         textposition="outside",
@@ -1412,7 +1412,7 @@ def render_brand_page(brand_key_page):
                 img_buf = BytesIO(fig.to_image(format="png", scale=2))
                 return img_buf
 
-            def make_dual_line_image(data1, data2, label1, label2, chart_title, color1="#0093D0", color2="#00AEEF"):
+            def make_dual_line_image(data1, data2, label1, label2, chart_title, color1="#0093D0", color2="#F8971D"):
                 """Render a dual-line Plotly chart and return as BytesIO PNG."""
                 fig = go.Figure()
                 if data1 is not None:
