@@ -76,47 +76,47 @@ def pivot_market_share(df_subset, metric_name):
 
 BRAND_PAGE_CSS = """
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&display=swap');
     #MainMenu {visibility: hidden;}
     header {visibility: hidden;}
     footer {visibility: hidden;}
     [data-testid="stSidebar"] {display: none;}
     .block-container { padding-top: 0rem !important; max-width: 100% !important; }
-    html, body, [class*="css"] { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: #1A1A2E !important; }
-    [data-testid="stAppViewContainer"] { background: linear-gradient(180deg, #F8FAFD 0%, #EEF2F7 100%); color: #1A1A2E; }
+    html, body, [class*="css"] { font-family: 'Noto Sans', 'Inter', 'Segoe UI', system-ui, sans-serif; color: #1A1A2E !important; }
+    [data-testid="stAppViewContainer"] { background: #F5F7FA; color: #1A1A2E; }
     [data-testid="stMarkdownContainer"] p { color: #1A1A2E; }
     .stExpander { color: #1A1A2E; }
-    .top-ribbon { background: linear-gradient(135deg, #5BABDE 0%, #7EC8E3 50%, #A3D9F0 100%); padding: 34px 50px; display: flex; align-items: center; gap: 16px; margin: -1rem -1rem 0 -1rem; width: calc(100% + 2rem); box-shadow: 0 4px 16px rgba(91, 171, 222, 0.25); position: relative; overflow: hidden; }
-    .top-ribbon::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at 80% 50%, rgba(255,255,255,0.05) 0%, transparent 50%); }
+    .top-ribbon { background: #0093D0; padding: 34px 50px; display: flex; align-items: center; gap: 16px; margin: -1rem -1rem 0 -1rem; width: calc(100% + 2rem); box-shadow: 0 4px 16px rgba(0, 147, 208, 0.25); position: relative; overflow: hidden; }
+    .top-ribbon::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: none; }
     .top-ribbon .title { color: #FFFFFF; font-size: 30px; font-weight: 700; letter-spacing: 0.3px; position: relative; z-index: 1; text-shadow: 0 1px 2px rgba(0,0,0,0.15); }
     .kpi-container { display: flex; gap: 24px; padding: 30px 50px 10px; }
-    .kpi-card { background: #FFFFFF; border: 1px solid rgba(26, 62, 110, 0.08); border-radius: 14px; padding: 24px 32px; flex: 1; box-shadow: 0 2px 12px rgba(26, 62, 110, 0.06); border-top: 4px solid #1A3E6E; }
-    .kpi-card .kpi-label { color: #6B7C93; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
-    .kpi-card .kpi-value { color: #1A3E6E; font-size: 36px; font-weight: 800; }
-    .kpi-card .kpi-period { color: #9EAAB8; font-size: 12px; font-weight: 400; margin-top: 6px; }
-    .section-title { padding: 20px 50px 5px; color: #1A3E6E; font-size: 18px; font-weight: 700; }
-    .stButton > button, .stDownloadButton > button { background: #FFFFFF !important; border: 1px solid rgba(26, 62, 110, 0.15) !important; border-radius: 10px !important; color: #1A3E6E !important; font-weight: 600 !important; padding: 8px 20px !important; }
+    .kpi-card { background: #FFFFFF; border: 1px solid #E6E9EC; border-radius: 8px; padding: 24px 32px; flex: 1; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border-top: 3px solid #0093D0; }
+    .kpi-card .kpi-label { color: #616365; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+    .kpi-card .kpi-value { color: #1A1A1A; font-size: 36px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .kpi-card .kpi-period { color: #616365; font-size: 12px; font-weight: 400; margin-top: 6px; }
+    .section-title { padding: 20px 50px 5px; color: #1A1A1A; font-size: 18px; font-weight: 700; }
+    .stButton > button, .stDownloadButton > button { background: #FFFFFF !important; border: 1px solid #E6E9EC !important; border-radius: 8px !important; color: #0093D0 !important; font-weight: 600 !important; padding: 8px 20px !important; }
     .stButton > button:hover, .stDownloadButton > button:hover { background: #F0F4F8 !important; box-shadow: 0 4px 12px rgba(26, 62, 110, 0.1) !important; }
 </style>
 """
 
 HOME_PAGE_CSS = """
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&display=swap');
     #MainMenu {visibility: hidden;}
     header {visibility: hidden;}
     footer {visibility: hidden;}
     [data-testid="stSidebar"] {display: none;}
     .block-container { padding-top: 0rem !important; padding-bottom: 0rem !important; max-width: 100% !important; }
-    html, body, [class*="css"] { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: #1A1A2E !important; }
+    html, body, [class*="css"] { font-family: 'Noto Sans', 'Inter', 'Segoe UI', system-ui, sans-serif; color: #1A1A2E !important; }
     [data-testid="stAppViewContainer"] p, [data-testid="stMarkdownContainer"] p { color: #1A1A2E; }
-    .top-ribbon { background: linear-gradient(135deg, #5BABDE 0%, #7EC8E3 50%, #A3D9F0 100%); padding: 34px 50px; display: flex; align-items: center; gap: 16px; margin: -1rem -1rem 0 -1rem; width: calc(100% + 2rem); box-shadow: 0 4px 16px rgba(91, 171, 222, 0.25); position: relative; overflow: hidden; }
-    .top-ribbon::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at 80% 50%, rgba(255,255,255,0.05) 0%, transparent 50%); }
+    .top-ribbon { background: #0093D0; padding: 34px 50px; display: flex; align-items: center; gap: 16px; margin: -1rem -1rem 0 -1rem; width: calc(100% + 2rem); box-shadow: 0 4px 16px rgba(0, 147, 208, 0.25); position: relative; overflow: hidden; }
+    .top-ribbon::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: none; }
     .top-ribbon .title { color: #FFFFFF; font-size: 30px; font-weight: 700; letter-spacing: 0.3px; position: relative; z-index: 1; text-shadow: 0 1px 2px rgba(0,0,0,0.15); }
-    [data-testid="stAppViewContainer"] { background: linear-gradient(180deg, #F8FAFD 0%, #EEF2F7 100%); }
-    .stButton > button { background: #FFFFFF !important; border: 1px solid rgba(26, 62, 110, 0.10) !important; border-radius: 18px !important; padding: 40px 32px !important; color: #1A3E6E !important; font-size: 20px !important; font-weight: 700 !important; font-family: 'Inter', sans-serif !important; cursor: pointer !important; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; box-shadow: 0 4px 16px rgba(26, 62, 110, 0.08), 0 2px 6px rgba(0,0,0,0.04) !important; min-height: 180px !important; border-top: 5px solid #5BABDE !important; }
+    [data-testid="stAppViewContainer"] { background: #F5F7FA; }
+    .stButton > button { background: #FFFFFF !important; border: 1px solid #E6E9EC !important; border-radius: 12px !important; padding: 40px 32px !important; color: #1A1A1A !important; font-size: 20px !important; font-weight: 700 !important; font-family: 'Noto Sans', 'Inter', 'Segoe UI', system-ui, sans-serif !important; cursor: pointer !important; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important; min-height: 180px !important; border-top: 3px solid #0093D0 !important; }
     .stButton > button > div, .stButton > button > div > p, .stButton > button p, .stButton > button span { font-size: 20px !important; font-weight: 700 !important; }
-    .stButton > button:hover { transform: translateY(-4px) !important; box-shadow: 0 16px 40px rgba(26, 62, 110, 0.18), 0 6px 16px rgba(0,0,0,0.08) !important; border-top: 5px solid #1A3E6E !important; background: #FAFCFF !important; }
+    .stButton > button:hover { transform: translateY(-4px) !important; box-shadow: 0 16px 40px rgba(26, 62, 110, 0.18), 0 6px 16px rgba(0,0,0,0.08) !important; border-top: 3px solid #00AEEF !important; background: #FAFCFF !important; }
 </style>
 """
 
@@ -125,7 +125,7 @@ HOME_PAGE_CSS = """
 # HELPERS
 # =====================================================
 
-CHART_COLORS = ["#1A3E6E", "#E85D4A", "#2EAF7D", "#F59E0B", "#8B5CF6", "#EC4899", "#6B7280", "#14B8A6"]
+CHART_COLORS = ["#0093D0", "#D6006E", "#00A950", "#F8971D", "#4A245E", "#F26649", "#75D1E0", "#616365"]
 
 
 def render_ribbon(title):
@@ -187,7 +187,7 @@ def render_trend_chart(pivoted_df, title, brands_order=None, is_percentage=True)
                     name=brand,
                     text=text_vals,
                     textposition="top center",
-                    textfont=dict(size=10, color="#1A3E6E"),
+                    textfont=dict(size=10, color="#0093D0"),
                     line=dict(color=CHART_COLORS[0], width=3),
                     marker=dict(size=7),
                     hovertemplate=f"<b>{brand}</b><br>%{{x}}<br>%{{y:.2f}}%<extra></extra>"
@@ -210,25 +210,25 @@ def render_trend_chart(pivoted_df, title, brands_order=None, is_percentage=True)
         margin=dict(l=60, r=30, t=20, b=50),
         plot_bgcolor="#FFFFFF",
         paper_bgcolor="#FFFFFF",
-        font=dict(family="Inter, sans-serif", size=13, color="#000000"),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#000000")),
+        font=dict(family="Noto Sans, sans-serif", size=13, color="#1A1A1A"),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#616365")),
         hovermode="x unified"
     )
     fig.update_xaxes(
         showgrid=False,
-        tickfont=dict(size=12, color="#000000"),
-        linecolor="#333333",
-        tickcolor="#333333",
+        tickfont=dict(size=12, color="#616365"),
+        linecolor="#E6E9EC",
+        tickcolor="#E6E9EC",
         ticks="outside",
         title_text=""
     )
     fig.update_yaxes(
         showgrid=True,
-        gridcolor="#E0E0E0",
+        gridcolor="#E6E9EC",
         ticksuffix="%" if is_percentage else "",
-        tickfont=dict(size=12, color="#000000"),
-        linecolor="#333333",
-        tickcolor="#333333",
+        tickfont=dict(size=12, color="#616365"),
+        linecolor="#E6E9EC",
+        tickcolor="#E6E9EC",
         ticks="outside",
         title_text="",
         separatethousands=True
@@ -289,14 +289,14 @@ def render_brand_page(brand_key_page):
         trx_growth_html = ""
         if pd.notna(trx_growth_val):
             sign = "+" if trx_growth_val >= 0 else ""
-            color = "#2EAF7D" if trx_growth_val >= 0 else "#E85D4A"
+            color = "#00A950" if trx_growth_val >= 0 else "#CC292B"
             arrow = "&#9650;" if trx_growth_val >= 0 else "&#9660;"
             trx_growth_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">{arrow} {sign}{trx_growth_val:.2f}% vs STLY</span>'
 
         nbrx_growth_html = ""
         if pd.notna(nbrx_growth_val):
             sign = "+" if nbrx_growth_val >= 0 else ""
-            color = "#2EAF7D" if nbrx_growth_val >= 0 else "#E85D4A"
+            color = "#00A950" if nbrx_growth_val >= 0 else "#CC292B"
             arrow = "&#9650;" if nbrx_growth_val >= 0 else "&#9660;"
             nbrx_growth_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">{arrow} {sign}{nbrx_growth_val:.2f}% vs STLY</span>'
 
@@ -304,12 +304,12 @@ def render_brand_page(brand_key_page):
         st.markdown(f"""
         <div class="kpi-container">
             <div class="kpi-card">
-                <div class="kpi-label">{display_name} TRX Claims <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(NPA)</span></div>
+                <div class="kpi-label">{display_name} TRX Claims <span style="font-size:11px; color:#616365; font-weight:400;">(NPA)</span></div>
                 <div class="kpi-value">{trx_claims_str} {trx_growth_html}</div>
                 <div class="kpi-period">Latest: {latest_qtr}</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-label">{display_name} NBRX Claims <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(NPA)</span></div>
+                <div class="kpi-label">{display_name} NBRX Claims <span style="font-size:11px; color:#616365; font-weight:400;">(NPA)</span></div>
                 <div class="kpi-value">{nbrx_claims_str} {nbrx_growth_html}</div>
                 <div class="kpi-period">Latest: {latest_qtr}</div>
             </div>
@@ -318,12 +318,12 @@ def render_brand_page(brand_key_page):
 
         # TRX Claims Trend
         if not trx_claims.empty:
-            st.markdown(f'<div class="section-title">TRX Claims Trend <span style="font-size:13px; color:#5BABDE; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="section-title">TRX Claims Trend <span style="font-size:13px; color:#0093D0; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
             render_trend_chart(trx_claims, "TRX Claims", [brand_name], is_percentage=False)
 
         # NBRX Claims Trend
         if not nbrx_claims.empty:
-            st.markdown(f'<div class="section-title">NBRX Claims Trend <span style="font-size:13px; color:#5BABDE; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="section-title">NBRX Claims Trend <span style="font-size:13px; color:#0093D0; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
             render_trend_chart(nbrx_claims, "NBRX Claims", [brand_name], is_percentage=False)
 
         # Raw Data Tables
@@ -333,10 +333,10 @@ def render_brand_page(brand_key_page):
             if df_to_render.empty:
                 return
             with st.expander(title, expanded=False):
-                html = '<table style="width:100%; border-collapse:collapse; font-family:Inter,sans-serif; margin:10px 0;">'
+                html = '<table style="width:100%; border-collapse:collapse; font-family:Noto Sans,sans-serif; margin:10px 0;">'
                 html += '<thead><tr>'
                 for col in df_to_render.columns:
-                    html += f'<th style="background:#1A3E6E; color:#FFFFFF; padding:10px 14px; text-align:right; font-size:12px; font-weight:600;">{col}</th>'
+                    html += f'<th style="background:#0093D0; color:#FFFFFF; padding:10px 14px; text-align:right; font-size:12px; font-weight:600;">{col}</th>'
                 html += '</tr></thead><tbody>'
                 for idx, row in df_to_render.iterrows():
                     bg = "#F8FAFD" if idx % 2 == 0 else "#FFFFFF"
@@ -402,12 +402,12 @@ def render_brand_page(brand_key_page):
                 elements = []
                 styles = getSampleStyleSheet()
 
-                title_style = ParagraphStyle("CustomTitle", parent=styles["Title"], fontSize=20, textColor=colors.HexColor("#1A3E6E"), spaceAfter=6)
-                heading_style = ParagraphStyle("CustomHeading", parent=styles["Heading2"], fontSize=14, textColor=colors.HexColor("#1A3E6E"), spaceBefore=16, spaceAfter=8)
-                kpi_style = ParagraphStyle("KPI", parent=styles["Normal"], fontSize=12, textColor=colors.HexColor("#1A3E6E"), spaceAfter=4)
+                title_style = ParagraphStyle("CustomTitle", parent=styles["Title"], fontSize=20, textColor=colors.HexColor("#0093D0"), spaceAfter=6)
+                heading_style = ParagraphStyle("CustomHeading", parent=styles["Heading2"], fontSize=14, textColor=colors.HexColor("#0093D0"), spaceBefore=16, spaceAfter=8)
+                kpi_style = ParagraphStyle("KPI", parent=styles["Normal"], fontSize=12, textColor=colors.HexColor("#0093D0"), spaceAfter=4)
 
                 table_style = TableStyle([
-                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1A3E6E")),
+                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0093D0")),
                     ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
                     ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
                     ("FONTSIZE", (0, 0), (-1, 0), 9),
@@ -434,8 +434,8 @@ def render_brand_page(brand_key_page):
                 # TRX Claims Chart
                 if not trx_claims.empty:
                     fig_trx = go.Figure()
-                    fig_trx.add_trace(go.Scatter(x=trx_claims.index.tolist(), y=trx_claims[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in trx_claims[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#1A3E6E", width=3), marker=dict(size=7)))
-                    fig_trx.update_layout(title=dict(text="TRX Claims Trend (NPA)", font=dict(size=13, color="#1A3E6E")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
+                    fig_trx.add_trace(go.Scatter(x=trx_claims.index.tolist(), y=trx_claims[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in trx_claims[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#0093D0", width=3), marker=dict(size=7)))
+                    fig_trx.update_layout(title=dict(text="TRX Claims Trend (NPA)", font=dict(size=13, color="#0093D0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
                     fig_trx.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
                     fig_trx.update_yaxes(tickfont=dict(size=9, color="#000000"), separatethousands=True)
                     trx_img = BytesIO(fig_trx.to_image(format="png", scale=2))
@@ -445,8 +445,8 @@ def render_brand_page(brand_key_page):
                 # NBRX Claims Chart
                 if not nbrx_claims.empty:
                     fig_nbrx = go.Figure()
-                    fig_nbrx.add_trace(go.Scatter(x=nbrx_claims.index.tolist(), y=nbrx_claims[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in nbrx_claims[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#1A3E6E", width=3), marker=dict(size=7)))
-                    fig_nbrx.update_layout(title=dict(text="NBRX Claims Trend (NPA)", font=dict(size=13, color="#1A3E6E")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
+                    fig_nbrx.add_trace(go.Scatter(x=nbrx_claims.index.tolist(), y=nbrx_claims[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in nbrx_claims[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#0093D0", width=3), marker=dict(size=7)))
+                    fig_nbrx.update_layout(title=dict(text="NBRX Claims Trend (NPA)", font=dict(size=13, color="#0093D0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
                     fig_nbrx.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
                     fig_nbrx.update_yaxes(tickfont=dict(size=9, color="#000000"), separatethousands=True)
                     nbrx_img = BytesIO(fig_nbrx.to_image(format="png", scale=2))
@@ -558,14 +558,14 @@ def render_brand_page(brand_key_page):
         claims_growth_html = ""
         if pd.notna(claims_growth_val):
             sign = "+" if claims_growth_val >= 0 else ""
-            color = "#2EAF7D" if claims_growth_val >= 0 else "#E85D4A"
+            color = "#00A950" if claims_growth_val >= 0 else "#CC292B"
             arrow = "&#9650;" if claims_growth_val >= 0 else "&#9660;"
             claims_growth_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">{arrow} {sign}{claims_growth_val:.2f}% vs STLY</span>'
 
         patients_growth_html = ""
         if pd.notna(patients_growth_val):
             sign = "+" if patients_growth_val >= 0 else ""
-            color = "#2EAF7D" if patients_growth_val >= 0 else "#E85D4A"
+            color = "#00A950" if patients_growth_val >= 0 else "#CC292B"
             arrow = "&#9650;" if patients_growth_val >= 0 else "&#9660;"
             patients_growth_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">{arrow} {sign}{patients_growth_val:.2f}% vs STLY</span>'
 
@@ -573,12 +573,12 @@ def render_brand_page(brand_key_page):
         st.markdown(f"""
         <div class="kpi-container">
             <div class="kpi-card">
-                <div class="kpi-label">{display_name} Claims <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(ELAAD)</span></div>
+                <div class="kpi-label">{display_name} Claims <span style="font-size:11px; color:#616365; font-weight:400;">(ELAAD)</span></div>
                 <div class="kpi-value">{claims_str} {claims_growth_html}</div>
                 <div class="kpi-period">Latest: {latest_qtr}</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-label">{display_name} Patients <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(ELAAD)</span></div>
+                <div class="kpi-label">{display_name} Patients <span style="font-size:11px; color:#616365; font-weight:400;">(ELAAD)</span></div>
                 <div class="kpi-value">{patients_str} {patients_growth_html}</div>
                 <div class="kpi-period">Latest: {latest_qtr}</div>
             </div>
@@ -587,12 +587,12 @@ def render_brand_page(brand_key_page):
 
         # Claims Trend
         if not claims.empty:
-            st.markdown(f'<div class="section-title">Claims Trend <span style="font-size:13px; color:#5BABDE; font-weight:500;">(ELAAD)</span></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="section-title">Claims Trend <span style="font-size:13px; color:#0093D0; font-weight:500;">(ELAAD)</span></div>', unsafe_allow_html=True)
             render_trend_chart(claims, "Claims", [brand_name], is_percentage=False)
 
         # Patients Trend
         if not patients.empty:
-            st.markdown(f'<div class="section-title">Patients Trend <span style="font-size:13px; color:#5BABDE; font-weight:500;">(ELAAD)</span></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="section-title">Patients Trend <span style="font-size:13px; color:#0093D0; font-weight:500;">(ELAAD)</span></div>', unsafe_allow_html=True)
             render_trend_chart(patients, "Patients", [brand_name], is_percentage=False)
 
         # Raw Data Tables
@@ -602,10 +602,10 @@ def render_brand_page(brand_key_page):
             if df_to_render.empty:
                 return
             with st.expander(title, expanded=False):
-                html = '<table style="width:100%; border-collapse:collapse; font-family:Inter,sans-serif; margin:10px 0;">'
+                html = '<table style="width:100%; border-collapse:collapse; font-family:Noto Sans,sans-serif; margin:10px 0;">'
                 html += '<thead><tr>'
                 for col in df_to_render.columns:
-                    html += f'<th style="background:#1A3E6E; color:#FFFFFF; padding:10px 14px; text-align:right; font-size:12px; font-weight:600;">{col}</th>'
+                    html += f'<th style="background:#0093D0; color:#FFFFFF; padding:10px 14px; text-align:right; font-size:12px; font-weight:600;">{col}</th>'
                 html += '</tr></thead><tbody>'
                 for idx, row in df_to_render.iterrows():
                     bg = "#F8FAFD" if idx % 2 == 0 else "#FFFFFF"
@@ -671,12 +671,12 @@ def render_brand_page(brand_key_page):
                 elements = []
                 styles = getSampleStyleSheet()
 
-                title_style = ParagraphStyle("CustomTitle", parent=styles["Title"], fontSize=20, textColor=colors.HexColor("#1A3E6E"), spaceAfter=6)
-                heading_style = ParagraphStyle("CustomHeading", parent=styles["Heading2"], fontSize=14, textColor=colors.HexColor("#1A3E6E"), spaceBefore=16, spaceAfter=8)
-                kpi_style = ParagraphStyle("KPI", parent=styles["Normal"], fontSize=12, textColor=colors.HexColor("#1A3E6E"), spaceAfter=4)
+                title_style = ParagraphStyle("CustomTitle", parent=styles["Title"], fontSize=20, textColor=colors.HexColor("#0093D0"), spaceAfter=6)
+                heading_style = ParagraphStyle("CustomHeading", parent=styles["Heading2"], fontSize=14, textColor=colors.HexColor("#0093D0"), spaceBefore=16, spaceAfter=8)
+                kpi_style = ParagraphStyle("KPI", parent=styles["Normal"], fontSize=12, textColor=colors.HexColor("#0093D0"), spaceAfter=4)
 
                 table_style = TableStyle([
-                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1A3E6E")),
+                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0093D0")),
                     ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
                     ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
                     ("FONTSIZE", (0, 0), (-1, 0), 9),
@@ -703,8 +703,8 @@ def render_brand_page(brand_key_page):
                 # Claims Chart
                 if not claims.empty and brand_name in claims.columns:
                     fig_c = go.Figure()
-                    fig_c.add_trace(go.Scatter(x=claims.index.tolist(), y=claims[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in claims[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#1A3E6E", width=3), marker=dict(size=7)))
-                    fig_c.update_layout(title=dict(text="Claims Trend (ELAAD)", font=dict(size=13, color="#1A3E6E")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
+                    fig_c.add_trace(go.Scatter(x=claims.index.tolist(), y=claims[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in claims[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#0093D0", width=3), marker=dict(size=7)))
+                    fig_c.update_layout(title=dict(text="Claims Trend (ELAAD)", font=dict(size=13, color="#0093D0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
                     fig_c.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
                     fig_c.update_yaxes(tickfont=dict(size=9, color="#000000"), separatethousands=True)
                     c_img = BytesIO(fig_c.to_image(format="png", scale=2))
@@ -714,8 +714,8 @@ def render_brand_page(brand_key_page):
                 # Patients Chart
                 if not patients.empty and brand_name in patients.columns:
                     fig_p = go.Figure()
-                    fig_p.add_trace(go.Scatter(x=patients.index.tolist(), y=patients[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in patients[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#1A3E6E", width=3), marker=dict(size=7)))
-                    fig_p.update_layout(title=dict(text="Patients Trend (ELAAD)", font=dict(size=13, color="#1A3E6E")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
+                    fig_p.add_trace(go.Scatter(x=patients.index.tolist(), y=patients[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in patients[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#0093D0", width=3), marker=dict(size=7)))
+                    fig_p.update_layout(title=dict(text="Patients Trend (ELAAD)", font=dict(size=13, color="#0093D0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
                     fig_p.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
                     fig_p.update_yaxes(tickfont=dict(size=9, color="#000000"), separatethousands=True)
                     p_img = BytesIO(fig_p.to_image(format="png", scale=2))
@@ -804,26 +804,26 @@ def render_brand_page(brand_key_page):
     trx_diff_html = ""
     if pd.notna(trx_diff_val):
         sign = "+" if trx_diff_val >= 0 else ""
-        color = "#2EAF7D" if trx_diff_val >= 0 else "#E85D4A"
+        color = "#00A950" if trx_diff_val >= 0 else "#CC292B"
         arrow = "&#9650;" if trx_diff_val >= 0 else "&#9660;"
         trx_diff_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">{arrow} {sign}{trx_diff_val:.2f}pp vs STLY</span>'
 
     nbrx_diff_html = ""
     if pd.notna(nbrx_diff_val):
         sign = "+" if nbrx_diff_val >= 0 else ""
-        color = "#2EAF7D" if nbrx_diff_val >= 0 else "#E85D4A"
+        color = "#00A950" if nbrx_diff_val >= 0 else "#CC292B"
         arrow = "&#9650;" if nbrx_diff_val >= 0 else "&#9660;"
         nbrx_diff_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">{arrow} {sign}{nbrx_diff_val:.2f}pp vs STLY</span>'
 
     st.markdown(f"""
     <div class="kpi-container">
         <div class="kpi-card">
-            <div class="kpi-label">{display_name} TRX Market Share <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(NPA)</span></div>
+            <div class="kpi-label">{display_name} TRX Market Share <span style="font-size:11px; color:#616365; font-weight:400;">(NPA)</span></div>
             <div class="kpi-value">{trx_str} {trx_diff_html}</div>
             <div class="kpi-period">Latest: {latest_qtr}</div>
         </div>
         <div class="kpi-card">
-            <div class="kpi-label">{display_name} NBRX Market Share <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(NPA)</span></div>
+            <div class="kpi-label">{display_name} NBRX Market Share <span style="font-size:11px; color:#616365; font-weight:400;">(NPA)</span></div>
             <div class="kpi-value">{nbrx_str} {nbrx_diff_html}</div>
             <div class="kpi-period">Latest: {latest_qtr}</div>
         </div>
@@ -831,12 +831,12 @@ def render_brand_page(brand_key_page):
     """, unsafe_allow_html=True)
 
     # --- TRX Market Share Trend ---
-    st.markdown(f'<div class="section-title">TRX Market Share Trend \u2014 {market} Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-title">TRX Market Share Trend \u2014 {market} Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
     brands_order = [brand_name] + [b for b in trx_ms.columns if b != brand_name]
     render_trend_chart(trx_ms, "TRX Market Share", brands_order)
 
     # --- NBRX Market Share Trend ---
-    st.markdown(f'<div class="section-title">NBRX Market Share Trend \u2014 {market} Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-title">NBRX Market Share Trend \u2014 {market} Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
     brands_order_nbrx = [brand_name] + [b for b in nbrx_ms.columns if b != brand_name]
     render_trend_chart(nbrx_ms, "NBRX Market Share", brands_order_nbrx)
 
@@ -861,14 +861,14 @@ def render_brand_page(brand_key_page):
                 st.markdown(f"""
                 <div class="kpi-container">
                     <div class="kpi-card">
-                        <div class="kpi-label">{config["display_name"]} Shipment Market Share <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>
+                        <div class="kpi-label">{config["display_name"]} Shipment Market Share <span style="font-size:11px; color:#616365; font-weight:400;">(DDD)</span></div>
                         <div class="kpi-value">{ship_str}</div>
                         <div class="kpi-period">Latest: {latest_ship_qtr}</div>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
 
-                st.markdown(f'<div class="section-title">Shipment Market Share Trend \u2014 {ddd_market} Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="section-title">Shipment Market Share Trend \u2014 {ddd_market} Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 ddd_brands_order = [ddd_brand] + [b for b in shipment_ms.columns if b != ddd_brand]
                 render_trend_chart(shipment_ms, "Shipment Market Share", ddd_brands_order)
 
@@ -890,12 +890,12 @@ def render_brand_page(brand_key_page):
                 st.markdown(f"""
                 <div class="kpi-container">
                     <div class="kpi-card">
-                        <div class="kpi-label">Abrysvo Retail Market Share <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>
+                        <div class="kpi-label">Abrysvo Retail Market Share <span style="font-size:11px; color:#616365; font-weight:400;">(DDD)</span></div>
                         <div class="kpi-value">{retail_str}</div>
                         <div class="kpi-period">Latest: {latest_ddd_qtr}</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-label">Abrysvo Non-Retail Market Share <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>
+                        <div class="kpi-label">Abrysvo Non-Retail Market Share <span style="font-size:11px; color:#616365; font-weight:400;">(DDD)</span></div>
                         <div class="kpi-value">{non_retail_str}</div>
                         <div class="kpi-period">Latest: {latest_ddd_qtr}</div>
                     </div>
@@ -904,13 +904,13 @@ def render_brand_page(brand_key_page):
 
             # Retail MS trend - all brands compared
             if not retail_ms.empty:
-                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 RSV Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 RSV Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 retail_order = ["ABRYSVO"] + [b for b in retail_ms.columns if b != "ABRYSVO"]
                 render_trend_chart(retail_ms, "Retail Market Share", retail_order)
 
             # Non-Retail MS trend - all brands compared
             if not non_retail_ms.empty:
-                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 RSV Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 RSV Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 non_retail_order = ["ABRYSVO"] + [b for b in non_retail_ms.columns if b != "ABRYSVO"]
                 render_trend_chart(non_retail_ms, "Non-Retail Market Share", non_retail_order)
 
@@ -919,7 +919,7 @@ def render_brand_page(brand_key_page):
             non_retail_contrib = pivot_market_share(ddd_data, "NON_RETAIL_CONTRIBUTION")
 
             if not retail_contrib.empty or not non_retail_contrib.empty:
-                st.markdown('<div class="section-title">Abrysvo Channel Contribution <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Abrysvo Channel Contribution <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
 
                 # Pie chart for latest quarter + trend chart side by side
                 latest_contrib_qtr = retail_contrib.index[-1] if not retail_contrib.empty else non_retail_contrib.index[-1]
@@ -934,11 +934,11 @@ def render_brand_page(brand_key_page):
                     fig_pie = go.Figure(data=[go.Pie(
                         labels=["Retail", "Non-Retail"],
                         values=[abrysvo_retail_c if pd.notna(abrysvo_retail_c) else 0, abrysvo_non_retail_c if pd.notna(abrysvo_non_retail_c) else 0],
-                        marker=dict(colors=["#1A3E6E", "#A3D9F0"], line=dict(color="#FFFFFF", width=2)),
+                        marker=dict(colors=["#0093D0", "#E6E9EC"], line=dict(color="#FFFFFF", width=2)),
                         textinfo="text",
                         text=[f"Retail<br>{abrysvo_retail_c:.2f}%" if pd.notna(abrysvo_retail_c) else "Retail<br>N/A", f"Non-Retail<br>{abrysvo_non_retail_c:.2f}%" if pd.notna(abrysvo_non_retail_c) else "Non-Retail<br>N/A"],
                         textposition="outside",
-                        textfont=dict(size=12, color="#1A1A2E"),
+                        textfont=dict(size=12, color="#1A1A1A"),
                         hole=0.4,
                         pull=[0.03, 0.03]
                     )])
@@ -946,7 +946,7 @@ def render_brand_page(brand_key_page):
                         template="plotly_white", height=350,
                         margin=dict(l=30, r=30, t=40, b=30),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
-                        title=dict(text=f"Latest: {latest_contrib_qtr}", font=dict(size=13, color="#1A3E6E")),
+                        title=dict(text=f"Latest: {latest_contrib_qtr}", font=dict(size=13, color="#0093D0")),
                         showlegend=False
                     )
                     try:
@@ -963,14 +963,14 @@ def render_brand_page(brand_key_page):
                         fig_contrib.add_trace(go.Scatter(
                             x=retail_contrib.index.tolist(), y=retail_contrib["ABRYSVO"].tolist(),
                             mode="lines+markers", name="Retail Contribution",
-                            line=dict(color="#1A3E6E", width=3), marker=dict(size=7),
+                            line=dict(color="#0093D0", width=3), marker=dict(size=7),
                             hovertemplate="<b>Retail Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
                         ))
                     if not non_retail_contrib.empty and "ABRYSVO" in non_retail_contrib.columns:
                         fig_contrib.add_trace(go.Scatter(
                             x=non_retail_contrib.index.tolist(), y=non_retail_contrib["ABRYSVO"].tolist(),
                             mode="lines+markers", name="Non-Retail Contribution",
-                            line=dict(color="#5BABDE", width=3), marker=dict(size=7),
+                            line=dict(color="#00AEEF", width=3), marker=dict(size=7),
                             hovertemplate="<b>Non-Retail Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
                         ))
 
@@ -978,12 +978,12 @@ def render_brand_page(brand_key_page):
                         template="plotly_white", height=350,
                         margin=dict(l=60, r=30, t=20, b=50),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
-                        font=dict(family="Inter, sans-serif", size=13, color="#000000"),
-                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#000000")),
+                        font=dict(family="Noto Sans, sans-serif", size=13, color="#1A1A1A"),
+                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#616365")),
                         hovermode="x unified"
                     )
-                    fig_contrib.update_xaxes(showgrid=False, tickfont=dict(size=12, color="#000000"), linecolor="#333333", tickcolor="#333333", ticks="outside", title_text="")
-                    fig_contrib.update_yaxes(showgrid=True, gridcolor="#E0E0E0", ticksuffix="%", tickfont=dict(size=12, color="#000000"), linecolor="#333333", tickcolor="#333333", ticks="outside", title_text="")
+                    fig_contrib.update_xaxes(showgrid=False, tickfont=dict(size=12, color="#616365"), linecolor="#E6E9EC", tickcolor="#E6E9EC", ticks="outside", title_text="")
+                    fig_contrib.update_yaxes(showgrid=True, gridcolor="#E6E9EC", ticksuffix="%", tickfont=dict(size=12, color="#616365"), linecolor="#E6E9EC", tickcolor="#E6E9EC", ticks="outside", title_text="")
                     try:
                         st.plotly_chart(fig_contrib, use_container_width=True, theme=None)
                     except TypeError:
@@ -995,12 +995,12 @@ def render_brand_page(brand_key_page):
             oa_contrib = pivot_market_share(ddd_data, "OA_CONTRIBUTION")
 
             if not oa_ms.empty:
-                st.markdown('<div class="section-title">OA Market Share Trend \u2014 RSV Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">OA Market Share Trend \u2014 RSV Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 oa_order = ["ABRYSVO"] + [b for b in oa_ms.columns if b != "ABRYSVO"]
                 render_trend_chart(oa_ms, "OA Market Share", oa_order)
 
             if not oa_contrib.empty or not ma_contrib.empty:
-                st.markdown('<div class="section-title">Abrysvo OA vs MA Contribution <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Abrysvo OA vs MA Contribution <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
 
                 # Pie chart for latest quarter + trend chart side by side
                 latest_oa_qtr = oa_contrib.index[-1] if not oa_contrib.empty else ma_contrib.index[-1]
@@ -1015,11 +1015,11 @@ def render_brand_page(brand_key_page):
                     fig_pie2 = go.Figure(data=[go.Pie(
                         labels=["OA Contribution", "MA Contribution"],
                         values=[abrysvo_oa_c if pd.notna(abrysvo_oa_c) else 0, abrysvo_ma_c if pd.notna(abrysvo_ma_c) else 0],
-                        marker=dict(colors=["#2A5A8C", "#7EDDB5"], line=dict(color="#FFFFFF", width=2)),
+                        marker=dict(colors=["#0093D0", "#00A950"], line=dict(color="#FFFFFF", width=2)),
                         textinfo="text",
                         text=[f"OA<br>{abrysvo_oa_c:.2f}%" if pd.notna(abrysvo_oa_c) else "OA<br>N/A", f"MA<br>{abrysvo_ma_c:.2f}%" if pd.notna(abrysvo_ma_c) else "MA<br>N/A"],
                         textposition="outside",
-                        textfont=dict(size=12, color="#1A1A2E"),
+                        textfont=dict(size=12, color="#1A1A1A"),
                         hole=0.4,
                         pull=[0.03, 0.03]
                     )])
@@ -1027,7 +1027,7 @@ def render_brand_page(brand_key_page):
                         template="plotly_white", height=350,
                         margin=dict(l=30, r=30, t=40, b=30),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
-                        title=dict(text=f"Latest: {latest_oa_qtr}", font=dict(size=13, color="#1A3E6E")),
+                        title=dict(text=f"Latest: {latest_oa_qtr}", font=dict(size=13, color="#0093D0")),
                         showlegend=False
                     )
                     try:
@@ -1044,14 +1044,14 @@ def render_brand_page(brand_key_page):
                         fig_oa_ma.add_trace(go.Scatter(
                             x=oa_contrib.index.tolist(), y=oa_contrib["ABRYSVO"].tolist(),
                             mode="lines+markers", name="OA Contribution",
-                            line=dict(color="#1A3E6E", width=3), marker=dict(size=7),
+                            line=dict(color="#0093D0", width=3), marker=dict(size=7),
                             hovertemplate="<b>OA Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
                         ))
                     if not ma_contrib.empty and "ABRYSVO" in ma_contrib.columns:
                         fig_oa_ma.add_trace(go.Scatter(
                             x=ma_contrib.index.tolist(), y=ma_contrib["ABRYSVO"].tolist(),
                             mode="lines+markers", name="MA Contribution",
-                            line=dict(color="#2EAF7D", width=3), marker=dict(size=7),
+                            line=dict(color="#00A950", width=3), marker=dict(size=7),
                             hovertemplate="<b>MA Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
                         ))
 
@@ -1059,12 +1059,12 @@ def render_brand_page(brand_key_page):
                         template="plotly_white", height=350,
                         margin=dict(l=60, r=30, t=20, b=50),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
-                        font=dict(family="Inter, sans-serif", size=13, color="#000000"),
-                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#000000")),
+                        font=dict(family="Noto Sans, sans-serif", size=13, color="#1A1A1A"),
+                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#616365")),
                         hovermode="x unified"
                     )
-                    fig_oa_ma.update_xaxes(showgrid=False, tickfont=dict(size=12, color="#000000"), linecolor="#333333", tickcolor="#333333", ticks="outside", title_text="")
-                    fig_oa_ma.update_yaxes(showgrid=True, gridcolor="#E0E0E0", ticksuffix="%", tickfont=dict(size=12, color="#000000"), linecolor="#333333", tickcolor="#333333", ticks="outside", title_text="")
+                    fig_oa_ma.update_xaxes(showgrid=False, tickfont=dict(size=12, color="#616365"), linecolor="#E6E9EC", tickcolor="#E6E9EC", ticks="outside", title_text="")
+                    fig_oa_ma.update_yaxes(showgrid=True, gridcolor="#E6E9EC", ticksuffix="%", tickfont=dict(size=12, color="#616365"), linecolor="#E6E9EC", tickcolor="#E6E9EC", ticks="outside", title_text="")
                     try:
                         st.plotly_chart(fig_oa_ma, use_container_width=True, theme=None)
                     except TypeError:
@@ -1088,12 +1088,12 @@ def render_brand_page(brand_key_page):
                 st.markdown(f"""
                 <div class="kpi-container">
                     <div class="kpi-card">
-                        <div class="kpi-label">Prevnar Retail Market Share <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>
+                        <div class="kpi-label">Prevnar Retail Market Share <span style="font-size:11px; color:#616365; font-weight:400;">(DDD)</span></div>
                         <div class="kpi-value">{retail_str}</div>
                         <div class="kpi-period">Latest: {latest_ddd_qtr}</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-label">Prevnar Non-Retail Market Share <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>
+                        <div class="kpi-label">Prevnar Non-Retail Market Share <span style="font-size:11px; color:#616365; font-weight:400;">(DDD)</span></div>
                         <div class="kpi-value">{non_retail_str}</div>
                         <div class="kpi-period">Latest: {latest_ddd_qtr}</div>
                     </div>
@@ -1102,13 +1102,13 @@ def render_brand_page(brand_key_page):
 
             # Retail MS trend - all brands compared
             if not retail_ms.empty:
-                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 retail_order = ["PREVNAR"] + [b for b in retail_ms.columns if b != "PREVNAR"]
                 render_trend_chart(retail_ms, "Retail Market Share", retail_order)
 
             # Non-Retail MS trend - all brands compared
             if not non_retail_ms.empty:
-                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 non_retail_order = ["PREVNAR"] + [b for b in non_retail_ms.columns if b != "PREVNAR"]
                 render_trend_chart(non_retail_ms, "Non-Retail Market Share", non_retail_order)
 
@@ -1117,7 +1117,7 @@ def render_brand_page(brand_key_page):
             non_retail_contrib = pivot_market_share(ddd_data, "NON_RETAIL_CONTRIBUTION")
 
             if not retail_contrib.empty or not non_retail_contrib.empty:
-                st.markdown('<div class="section-title">Prevnar Channel Contribution <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Prevnar Channel Contribution <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
 
                 # Pie chart for latest quarter + trend chart side by side
                 latest_contrib_qtr = retail_contrib.index[-1] if not retail_contrib.empty else non_retail_contrib.index[-1]
@@ -1132,11 +1132,11 @@ def render_brand_page(brand_key_page):
                     fig_pie = go.Figure(data=[go.Pie(
                         labels=["Retail", "Non-Retail"],
                         values=[prevnar_retail_c if pd.notna(prevnar_retail_c) else 0, prevnar_non_retail_c if pd.notna(prevnar_non_retail_c) else 0],
-                        marker=dict(colors=["#1A3E6E", "#A3D9F0"], line=dict(color="#FFFFFF", width=2)),
+                        marker=dict(colors=["#0093D0", "#E6E9EC"], line=dict(color="#FFFFFF", width=2)),
                         textinfo="text",
                         text=[f"Retail<br>{prevnar_retail_c:.2f}%" if pd.notna(prevnar_retail_c) else "Retail<br>N/A", f"Non-Retail<br>{prevnar_non_retail_c:.2f}%" if pd.notna(prevnar_non_retail_c) else "Non-Retail<br>N/A"],
                         textposition="outside",
-                        textfont=dict(size=12, color="#1A1A2E"),
+                        textfont=dict(size=12, color="#1A1A1A"),
                         hole=0.4,
                         pull=[0.03, 0.03]
                     )])
@@ -1144,7 +1144,7 @@ def render_brand_page(brand_key_page):
                         template="plotly_white", height=350,
                         margin=dict(l=30, r=30, t=40, b=30),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
-                        title=dict(text=f"Latest: {latest_contrib_qtr}", font=dict(size=13, color="#1A3E6E")),
+                        title=dict(text=f"Latest: {latest_contrib_qtr}", font=dict(size=13, color="#0093D0")),
                         showlegend=False
                     )
                     try:
@@ -1161,14 +1161,14 @@ def render_brand_page(brand_key_page):
                         fig_contrib.add_trace(go.Scatter(
                             x=retail_contrib.index.tolist(), y=retail_contrib["PREVNAR"].tolist(),
                             mode="lines+markers", name="Retail Contribution",
-                            line=dict(color="#1A3E6E", width=3), marker=dict(size=7),
+                            line=dict(color="#0093D0", width=3), marker=dict(size=7),
                             hovertemplate="<b>Retail Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
                         ))
                     if not non_retail_contrib.empty and "PREVNAR" in non_retail_contrib.columns:
                         fig_contrib.add_trace(go.Scatter(
                             x=non_retail_contrib.index.tolist(), y=non_retail_contrib["PREVNAR"].tolist(),
                             mode="lines+markers", name="Non-Retail Contribution",
-                            line=dict(color="#5BABDE", width=3), marker=dict(size=7),
+                            line=dict(color="#00AEEF", width=3), marker=dict(size=7),
                             hovertemplate="<b>Non-Retail Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
                         ))
 
@@ -1176,12 +1176,12 @@ def render_brand_page(brand_key_page):
                         template="plotly_white", height=350,
                         margin=dict(l=60, r=30, t=20, b=50),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
-                        font=dict(family="Inter, sans-serif", size=13, color="#000000"),
-                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#000000")),
+                        font=dict(family="Noto Sans, sans-serif", size=13, color="#1A1A1A"),
+                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#616365")),
                         hovermode="x unified"
                     )
-                    fig_contrib.update_xaxes(showgrid=False, tickfont=dict(size=12, color="#000000"), linecolor="#333333", tickcolor="#333333", ticks="outside", title_text="")
-                    fig_contrib.update_yaxes(showgrid=True, gridcolor="#E0E0E0", ticksuffix="%", tickfont=dict(size=12, color="#000000"), linecolor="#333333", tickcolor="#333333", ticks="outside", title_text="")
+                    fig_contrib.update_xaxes(showgrid=False, tickfont=dict(size=12, color="#616365"), linecolor="#E6E9EC", tickcolor="#E6E9EC", ticks="outside", title_text="")
+                    fig_contrib.update_yaxes(showgrid=True, gridcolor="#E6E9EC", ticksuffix="%", tickfont=dict(size=12, color="#616365"), linecolor="#E6E9EC", tickcolor="#E6E9EC", ticks="outside", title_text="")
                     try:
                         st.plotly_chart(fig_contrib, use_container_width=True, theme=None)
                     except TypeError:
@@ -1205,12 +1205,12 @@ def render_brand_page(brand_key_page):
                 st.markdown(f"""
                 <div class="kpi-container">
                     <div class="kpi-card">
-                        <div class="kpi-label">Comirnaty Retail Market Share <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>
+                        <div class="kpi-label">Comirnaty Retail Market Share <span style="font-size:11px; color:#616365; font-weight:400;">(DDD)</span></div>
                         <div class="kpi-value">{retail_str}</div>
                         <div class="kpi-period">Latest: {latest_ddd_qtr}</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-label">Comirnaty Non-Retail Market Share <span style="font-size:11px; color:#9EAAB8; font-weight:400;">(DDD)</span></div>
+                        <div class="kpi-label">Comirnaty Non-Retail Market Share <span style="font-size:11px; color:#616365; font-weight:400;">(DDD)</span></div>
                         <div class="kpi-value">{non_retail_str}</div>
                         <div class="kpi-period">Latest: {latest_ddd_qtr}</div>
                     </div>
@@ -1219,13 +1219,13 @@ def render_brand_page(brand_key_page):
 
             # Retail MS trend - all brands compared
             if not retail_ms.empty:
-                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 COVID Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 COVID Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 retail_order = ["COMIRNATY"] + [b for b in retail_ms.columns if b != "COMIRNATY"]
                 render_trend_chart(retail_ms, "Retail Market Share", retail_order)
 
             # Non-Retail MS trend - all brands compared
             if not non_retail_ms.empty:
-                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 COVID Market <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 COVID Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 non_retail_order = ["COMIRNATY"] + [b for b in non_retail_ms.columns if b != "COMIRNATY"]
                 render_trend_chart(non_retail_ms, "Non-Retail Market Share", non_retail_order)
 
@@ -1234,7 +1234,7 @@ def render_brand_page(brand_key_page):
             non_retail_contrib = pivot_market_share(ddd_data, "NON_RETAIL_CONTRIBUTION")
 
             if not retail_contrib.empty or not non_retail_contrib.empty:
-                st.markdown('<div class="section-title">Comirnaty Channel Contribution <span style="font-size:13px; color:#5BABDE; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Comirnaty Channel Contribution <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
 
                 # Pie chart for latest quarter + trend chart side by side
                 latest_contrib_qtr = retail_contrib.index[-1] if not retail_contrib.empty else non_retail_contrib.index[-1]
@@ -1249,11 +1249,11 @@ def render_brand_page(brand_key_page):
                     fig_pie = go.Figure(data=[go.Pie(
                         labels=["Retail", "Non-Retail"],
                         values=[comirnaty_retail_c if pd.notna(comirnaty_retail_c) else 0, comirnaty_non_retail_c if pd.notna(comirnaty_non_retail_c) else 0],
-                        marker=dict(colors=["#1A3E6E", "#A3D9F0"], line=dict(color="#FFFFFF", width=2)),
+                        marker=dict(colors=["#0093D0", "#E6E9EC"], line=dict(color="#FFFFFF", width=2)),
                         textinfo="text",
                         text=[f"Retail<br>{comirnaty_retail_c:.2f}%" if pd.notna(comirnaty_retail_c) else "Retail<br>N/A", f"Non-Retail<br>{comirnaty_non_retail_c:.2f}%" if pd.notna(comirnaty_non_retail_c) else "Non-Retail<br>N/A"],
                         textposition="outside",
-                        textfont=dict(size=12, color="#1A1A2E"),
+                        textfont=dict(size=12, color="#1A1A1A"),
                         hole=0.4,
                         pull=[0.03, 0.03]
                     )])
@@ -1261,7 +1261,7 @@ def render_brand_page(brand_key_page):
                         template="plotly_white", height=350,
                         margin=dict(l=30, r=30, t=40, b=30),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
-                        title=dict(text=f"Latest: {latest_contrib_qtr}", font=dict(size=13, color="#1A3E6E")),
+                        title=dict(text=f"Latest: {latest_contrib_qtr}", font=dict(size=13, color="#0093D0")),
                         showlegend=False
                     )
                     try:
@@ -1278,14 +1278,14 @@ def render_brand_page(brand_key_page):
                         fig_contrib.add_trace(go.Scatter(
                             x=retail_contrib.index.tolist(), y=retail_contrib["COMIRNATY"].tolist(),
                             mode="lines+markers", name="Retail Contribution",
-                            line=dict(color="#1A3E6E", width=3), marker=dict(size=7),
+                            line=dict(color="#0093D0", width=3), marker=dict(size=7),
                             hovertemplate="<b>Retail Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
                         ))
                     if not non_retail_contrib.empty and "COMIRNATY" in non_retail_contrib.columns:
                         fig_contrib.add_trace(go.Scatter(
                             x=non_retail_contrib.index.tolist(), y=non_retail_contrib["COMIRNATY"].tolist(),
                             mode="lines+markers", name="Non-Retail Contribution",
-                            line=dict(color="#5BABDE", width=3), marker=dict(size=7),
+                            line=dict(color="#00AEEF", width=3), marker=dict(size=7),
                             hovertemplate="<b>Non-Retail Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
                         ))
 
@@ -1293,12 +1293,12 @@ def render_brand_page(brand_key_page):
                         template="plotly_white", height=350,
                         margin=dict(l=60, r=30, t=20, b=50),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
-                        font=dict(family="Inter, sans-serif", size=13, color="#000000"),
-                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#000000")),
+                        font=dict(family="Noto Sans, sans-serif", size=13, color="#1A1A1A"),
+                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#616365")),
                         hovermode="x unified"
                     )
-                    fig_contrib.update_xaxes(showgrid=False, tickfont=dict(size=12, color="#000000"), linecolor="#333333", tickcolor="#333333", ticks="outside", title_text="")
-                    fig_contrib.update_yaxes(showgrid=True, gridcolor="#E0E0E0", ticksuffix="%", tickfont=dict(size=12, color="#000000"), linecolor="#333333", tickcolor="#333333", ticks="outside", title_text="")
+                    fig_contrib.update_xaxes(showgrid=False, tickfont=dict(size=12, color="#616365"), linecolor="#E6E9EC", tickcolor="#E6E9EC", ticks="outside", title_text="")
+                    fig_contrib.update_yaxes(showgrid=True, gridcolor="#E6E9EC", ticksuffix="%", tickfont=dict(size=12, color="#616365"), linecolor="#E6E9EC", tickcolor="#E6E9EC", ticks="outside", title_text="")
                     try:
                         st.plotly_chart(fig_contrib, use_container_width=True, theme=None)
                     except TypeError:
@@ -1312,11 +1312,11 @@ def render_brand_page(brand_key_page):
         if df_to_render.empty:
             return
         with st.expander(title, expanded=False):
-            html = '<table style="width:100%; border-collapse:collapse; font-family:Inter,sans-serif; margin:10px 0;">'
+            html = '<table style="width:100%; border-collapse:collapse; font-family:Noto Sans,sans-serif; margin:10px 0;">'
             # Header
             html += '<thead><tr>'
             for col in df_to_render.columns:
-                html += f'<th style="background:#1A3E6E; color:#FFFFFF; padding:10px 14px; text-align:right; font-size:12px; font-weight:600;">{col}</th>'
+                html += f'<th style="background:#0093D0; color:#FFFFFF; padding:10px 14px; text-align:right; font-size:12px; font-weight:600;">{col}</th>'
             html += '</tr></thead><tbody>'
             # Rows
             for idx, row in df_to_render.iterrows():
@@ -1406,20 +1406,20 @@ def render_brand_page(brand_key_page):
                             fig.add_trace(go.Scatter(x=pivoted_df.index.tolist(), y=y_vals, mode="lines+markers+text", name=brand, text=text_vals, textposition="top center", textfont=dict(size=9, color=CHART_COLORS[0]), line=dict(color=CHART_COLORS[0], width=3), marker=dict(size=7)))
                         else:
                             fig.add_trace(go.Scatter(x=pivoted_df.index.tolist(), y=y_vals, mode="lines+markers", name=brand, line=dict(color=CHART_COLORS[i % len(CHART_COLORS)], width=2), marker=dict(size=5)))
-                fig.update_layout(title=dict(text=chart_title, font=dict(size=13, color="#1A3E6E")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"), legend=dict(orientation="h", y=-0.2, font=dict(size=9, color="#000000")))
+                fig.update_layout(title=dict(text=chart_title, font=dict(size=13, color="#0093D0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"), legend=dict(orientation="h", y=-0.2, font=dict(size=9, color="#000000")))
                 fig.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
                 fig.update_yaxes(ticksuffix="%", tickfont=dict(size=9, color="#000000"))
                 img_buf = BytesIO(fig.to_image(format="png", scale=2))
                 return img_buf
 
-            def make_dual_line_image(data1, data2, label1, label2, chart_title, color1="#1A3E6E", color2="#5BABDE"):
+            def make_dual_line_image(data1, data2, label1, label2, chart_title, color1="#0093D0", color2="#00AEEF"):
                 """Render a dual-line Plotly chart and return as BytesIO PNG."""
                 fig = go.Figure()
                 if data1 is not None:
                     fig.add_trace(go.Scatter(x=data1.index.tolist(), y=data1.tolist(), mode="lines+markers", name=label1, line=dict(color=color1, width=3), marker=dict(size=7)))
                 if data2 is not None:
                     fig.add_trace(go.Scatter(x=data2.index.tolist(), y=data2.tolist(), mode="lines+markers", name=label2, line=dict(color=color2, width=3), marker=dict(size=7)))
-                fig.update_layout(title=dict(text=chart_title, font=dict(size=13, color="#1A3E6E")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"), legend=dict(orientation="h", y=-0.2, font=dict(size=9, color="#000000")))
+                fig.update_layout(title=dict(text=chart_title, font=dict(size=13, color="#0093D0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"), legend=dict(orientation="h", y=-0.2, font=dict(size=9, color="#000000")))
                 fig.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
                 fig.update_yaxes(ticksuffix="%", tickfont=dict(size=9, color="#000000"))
                 img_buf = BytesIO(fig.to_image(format="png", scale=2))
@@ -1446,12 +1446,12 @@ def render_brand_page(brand_key_page):
             elements = []
             styles = getSampleStyleSheet()
 
-            title_style = ParagraphStyle("CustomTitle", parent=styles["Title"], fontSize=20, textColor=colors.HexColor("#1A3E6E"), spaceAfter=6)
-            heading_style = ParagraphStyle("CustomHeading", parent=styles["Heading2"], fontSize=14, textColor=colors.HexColor("#1A3E6E"), spaceBefore=16, spaceAfter=8)
-            kpi_style = ParagraphStyle("KPI", parent=styles["Normal"], fontSize=12, textColor=colors.HexColor("#1A3E6E"), spaceAfter=4)
+            title_style = ParagraphStyle("CustomTitle", parent=styles["Title"], fontSize=20, textColor=colors.HexColor("#0093D0"), spaceAfter=6)
+            heading_style = ParagraphStyle("CustomHeading", parent=styles["Heading2"], fontSize=14, textColor=colors.HexColor("#0093D0"), spaceBefore=16, spaceAfter=8)
+            kpi_style = ParagraphStyle("KPI", parent=styles["Normal"], fontSize=12, textColor=colors.HexColor("#0093D0"), spaceAfter=4)
 
             table_style = TableStyle([
-                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1A3E6E")),
+                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0093D0")),
                 ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
                 ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
                 ("FONTSIZE", (0, 0), (-1, 0), 9),
@@ -1571,7 +1571,7 @@ def render_brand_page(brand_key_page):
                         if not oa_contrib_pdf.empty and ddd_brand_pdf in oa_contrib_pdf.columns:
                             oa_data = oa_contrib_pdf[ddd_brand_pdf]
                             ma_data = ma_contrib_pdf[ddd_brand_pdf] if (not ma_contrib_pdf.empty and ddd_brand_pdf in ma_contrib_pdf.columns) else None
-                            oa_ma_img = make_dual_line_image(oa_data, ma_data, "OA Contribution", "MA Contribution", f"{display_name} OA vs MA Contribution (DDD)", "#1A3E6E", "#2EAF7D")
+                            oa_ma_img = make_dual_line_image(oa_data, ma_data, "OA Contribution", "MA Contribution", f"{display_name} OA vs MA Contribution (DDD)", "#0093D0", "#00A950")
                             elements.append(Image(oa_ma_img, width=7.5*inch, height=2.8*inch))
                             elements.append(Spacer(1, 10))
 
@@ -1645,18 +1645,18 @@ def render_home():
 
     st.markdown(f"""
     <div style="padding: 0 50px;">
-        <div style="background: #FFFFFF; border-radius: 14px; padding: 24px 32px; box-shadow: 0 2px 12px rgba(26, 62, 110, 0.06); border: 1px solid rgba(26, 62, 110, 0.08); border-left: 5px solid #5BABDE;">
-            <div style="font-size: 16px; font-weight: 700; color: #1A3E6E; margin-bottom: 16px; font-family: 'Inter', sans-serif;">Data Summary</div>
-            <table style="width: 100%; border-collapse: collapse; font-family: 'Inter', sans-serif;">
+        <div style="background: #FFFFFF; border-radius: 14px; padding: 24px 32px; box-shadow: 0 2px 12px rgba(26, 62, 110, 0.06); border: 1px solid #E6E9EC; border-left: 4px solid #0093D0;">
+            <div style="font-size: 16px; font-weight: 700; color: #1A1A1A; margin-bottom: 16px; font-family: 'Noto Sans', sans-serif;">Data Summary</div>
+            <table style="width: 100%; border-collapse: collapse; font-family: 'Noto Sans', sans-serif;">
                 <thead><tr style="border-bottom: 2px solid #E8EDF3;">
-                    <th style="text-align: left; padding: 10px 16px; font-size: 13px; font-weight: 600; color: #6B7C93; text-transform: uppercase; letter-spacing: 0.5px;">Data Source</th>
-                    <th style="text-align: left; padding: 10px 16px; font-size: 13px; font-weight: 600; color: #6B7C93; text-transform: uppercase; letter-spacing: 0.5px;">Data Availability</th>
+                    <th style="text-align: left; padding: 10px 16px; font-size: 13px; font-weight: 600; color: #616365; text-transform: uppercase; letter-spacing: 0.5px;">Data Source</th>
+                    <th style="text-align: left; padding: 10px 16px; font-size: 13px; font-weight: 600; color: #616365; text-transform: uppercase; letter-spacing: 0.5px;">Data Availability</th>
                 </tr></thead>
                 <tbody>
                     <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">NPA</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Till {max_date}</td></tr>
                     <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">DDD</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Till {max_date}</td></tr>
                     <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">ELAAD</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Till {max_date}</td></tr>
-                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50; font-weight: 600;">Refreshed On</td><td style="padding: 12px 16px; font-size: 14px; color: #1A3E6E; font-weight: 600;">{refresh_ts}</td></tr>
+                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50; font-weight: 600;">Refreshed On</td><td style="padding: 12px 16px; font-size: 14px; color: #0093D0; font-weight: 600;">{refresh_ts}</td></tr>
                 </tbody>
             </table>
         </div>
@@ -1689,7 +1689,7 @@ def render_home():
 
     st.markdown("""
     <div style="text-align: center; padding: 14px 0; border-top: 1px solid rgba(26, 62, 110, 0.08); margin-top: 40px;">
-        <span style="color: #9EAAB8; font-size: 12px;">Developed by ZS Primary Care Team</span>
+        <span style="color: #616365; font-size: 12px;">Developed by ZS Primary Care Team</span>
     </div>
     """, unsafe_allow_html=True)
 
