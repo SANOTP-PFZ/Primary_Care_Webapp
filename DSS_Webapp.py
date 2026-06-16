@@ -28,7 +28,7 @@ DATASET_NAME = "SQL_EARNINGS_REPORT_MASTER_DATASET_SF"  # <-- Your Dataiku datas
 BRAND_CONFIG = {
     "nurtec": {"display_name": "Nurtec", "brand_key": "NURTEC", "market": "CGRP", "market_display": "Oral CGRP", "source": "NPA"},
     "eliquis": {"display_name": "Eliquis", "brand_key": "ELIQUIS", "market": "OAC", "market_display": "Oral Anticoagulant", "source": "NPA"},
-    "prevnar": {"display_name": "Prevnar", "brand_key": "PREVNAR 20", "market": "PCV", "market_display": "PCV", "source": "NPA", "ddd_market": "PCV", "ddd_brand": "PREVNAR"},
+    "prevnar": {"display_name": "Prevnar", "brand_key": "PREVNAR", "market": "PCV", "market_display": "PCV", "source": "NPA", "ddd_market": "PCV", "ddd_brand": "PREVNAR"},
     "comirnaty": {"display_name": "Comirnaty", "brand_key": "COMIRNATY", "market": "COVID_VACCINES", "market_display": "COVID Vaccines", "source": "NPA", "ddd_market": "COVID", "ddd_brand": "COMIRNATY"},
     "abrysvo": {"display_name": "Abrysvo", "brand_key": "ABRYSVO", "market": "RSV", "market_display": "RSV", "source": "NPA", "ddd_market": "RSV", "ddd_brand": "ABRYSVO"},
     "paxlovid": {"display_name": "Paxlovid", "brand_key": "PAXLOVID", "market": "COVID_ORAL", "market_display": "COVID Oral Treatment", "source": "NPA"},
@@ -777,13 +777,6 @@ def render_brand_page(brand_key_page):
     trx_data = get_npa_trx_data(df, market)
     nbrx_data = get_npa_nbrx_data(df, market)
 
-    # Combine PREVNAR 13 into PREVNAR 20 for PCV market
-    if brand_key_page == "prevnar":
-        trx_data.loc[trx_data["BRAND"] == "PREVNAR 13", "BRAND"] = "PREVNAR 20"
-        nbrx_data.loc[nbrx_data["BRAND"] == "PREVNAR 13", "BRAND"] = "PREVNAR 20"
-        # Sum values for same quarter + metric where both exist
-        trx_data = trx_data.groupby(["YR_QTR_TXT", "DATASET", "MARKET", "BRAND", "METRICS"], as_index=False)["VALUE"].sum()
-        nbrx_data = nbrx_data.groupby(["YR_QTR_TXT", "DATASET", "MARKET", "BRAND", "METRICS"], as_index=False)["VALUE"].sum()
 
     if trx_data.empty and nbrx_data.empty:
         st.warning(f"No NPA data available for {display_name} in market '{market}'. Check the dataset.")
