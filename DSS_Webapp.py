@@ -263,6 +263,8 @@ def render_brand_page(brand_key_page):
     if brand_key_page == "zavzpret":
         trx_data = get_npa_trx_data(df, market)
         nbrx_data = get_npa_nbrx_data(df, market)
+        trx_data = trx_data[trx_data["YR_QTR_TXT"] >= "2025Q1"]
+        nbrx_data = nbrx_data[nbrx_data["YR_QTR_TXT"] >= "2025Q1"]
 
         if trx_data.empty and nbrx_data.empty:
             st.warning(f"No data available for {display_name}. Check the dataset.")
@@ -532,6 +534,7 @@ def render_brand_page(brand_key_page):
     # --- BEYFORTUS: Special handler (claims + patients, no market share) ---
     if brand_key_page == "beyfortus":
         elaad_data = df[(df["DATASET"] == "ELAAD") & (df["MARKET"] == "BEYFORTUS")]
+        elaad_data = elaad_data[elaad_data["YR_QTR_TXT"] >= "2025Q1"]
 
         if elaad_data.empty:
             st.warning(f"No data available for {display_name}. Check the dataset.")
