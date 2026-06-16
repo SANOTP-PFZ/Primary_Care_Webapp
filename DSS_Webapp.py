@@ -179,7 +179,8 @@ def render_trend_chart(pivoted_df, title, brands_order=None, is_percentage=True)
             y_vals = pivoted_df[brand].tolist()
             if i == 0:
                 # Primary brand - show data labels
-                text_vals = [f"{v:.2f}" if pd.notna(v) else "" for v in y_vals]
+                text_vals = [f"{v:.2f}" if pd.notna(v) else "" for v in y_vals] if is_percentage else [f"{v:,.0f}" if pd.notna(v) else "" for v in y_vals]
+                hover_fmt = f"<b>{brand}</b><br>%{{x}}<br>%{{y:.2f}}%<extra></extra>" if is_percentage else f"<b>{brand}</b><br>%{{x}}<br>%{{y:,.0f}}<extra></extra>"
                 fig.add_trace(go.Scatter(
                     x=pivoted_df.index.tolist(),
                     y=y_vals,
@@ -190,10 +191,11 @@ def render_trend_chart(pivoted_df, title, brands_order=None, is_percentage=True)
                     textfont=dict(size=10, color="#0093D0"),
                     line=dict(color=CHART_COLORS[0], width=3),
                     marker=dict(size=7),
-                    hovertemplate=f"<b>{brand}</b><br>%{{x}}<br>%{{y:.2f}}%<extra></extra>"
+                    hovertemplate=hover_fmt
                 ))
             else:
                 # Competitor brands - no data labels
+                hover_fmt = f"<b>{brand}</b><br>%{{x}}<br>%{{y:.2f}}%<extra></extra>" if is_percentage else f"<b>{brand}</b><br>%{{x}}<br>%{{y:,.0f}}<extra></extra>"
                 fig.add_trace(go.Scatter(
                     x=pivoted_df.index.tolist(),
                     y=y_vals,
@@ -201,7 +203,7 @@ def render_trend_chart(pivoted_df, title, brands_order=None, is_percentage=True)
                     name=brand,
                     line=dict(color=CHART_COLORS[i % len(CHART_COLORS)], width=2),
                     marker=dict(size=5),
-                    hovertemplate=f"<b>{brand}</b><br>%{{x}}<br>%{{y:.2f}}%<extra></extra>"
+                    hovertemplate=hover_fmt
                 ))
 
     fig.update_layout(
