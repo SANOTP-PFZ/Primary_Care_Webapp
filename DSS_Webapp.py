@@ -945,7 +945,7 @@ def render_brand_page(brand_key_page):
                         text=[f"Retail<br>{abrysvo_retail_c:.2f}%" if pd.notna(abrysvo_retail_c) else "Retail<br>N/A", f"Non-Retail<br>{abrysvo_non_retail_c:.2f}%" if pd.notna(abrysvo_non_retail_c) else "Non-Retail<br>N/A"],
                         textposition="outside",
                         textfont=dict(size=12, color="#1A1A1A"),
-                        hovertemplate="%{label}: %{percent}<extra></extra>",
+                        hovertemplate="%{text}<extra></extra>",
                         hole=0.4,
                         pull=[0.03, 0.03]
                     )])
@@ -964,8 +964,8 @@ def render_brand_page(brand_key_page):
                 with col_trend:
                     import plotly.io as pio
                     pio.templates.default = "plotly_white"
-                    fig_contrib = go.Figure()
-
+                    fig_trend = go.Figure()
+                    # Retail contribution trend
                     if not retail_contrib.empty and "ABRYSVO" in retail_contrib.columns:
                         fig_contrib.add_trace(go.Scatter(
                             x=retail_contrib.index.tolist(), y=retail_contrib["ABRYSVO"].tolist(),
@@ -1027,7 +1027,7 @@ def render_brand_page(brand_key_page):
                         text=[f"OA<br>{abrysvo_oa_c:.2f}%" if pd.notna(abrysvo_oa_c) else "OA<br>N/A", f"MA<br>{abrysvo_ma_c:.2f}%" if pd.notna(abrysvo_ma_c) else "MA<br>N/A"],
                         textposition="outside",
                         textfont=dict(size=12, color="#1A1A1A"),
-                        hovertemplate="%{label}: %{percent}<extra></extra>",
+                        hovertemplate="%{text}<extra></extra>",
                         hole=0.4,
                         pull=[0.03, 0.03]
                     )])
@@ -1145,7 +1145,7 @@ def render_brand_page(brand_key_page):
                         text=[f"Retail<br>{prevnar_retail_c:.2f}%" if pd.notna(prevnar_retail_c) else "Retail<br>N/A", f"Non-Retail<br>{prevnar_non_retail_c:.2f}%" if pd.notna(prevnar_non_retail_c) else "Non-Retail<br>N/A"],
                         textposition="outside",
                         textfont=dict(size=12, color="#1A1A1A"),
-                        hovertemplate="%{label}: %{percent}<extra></extra>",
+                        hovertemplate="%{text}<extra></extra>",
                         hole=0.4,
                         pull=[0.03, 0.03]
                     )])
@@ -1263,7 +1263,7 @@ def render_brand_page(brand_key_page):
                         text=[f"Retail<br>{comirnaty_retail_c:.2f}%" if pd.notna(comirnaty_retail_c) else "Retail<br>N/A", f"Non-Retail<br>{comirnaty_non_retail_c:.2f}%" if pd.notna(comirnaty_non_retail_c) else "Non-Retail<br>N/A"],
                         textposition="outside",
                         textfont=dict(size=12, color="#1A1A1A"),
-                        hovertemplate="%{label}: %{percent}<extra></extra>",
+                        hovertemplate="%{text}<extra></extra>",
                         hole=0.4,
                         pull=[0.03, 0.03]
                     )])
