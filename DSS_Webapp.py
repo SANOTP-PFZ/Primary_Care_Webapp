@@ -26,7 +26,7 @@ DATASET_NAME = "SQL_EARNINGS_REPORT_MASTER_DATASET_SF"  # <-- Your Dataiku datas
 
 # Primary brands and their markets (these become the brand cards on home page)
 BRAND_CONFIG = {
-    "nurtec": {"display_name": "Nurtec", "brand_key": "NURTEC", "market": "CGRP", "market_display": "Oral CGRP", "source": "NPA"},
+    "nurtec": {"display_name": "Nurtec", "brand_key": "NURTEC", "market": "OCGRP", "market_display": "Oral CGRP", "source": "NPA"},
     "eliquis": {"display_name": "Eliquis", "brand_key": "ELIQUIS", "market": "OAC", "market_display": "Oral Anticoagulant", "source": "NPA"},
     "prevnar": {"display_name": "Prevnar", "brand_key": "PREVNAR", "market": "PCV", "market_display": "PCV", "source": "NPA", "ddd_market": "PCV", "ddd_brand": "PREVNAR"},
     "comirnaty": {"display_name": "Comirnaty", "brand_key": "COMIRNATY", "market": "COVID_VACCINES", "market_display": "COVID Vaccines", "source": "NPA", "ddd_market": "COVID", "ddd_brand": "COMIRNATY"},
@@ -578,12 +578,12 @@ def render_brand_page(brand_key_page):
         st.markdown(f"""
         <div class="kpi-container">
             <div class="kpi-card">
-                <div class="kpi-label">{display_name} Claims <span style="font-size:11px; color:#616365; font-weight:400;">(ELAAD)</span></div>
+                <div class="kpi-label">{display_name} Claims <span style="font-size:11px; color:#616365; font-weight:400;">(LAAD)</span></div>
                 <div class="kpi-value">{claims_str} {claims_growth_html}</div>
                 <div class="kpi-period">Latest: {latest_qtr}</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-label">{display_name} Patients <span style="font-size:11px; color:#616365; font-weight:400;">(ELAAD)</span></div>
+                <div class="kpi-label">{display_name} Patients <span style="font-size:11px; color:#616365; font-weight:400;">(LAAD)</span></div>
                 <div class="kpi-value">{patients_str} {patients_growth_html}</div>
                 <div class="kpi-period">Latest: {latest_qtr}</div>
             </div>
@@ -592,12 +592,12 @@ def render_brand_page(brand_key_page):
 
         # Claims Trend
         if not claims.empty:
-            st.markdown(f'<div class="section-title">Claims Trend <span style="font-size:13px; color:#0093D0; font-weight:500;">(ELAAD)</span></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="section-title">Claims Trend <span style="font-size:13px; color:#0093D0; font-weight:500;">(LAAD)</span></div>', unsafe_allow_html=True)
             render_trend_chart(claims, "Claims", [brand_name], is_percentage=False)
 
         # Patients Trend
         if not patients.empty:
-            st.markdown(f'<div class="section-title">Patients Trend <span style="font-size:13px; color:#0093D0; font-weight:500;">(ELAAD)</span></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="section-title">Patients Trend <span style="font-size:13px; color:#0093D0; font-weight:500;">(LAAD)</span></div>', unsafe_allow_html=True)
             render_trend_chart(patients, "Patients", [brand_name], is_percentage=False)
 
         # Raw Data Tables
@@ -701,15 +701,15 @@ def render_brand_page(brand_key_page):
                 elements.append(Paragraph(f"<b>Latest Quarter:</b> {latest_qtr}", kpi_style))
                 c_g_str = f" ({'+' if claims_growth_val >= 0 else ''}{claims_growth_val:.2f}% vs STLY)" if pd.notna(claims_growth_val) else ""
                 p_g_str = f" ({'+' if patients_growth_val >= 0 else ''}{patients_growth_val:.2f}% vs STLY)" if pd.notna(patients_growth_val) else ""
-                elements.append(Paragraph(f"<b>{display_name} Claims (ELAAD):</b> {claims_str}{c_g_str}", kpi_style))
-                elements.append(Paragraph(f"<b>{display_name} Patients (ELAAD):</b> {patients_str}{p_g_str}", kpi_style))
+                elements.append(Paragraph(f"<b>{display_name} Claims (LAAD):</b> {claims_str}{c_g_str}", kpi_style))
+                elements.append(Paragraph(f"<b>{display_name} Patients (LAAD):</b> {patients_str}{p_g_str}", kpi_style))
                 elements.append(Spacer(1, 10))
 
                 # Claims Chart
                 if not claims.empty and brand_name in claims.columns:
                     fig_c = go.Figure()
                     fig_c.add_trace(go.Scatter(x=claims.index.tolist(), y=claims[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in claims[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#0093D0", width=3), marker=dict(size=7)))
-                    fig_c.update_layout(title=dict(text="Claims Trend (ELAAD)", font=dict(size=13, color="#0093D0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
+                    fig_c.update_layout(title=dict(text="Claims Trend (LAAD)", font=dict(size=13, color="#0093D0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
                     fig_c.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
                     fig_c.update_yaxes(tickfont=dict(size=9, color="#000000"), separatethousands=True)
                     c_img = BytesIO(fig_c.to_image(format="png", scale=2))
@@ -720,7 +720,7 @@ def render_brand_page(brand_key_page):
                 if not patients.empty and brand_name in patients.columns:
                     fig_p = go.Figure()
                     fig_p.add_trace(go.Scatter(x=patients.index.tolist(), y=patients[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in patients[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#0093D0", width=3), marker=dict(size=7)))
-                    fig_p.update_layout(title=dict(text="Patients Trend (ELAAD)", font=dict(size=13, color="#0093D0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
+                    fig_p.update_layout(title=dict(text="Patients Trend (LAAD)", font=dict(size=13, color="#0093D0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
                     fig_p.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
                     fig_p.update_yaxes(tickfont=dict(size=9, color="#000000"), separatethousands=True)
                     p_img = BytesIO(fig_p.to_image(format="png", scale=2))
@@ -1665,7 +1665,7 @@ def render_home():
                 <tbody>
                     <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">NPA</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Till {max_date}</td></tr>
                     <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">DDD</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Till {max_date}</td></tr>
-                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">ELAAD</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Till {max_date}</td></tr>
+                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">LAAD</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Till {max_date}</td></tr>
                     <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50; font-weight: 600;">Refreshed On</td><td style="padding: 12px 16px; font-size: 14px; color: #0093D0; font-weight: 600;">{refresh_ts}</td></tr>
                 </tbody>
             </table>
