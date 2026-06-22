@@ -964,7 +964,7 @@ def render_brand_page(brand_key_page):
                 with col_trend:
                     import plotly.io as pio
                     pio.templates.default = "plotly_white"
-                    fig_trend = go.Figure()
+                    fig_contrib = go.Figure()
                     # Retail contribution trend
                     if not retail_contrib.empty and "ABRYSVO" in retail_contrib.columns:
                         fig_contrib.add_trace(go.Scatter(
