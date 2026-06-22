@@ -945,6 +945,7 @@ def render_brand_page(brand_key_page):
                         text=[f"Retail<br>{abrysvo_retail_c:.2f}%" if pd.notna(abrysvo_retail_c) else "Retail<br>N/A", f"Non-Retail<br>{abrysvo_non_retail_c:.2f}%" if pd.notna(abrysvo_non_retail_c) else "Non-Retail<br>N/A"],
                         textposition="outside",
                         textfont=dict(size=12, color="#1A1A1A"),
+                        hovertemplate="%{label}: %{percent}<extra></extra>",
                         hole=0.4,
                         pull=[0.03, 0.03]
                     )])
@@ -1026,6 +1027,7 @@ def render_brand_page(brand_key_page):
                         text=[f"OA<br>{abrysvo_oa_c:.2f}%" if pd.notna(abrysvo_oa_c) else "OA<br>N/A", f"MA<br>{abrysvo_ma_c:.2f}%" if pd.notna(abrysvo_ma_c) else "MA<br>N/A"],
                         textposition="outside",
                         textfont=dict(size=12, color="#1A1A1A"),
+                        hovertemplate="%{label}: %{percent}<extra></extra>",
                         hole=0.4,
                         pull=[0.03, 0.03]
                     )])
@@ -1143,6 +1145,7 @@ def render_brand_page(brand_key_page):
                         text=[f"Retail<br>{prevnar_retail_c:.2f}%" if pd.notna(prevnar_retail_c) else "Retail<br>N/A", f"Non-Retail<br>{prevnar_non_retail_c:.2f}%" if pd.notna(prevnar_non_retail_c) else "Non-Retail<br>N/A"],
                         textposition="outside",
                         textfont=dict(size=12, color="#1A1A1A"),
+                        hovertemplate="%{label}: %{percent}<extra></extra>",
                         hole=0.4,
                         pull=[0.03, 0.03]
                     )])
@@ -1260,6 +1263,7 @@ def render_brand_page(brand_key_page):
                         text=[f"Retail<br>{comirnaty_retail_c:.2f}%" if pd.notna(comirnaty_retail_c) else "Retail<br>N/A", f"Non-Retail<br>{comirnaty_non_retail_c:.2f}%" if pd.notna(comirnaty_non_retail_c) else "Non-Retail<br>N/A"],
                         textposition="outside",
                         textfont=dict(size=12, color="#1A1A1A"),
+                        hovertemplate="%{label}: %{percent}<extra></extra>",
                         hole=0.4,
                         pull=[0.03, 0.03]
                     )])
