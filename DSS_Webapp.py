@@ -1426,6 +1426,35 @@ def render_brand_page(brand_key_page):
             qoq_nbrx_df["STLY Growth %"] = qoq_nbrx_df["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
             render_styled_table(qoq_nbrx_df, "Nurtec NBRX QOQ Summary")
 
+        # OCGRP Market QOQ Tables
+        trx_ocgrp_claims = pivot_market_share(trx_data, "TRX CLAIMS")
+        trx_ocgrp_growth = pivot_market_share(trx_data, "TRX CLAIMS QOQ GROWTH PCT")
+        trx_ocgrp_stly = pivot_market_share(trx_data, "TRX CLAIMS GROWTH PCT STLY")
+
+        if not trx_ocgrp_claims.empty and "OCGRP" in trx_ocgrp_claims.columns:
+            qoq_trx_ocgrp = pd.DataFrame({"Quarter": trx_ocgrp_claims.index})
+            qoq_trx_ocgrp["TRX Claims"] = trx_ocgrp_claims["OCGRP"].values
+            qoq_trx_ocgrp["Prev Qtr Growth %"] = trx_ocgrp_growth["OCGRP"].values if (not trx_ocgrp_growth.empty and "OCGRP" in trx_ocgrp_growth.columns) else None
+            qoq_trx_ocgrp["STLY Growth %"] = trx_ocgrp_stly["OCGRP"].values if (not trx_ocgrp_stly.empty and "OCGRP" in trx_ocgrp_stly.columns) else None
+            qoq_trx_ocgrp["TRX Claims"] = qoq_trx_ocgrp["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            qoq_trx_ocgrp["Prev Qtr Growth %"] = qoq_trx_ocgrp["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            qoq_trx_ocgrp["STLY Growth %"] = qoq_trx_ocgrp["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table(qoq_trx_ocgrp, "OCGRP TRX QOQ Summary")
+
+        nbrx_ocgrp_claims = pivot_market_share(nbrx_data, "NBRX CLAIMS")
+        nbrx_ocgrp_growth = pivot_market_share(nbrx_data, "NBRX CLAIMS QOQ GROWTH PCT")
+        nbrx_ocgrp_stly = pivot_market_share(nbrx_data, "NBRX CLAIMS GROWTH PCT STLY")
+
+        if not nbrx_ocgrp_claims.empty and "OCGRP" in nbrx_ocgrp_claims.columns:
+            qoq_nbrx_ocgrp = pd.DataFrame({"Quarter": nbrx_ocgrp_claims.index})
+            qoq_nbrx_ocgrp["NBRX Claims"] = nbrx_ocgrp_claims["OCGRP"].values
+            qoq_nbrx_ocgrp["Prev Qtr Growth %"] = nbrx_ocgrp_growth["OCGRP"].values if (not nbrx_ocgrp_growth.empty and "OCGRP" in nbrx_ocgrp_growth.columns) else None
+            qoq_nbrx_ocgrp["STLY Growth %"] = nbrx_ocgrp_stly["OCGRP"].values if (not nbrx_ocgrp_stly.empty and "OCGRP" in nbrx_ocgrp_stly.columns) else None
+            qoq_nbrx_ocgrp["NBRX Claims"] = qoq_nbrx_ocgrp["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            qoq_nbrx_ocgrp["Prev Qtr Growth %"] = qoq_nbrx_ocgrp["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            qoq_nbrx_ocgrp["STLY Growth %"] = qoq_nbrx_ocgrp["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table(qoq_nbrx_ocgrp, "OCGRP NBRX QOQ Summary")
+
     # --- Downloads ---
     st.markdown('<div class="section-title">Download Reports</div>', unsafe_allow_html=True)
 
