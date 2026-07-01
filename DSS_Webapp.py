@@ -1396,6 +1396,36 @@ def render_brand_page(brand_key_page):
             display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-")
         render_styled_table(display_df, "NBRX MS Diff vs STLY (pp)")
 
+    # --- Nurtec QOQ Tables ---
+    if brand_key_page == "nurtec":
+        trx_qoq_claims = pivot_market_share(trx_data, "TRX CLAIMS")
+        trx_qoq_growth = pivot_market_share(trx_data, "TRX CLAIMS QOQ GROWTH PCT")
+        trx_qoq_stly = pivot_market_share(trx_data, "TRX CLAIMS GROWTH PCT STLY")
+
+        if not trx_qoq_claims.empty and "NURTEC" in trx_qoq_claims.columns:
+            qoq_trx_df = pd.DataFrame({"Quarter": trx_qoq_claims.index})
+            qoq_trx_df["TRX Claims"] = trx_qoq_claims["NURTEC"].values
+            qoq_trx_df["Prev Qtr Growth %"] = trx_qoq_growth["NURTEC"].values if (not trx_qoq_growth.empty and "NURTEC" in trx_qoq_growth.columns) else None
+            qoq_trx_df["STLY Growth %"] = trx_qoq_stly["NURTEC"].values if (not trx_qoq_stly.empty and "NURTEC" in trx_qoq_stly.columns) else None
+            qoq_trx_df["TRX Claims"] = qoq_trx_df["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            qoq_trx_df["Prev Qtr Growth %"] = qoq_trx_df["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            qoq_trx_df["STLY Growth %"] = qoq_trx_df["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table(qoq_trx_df, "Nurtec TRX QOQ Summary")
+
+        nbrx_qoq_claims = pivot_market_share(nbrx_data, "NBRX CLAIMS")
+        nbrx_qoq_growth = pivot_market_share(nbrx_data, "NBRX CLAIMS QOQ GROWTH PCT")
+        nbrx_qoq_stly = pivot_market_share(nbrx_data, "NBRX CLAIMS GROWTH PCT STLY")
+
+        if not nbrx_qoq_claims.empty and "NURTEC" in nbrx_qoq_claims.columns:
+            qoq_nbrx_df = pd.DataFrame({"Quarter": nbrx_qoq_claims.index})
+            qoq_nbrx_df["NBRX Claims"] = nbrx_qoq_claims["NURTEC"].values
+            qoq_nbrx_df["Prev Qtr Growth %"] = nbrx_qoq_growth["NURTEC"].values if (not nbrx_qoq_growth.empty and "NURTEC" in nbrx_qoq_growth.columns) else None
+            qoq_nbrx_df["STLY Growth %"] = nbrx_qoq_stly["NURTEC"].values if (not nbrx_qoq_stly.empty and "NURTEC" in nbrx_qoq_stly.columns) else None
+            qoq_nbrx_df["NBRX Claims"] = qoq_nbrx_df["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            qoq_nbrx_df["Prev Qtr Growth %"] = qoq_nbrx_df["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            qoq_nbrx_df["STLY Growth %"] = qoq_nbrx_df["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table(qoq_nbrx_df, "Nurtec NBRX QOQ Summary")
+
     # --- Downloads ---
     st.markdown('<div class="section-title">Download Reports</div>', unsafe_allow_html=True)
 
