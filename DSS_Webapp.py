@@ -1196,6 +1196,26 @@ def render_brand_page(brand_key_page):
                     except TypeError:
                         st.plotly_chart(fig_contrib, use_container_width=True)
 
+            # --- Prevnar Peds Market Share Trend (2024 onwards) ---
+            ped_ms = pivot_market_share(ddd_data, "PED_MS")
+            if not ped_ms.empty:
+                ped_brands = [b for b in ["PREVNAR", "VAXNEUVANCE"] if b in ped_ms.columns]
+                ped_ms = ped_ms[ped_brands]
+                ped_ms = ped_ms[ped_ms.index >= "2024Q1"]
+                if not ped_ms.empty:
+                    st.markdown('<div class="section-title">Peds Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                    render_trend_chart(ped_ms, "Peds Market Share", ped_brands)
+
+            # --- Prevnar Adult Market Share Trend (2024 onwards) ---
+            adult_ms = pivot_market_share(ddd_data, "ADULT_MS")
+            if not adult_ms.empty:
+                adult_brands = [b for b in ["PREVNAR", "VAXNEUVANCE", "CAPVAXIVE"] if b in adult_ms.columns]
+                adult_ms = adult_ms[adult_brands]
+                adult_ms = adult_ms[adult_ms.index >= "2024Q1"]
+                if not adult_ms.empty:
+                    st.markdown('<div class="section-title">Adult Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                    render_trend_chart(adult_ms, "Adult Market Share", adult_brands)
+
         # --- Comirnaty-specific DDD metrics ---
         if brand_key_page == "comirnaty":
             # Retail MS - all brands in market
