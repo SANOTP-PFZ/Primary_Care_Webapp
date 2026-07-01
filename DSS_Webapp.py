@@ -1455,6 +1455,57 @@ def render_brand_page(brand_key_page):
             qoq_nbrx_ocgrp["STLY Growth %"] = qoq_nbrx_ocgrp["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
             render_styled_table(qoq_nbrx_ocgrp, "OCGRP NBRX QOQ Summary")
 
+    # --- Eliquis QOQ Tables ---
+    if brand_key_page == "eliquis":
+        trx_eli_claims = pivot_market_share(trx_data, "TRX CLAIMS")
+        trx_eli_growth = pivot_market_share(trx_data, "TRX CLAIMS QOQ GROWTH PCT")
+        trx_eli_stly = pivot_market_share(trx_data, "TRX CLAIMS GROWTH PCT STLY")
+
+        if not trx_eli_claims.empty and "ELIQUIS" in trx_eli_claims.columns:
+            qoq_trx_eli = pd.DataFrame({"Quarter": trx_eli_claims.index})
+            qoq_trx_eli["TRX Claims"] = trx_eli_claims["ELIQUIS"].values
+            qoq_trx_eli["Prev Qtr Growth %"] = trx_eli_growth["ELIQUIS"].values if (not trx_eli_growth.empty and "ELIQUIS" in trx_eli_growth.columns) else None
+            qoq_trx_eli["STLY Growth %"] = trx_eli_stly["ELIQUIS"].values if (not trx_eli_stly.empty and "ELIQUIS" in trx_eli_stly.columns) else None
+            qoq_trx_eli["TRX Claims"] = qoq_trx_eli["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            qoq_trx_eli["Prev Qtr Growth %"] = qoq_trx_eli["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            qoq_trx_eli["STLY Growth %"] = qoq_trx_eli["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table(qoq_trx_eli, "Eliquis TRX QOQ Summary")
+
+        nbrx_eli_claims = pivot_market_share(nbrx_data, "NBRX CLAIMS")
+        nbrx_eli_growth = pivot_market_share(nbrx_data, "NBRX CLAIMS QOQ GROWTH PCT")
+        nbrx_eli_stly = pivot_market_share(nbrx_data, "NBRX CLAIMS GROWTH PCT STLY")
+
+        if not nbrx_eli_claims.empty and "ELIQUIS" in nbrx_eli_claims.columns:
+            qoq_nbrx_eli = pd.DataFrame({"Quarter": nbrx_eli_claims.index})
+            qoq_nbrx_eli["NBRX Claims"] = nbrx_eli_claims["ELIQUIS"].values
+            qoq_nbrx_eli["Prev Qtr Growth %"] = nbrx_eli_growth["ELIQUIS"].values if (not nbrx_eli_growth.empty and "ELIQUIS" in nbrx_eli_growth.columns) else None
+            qoq_nbrx_eli["STLY Growth %"] = nbrx_eli_stly["ELIQUIS"].values if (not nbrx_eli_stly.empty and "ELIQUIS" in nbrx_eli_stly.columns) else None
+            qoq_nbrx_eli["NBRX Claims"] = qoq_nbrx_eli["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            qoq_nbrx_eli["Prev Qtr Growth %"] = qoq_nbrx_eli["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            qoq_nbrx_eli["STLY Growth %"] = qoq_nbrx_eli["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table(qoq_nbrx_eli, "Eliquis NBRX QOQ Summary")
+
+        # OAC Market QOQ Tables
+        if not trx_eli_claims.empty and "OAC" in trx_eli_claims.columns:
+            qoq_trx_oac = pd.DataFrame({"Quarter": trx_eli_claims.index})
+            qoq_trx_oac["TRX Claims"] = trx_eli_claims["OAC"].values
+            qoq_trx_oac["Prev Qtr Growth %"] = trx_eli_growth["OAC"].values if (not trx_eli_growth.empty and "OAC" in trx_eli_growth.columns) else None
+            qoq_trx_oac["STLY Growth %"] = trx_eli_stly["OAC"].values if (not trx_eli_stly.empty and "OAC" in trx_eli_stly.columns) else None
+            qoq_trx_oac["TRX Claims"] = qoq_trx_oac["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            qoq_trx_oac["Prev Qtr Growth %"] = qoq_trx_oac["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            qoq_trx_oac["STLY Growth %"] = qoq_trx_oac["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table(qoq_trx_oac, "OAC TRX QOQ Summary")
+
+        if not nbrx_eli_claims.empty and "OAC" in nbrx_eli_claims.columns:
+            qoq_nbrx_oac = pd.DataFrame({"Quarter": nbrx_eli_claims.index})
+            qoq_nbrx_oac["NBRX Claims"] = nbrx_eli_claims["OAC"].values
+            qoq_nbrx_oac["Prev Qtr Growth %"] = nbrx_eli_growth["OAC"].values if (not nbrx_eli_growth.empty and "OAC" in nbrx_eli_growth.columns) else None
+            qoq_nbrx_oac["STLY Growth %"] = nbrx_eli_stly["OAC"].values if (not nbrx_eli_stly.empty and "OAC" in nbrx_eli_stly.columns) else None
+            qoq_nbrx_oac["NBRX Claims"] = qoq_nbrx_oac["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            qoq_nbrx_oac["Prev Qtr Growth %"] = qoq_nbrx_oac["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            qoq_nbrx_oac["STLY Growth %"] = qoq_nbrx_oac["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table(qoq_nbrx_oac, "OAC NBRX QOQ Summary")
+
     # --- Downloads ---
     st.markdown('<div class="section-title">Download Reports</div>', unsafe_allow_html=True)
 
