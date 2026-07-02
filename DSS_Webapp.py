@@ -1654,6 +1654,82 @@ def render_brand_page(brand_key_page):
             qoq_nbrx_rsv["STLY Growth %"] = qoq_nbrx_rsv["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
             render_styled_table(qoq_nbrx_rsv, "RSV NBRX QoQ Growth Summary (NPA)")
 
+    # --- Comirnaty QoQ Summaries ---
+    if brand_key_page == "comirnaty":
+        st.markdown('<div class="section-title">QoQ Summaries</div>', unsafe_allow_html=True)
+
+        # STLY Diff Tables
+        if not trx_diff.empty:
+            display_df = trx_diff.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
+            for col in display_df.columns[1:]:
+                display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-")
+            render_styled_table(display_df, "TRX Market Share Difference vs STLY (NPA)")
+
+        if not nbrx_diff.empty:
+            display_df = nbrx_diff.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
+            for col in display_df.columns[1:]:
+                display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-")
+            render_styled_table(display_df, "NBRX Market Share Difference vs STLY (NPA)")
+
+        # Comirnaty QOQ Tables
+        comirnaty_market_data = df[df["BRAND"].isin(["COMIRNATY", "COVID_VACCINES"])].copy()
+        trx_com_claims = pivot_market_share(trx_data, "TRX CLAIMS")
+        trx_com_growth = pivot_market_share(comirnaty_market_data, "TRX QOQ GROWTH PCT")
+        trx_com_stly = pivot_market_share(comirnaty_market_data, "TRX STLY GROWTH PCT")
+
+        if not trx_com_claims.empty and "COMIRNATY" in trx_com_claims.columns:
+            qoq_trx_com = pd.DataFrame({"Quarter": trx_com_claims.index})
+            qoq_trx_com.index = trx_com_claims.index
+            qoq_trx_com["TRX Claims"] = trx_com_claims["COMIRNATY"]
+            qoq_trx_com["Prev Qtr Growth %"] = trx_com_growth["COMIRNATY"].reindex(trx_com_claims.index) if (not trx_com_growth.empty and "COMIRNATY" in trx_com_growth.columns) else None
+            qoq_trx_com["STLY Growth %"] = trx_com_stly["COMIRNATY"].reindex(trx_com_claims.index) if (not trx_com_stly.empty and "COMIRNATY" in trx_com_stly.columns) else None
+            qoq_trx_com = qoq_trx_com.reset_index(drop=True)
+            qoq_trx_com["TRX Claims"] = qoq_trx_com["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            qoq_trx_com["Prev Qtr Growth %"] = qoq_trx_com["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            qoq_trx_com["STLY Growth %"] = qoq_trx_com["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table(qoq_trx_com, "Comirnaty TRX QoQ Growth Summary (NPA)")
+
+        nbrx_com_claims = pivot_market_share(nbrx_data, "NBRX CLAIMS")
+        nbrx_com_growth = pivot_market_share(comirnaty_market_data, "NBRX QOQ GROWTH PCT")
+        nbrx_com_stly = pivot_market_share(comirnaty_market_data, "NBRX STLY GROWTH PCT")
+
+        if not nbrx_com_claims.empty and "COMIRNATY" in nbrx_com_claims.columns:
+            qoq_nbrx_com = pd.DataFrame({"Quarter": nbrx_com_claims.index})
+            qoq_nbrx_com.index = nbrx_com_claims.index
+            qoq_nbrx_com["NBRX Claims"] = nbrx_com_claims["COMIRNATY"]
+            qoq_nbrx_com["Prev Qtr Growth %"] = nbrx_com_growth["COMIRNATY"].reindex(nbrx_com_claims.index) if (not nbrx_com_growth.empty and "COMIRNATY" in nbrx_com_growth.columns) else None
+            qoq_nbrx_com["STLY Growth %"] = nbrx_com_stly["COMIRNATY"].reindex(nbrx_com_claims.index) if (not nbrx_com_stly.empty and "COMIRNATY" in nbrx_com_stly.columns) else None
+            qoq_nbrx_com = qoq_nbrx_com.reset_index(drop=True)
+            qoq_nbrx_com["NBRX Claims"] = qoq_nbrx_com["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            qoq_nbrx_com["Prev Qtr Growth %"] = qoq_nbrx_com["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            qoq_nbrx_com["STLY Growth %"] = qoq_nbrx_com["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table(qoq_nbrx_com, "Comirnaty NBRX QoQ Growth Summary (NPA)")
+
+        # COVID_VACCINES Market QOQ Tables
+        if not trx_com_claims.empty and "COVID_VACCINES" in trx_com_claims.columns:
+            qoq_trx_cv = pd.DataFrame({"Quarter": trx_com_claims.index})
+            qoq_trx_cv.index = trx_com_claims.index
+            qoq_trx_cv["TRX Claims"] = trx_com_claims["COVID_VACCINES"]
+            qoq_trx_cv["Prev Qtr Growth %"] = trx_com_growth["COVID_VACCINES"].reindex(trx_com_claims.index) if (not trx_com_growth.empty and "COVID_VACCINES" in trx_com_growth.columns) else None
+            qoq_trx_cv["STLY Growth %"] = trx_com_stly["COVID_VACCINES"].reindex(trx_com_claims.index) if (not trx_com_stly.empty and "COVID_VACCINES" in trx_com_stly.columns) else None
+            qoq_trx_cv = qoq_trx_cv.reset_index(drop=True)
+            qoq_trx_cv["TRX Claims"] = qoq_trx_cv["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            qoq_trx_cv["Prev Qtr Growth %"] = qoq_trx_cv["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            qoq_trx_cv["STLY Growth %"] = qoq_trx_cv["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table(qoq_trx_cv, "COVID Vaccines TRX QoQ Growth Summary (NPA)")
+
+        if not nbrx_com_claims.empty and "COVID_VACCINES" in nbrx_com_claims.columns:
+            qoq_nbrx_cv = pd.DataFrame({"Quarter": nbrx_com_claims.index})
+            qoq_nbrx_cv.index = nbrx_com_claims.index
+            qoq_nbrx_cv["NBRX Claims"] = nbrx_com_claims["COVID_VACCINES"]
+            qoq_nbrx_cv["Prev Qtr Growth %"] = nbrx_com_growth["COVID_VACCINES"].reindex(nbrx_com_claims.index) if (not nbrx_com_growth.empty and "COVID_VACCINES" in nbrx_com_growth.columns) else None
+            qoq_nbrx_cv["STLY Growth %"] = nbrx_com_stly["COVID_VACCINES"].reindex(nbrx_com_claims.index) if (not nbrx_com_stly.empty and "COVID_VACCINES" in nbrx_com_stly.columns) else None
+            qoq_nbrx_cv = qoq_nbrx_cv.reset_index(drop=True)
+            qoq_nbrx_cv["NBRX Claims"] = qoq_nbrx_cv["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            qoq_nbrx_cv["Prev Qtr Growth %"] = qoq_nbrx_cv["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            qoq_nbrx_cv["STLY Growth %"] = qoq_nbrx_cv["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table(qoq_nbrx_cv, "COVID Vaccines NBRX QoQ Growth Summary (NPA)")
+
     # --- Raw Data Tables ---
     st.markdown('<div class="section-title">Raw Data Tables</div>', unsafe_allow_html=True)
 
@@ -1681,8 +1757,8 @@ def render_brand_page(brand_key_page):
             display_df[col] = display_df[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
         render_styled_table(display_df, "NBRX Claims (NPA)")
 
-    # For non-Nurtec/Eliquis/Prevnar/Abrysvo brands, STLY diff tables go under Raw Data Tables
-    if brand_key_page not in ("nurtec", "eliquis", "prevnar", "abrysvo"):
+    # For non-Nurtec/Eliquis/Prevnar/Abrysvo/Comirnaty brands, STLY diff tables go under Raw Data Tables
+    if brand_key_page not in ("nurtec", "eliquis", "prevnar", "abrysvo", "comirnaty"):
         if not trx_diff.empty:
             display_df = trx_diff.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
             for col in display_df.columns[1:]:
