@@ -1369,13 +1369,13 @@ def render_brand_page(brand_key_page):
             display_df = trx_diff.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
             for col in display_df.columns[1:]:
                 display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-")
-            render_styled_table(display_df, "TRX MS Diff vs STLY (pp)")
+            render_styled_table(display_df, "TRX Market Share Difference vs STLY (NPA)")
 
         if not nbrx_diff.empty:
             display_df = nbrx_diff.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
             for col in display_df.columns[1:]:
                 display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-")
-            render_styled_table(display_df, "NBRX MS Diff vs STLY (pp)")
+            render_styled_table(display_df, "NBRX Market Share Difference vs STLY (NPA)")
 
         # Nurtec QOQ Tables
         trx_qoq_claims = pivot_market_share(trx_data, "TRX CLAIMS")
@@ -1390,7 +1390,7 @@ def render_brand_page(brand_key_page):
             qoq_trx_df["TRX Claims"] = qoq_trx_df["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             qoq_trx_df["Prev Qtr Growth %"] = qoq_trx_df["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
             qoq_trx_df["STLY Growth %"] = qoq_trx_df["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            render_styled_table(qoq_trx_df, "Nurtec TRX QOQ Summary")
+            render_styled_table(qoq_trx_df, "Nurtec TRX QoQ Growth Summary (NPA)")
 
         nbrx_qoq_claims = pivot_market_share(nbrx_data, "NBRX CLAIMS")
         nbrx_qoq_growth = pivot_market_share(nbrx_data, "NBRX CLAIMS QOQ GROWTH PCT")
@@ -1404,7 +1404,7 @@ def render_brand_page(brand_key_page):
             qoq_nbrx_df["NBRX Claims"] = qoq_nbrx_df["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             qoq_nbrx_df["Prev Qtr Growth %"] = qoq_nbrx_df["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
             qoq_nbrx_df["STLY Growth %"] = qoq_nbrx_df["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            render_styled_table(qoq_nbrx_df, "Nurtec NBRX QOQ Summary")
+            render_styled_table(qoq_nbrx_df, "Nurtec NBRX QoQ Growth Summary (NPA)")
 
         # OCGRP Market QOQ Tables
         trx_ocgrp_claims = pivot_market_share(trx_data, "TRX CLAIMS")
@@ -1419,7 +1419,7 @@ def render_brand_page(brand_key_page):
             qoq_trx_ocgrp["TRX Claims"] = qoq_trx_ocgrp["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             qoq_trx_ocgrp["Prev Qtr Growth %"] = qoq_trx_ocgrp["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
             qoq_trx_ocgrp["STLY Growth %"] = qoq_trx_ocgrp["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            render_styled_table(qoq_trx_ocgrp, "OCGRP TRX QOQ Summary")
+            render_styled_table(qoq_trx_ocgrp, "OCGRP TRX QoQ Growth Summary (NPA)")
 
         nbrx_ocgrp_claims = pivot_market_share(nbrx_data, "NBRX CLAIMS")
         nbrx_ocgrp_growth = pivot_market_share(nbrx_data, "NBRX CLAIMS QOQ GROWTH PCT")
@@ -1433,7 +1433,7 @@ def render_brand_page(brand_key_page):
             qoq_nbrx_ocgrp["NBRX Claims"] = qoq_nbrx_ocgrp["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             qoq_nbrx_ocgrp["Prev Qtr Growth %"] = qoq_nbrx_ocgrp["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
             qoq_nbrx_ocgrp["STLY Growth %"] = qoq_nbrx_ocgrp["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            render_styled_table(qoq_nbrx_ocgrp, "OCGRP NBRX QOQ Summary")
+            render_styled_table(qoq_nbrx_ocgrp, "OCGRP NBRX QoQ Growth Summary (NPA)")
 
     # --- Raw Data Tables ---
     st.markdown('<div class="section-title">Raw Data Tables</div>', unsafe_allow_html=True)
@@ -1442,25 +1442,25 @@ def render_brand_page(brand_key_page):
         display_df = trx_ms.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
         for col in display_df.columns[1:]:
             display_df[col] = display_df[col].apply(lambda x: f"{x:.2f}%" if pd.notna(x) else "-")
-        render_styled_table(display_df, "TRX Market Share (%)")
+        render_styled_table(display_df, "TRX Market Share (NPA)")
 
     if not nbrx_ms.empty:
         display_df = nbrx_ms.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
         for col in display_df.columns[1:]:
             display_df[col] = display_df[col].apply(lambda x: f"{x:.2f}%" if pd.notna(x) else "-")
-        render_styled_table(display_df, "NBRX Market Share (%)")
+        render_styled_table(display_df, "NBRX Market Share (NPA)")
 
     if not trx_claims.empty:
         display_df = trx_claims.reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
         for col in display_df.columns[1:]:
             display_df[col] = display_df[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-        render_styled_table(display_df, "TRX Claims")
+        render_styled_table(display_df, "TRX Claims (NPA)")
 
     if not nbrx_claims.empty:
         display_df = nbrx_claims.reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
         for col in display_df.columns[1:]:
             display_df[col] = display_df[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-        render_styled_table(display_df, "NBRX Claims")
+        render_styled_table(display_df, "NBRX Claims (NPA)")
 
     # For non-Nurtec brands, STLY diff tables go under Raw Data Tables
     if brand_key_page != "nurtec":
@@ -1468,13 +1468,13 @@ def render_brand_page(brand_key_page):
             display_df = trx_diff.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
             for col in display_df.columns[1:]:
                 display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-")
-            render_styled_table(display_df, "TRX MS Diff vs STLY (pp)")
+            render_styled_table(display_df, "TRX Market Share Difference vs STLY (NPA)")
 
         if not nbrx_diff.empty:
             display_df = nbrx_diff.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
             for col in display_df.columns[1:]:
                 display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-")
-            render_styled_table(display_df, "NBRX MS Diff vs STLY (pp)")
+            render_styled_table(display_df, "NBRX Market Share Difference vs STLY (NPA)")
 
     # --- Eliquis QOQ Tables ---
     if brand_key_page == "eliquis":
