@@ -1385,8 +1385,8 @@ def render_brand_page(brand_key_page):
 
         # Nurtec QOQ Tables
         trx_qoq_claims = pivot_market_share(trx_data, "TRX CLAIMS")
-        trx_qoq_growth = pivot_market_share(trx_data, "TRX CLAIMS QOQ GROWTH PCT")
-        trx_qoq_stly = pivot_market_share(trx_data, "TRX CLAIMS GROWTH PCT STLY")
+        trx_qoq_growth = pivot_market_share(trx_data, "TRX QOQ GROWTH PCT")
+        trx_qoq_stly = pivot_market_share(trx_data, "TRX STLY GROWTH PCT")
 
         if not trx_qoq_claims.empty and "NURTEC" in trx_qoq_claims.columns:
             qoq_trx_df = pd.DataFrame({"Quarter": trx_qoq_claims.index})
@@ -1399,8 +1399,8 @@ def render_brand_page(brand_key_page):
             render_styled_table(qoq_trx_df, "Nurtec TRX QoQ Growth Summary (NPA)")
 
         nbrx_qoq_claims = pivot_market_share(nbrx_data, "NBRX CLAIMS")
-        nbrx_qoq_growth = pivot_market_share(nbrx_data, "NBRX CLAIMS QOQ GROWTH PCT")
-        nbrx_qoq_stly = pivot_market_share(nbrx_data, "NBRX CLAIMS GROWTH PCT STLY")
+        nbrx_qoq_growth = pivot_market_share(nbrx_data, "NBRX QOQ GROWTH PCT")
+        nbrx_qoq_stly = pivot_market_share(nbrx_data, "NBRX STLY GROWTH PCT")
 
         if not nbrx_qoq_claims.empty and "NURTEC" in nbrx_qoq_claims.columns:
             qoq_nbrx_df = pd.DataFrame({"Quarter": nbrx_qoq_claims.index})
@@ -1414,8 +1414,8 @@ def render_brand_page(brand_key_page):
 
         # OCGRP Market QOQ Tables
         trx_ocgrp_claims = pivot_market_share(trx_data, "TRX CLAIMS")
-        trx_ocgrp_growth = pivot_market_share(trx_data, "TRX CLAIMS QOQ GROWTH PCT")
-        trx_ocgrp_stly = pivot_market_share(trx_data, "TRX CLAIMS GROWTH PCT STLY")
+        trx_ocgrp_growth = pivot_market_share(trx_data, "TRX QOQ GROWTH PCT")
+        trx_ocgrp_stly = pivot_market_share(trx_data, "TRX STLY GROWTH PCT")
 
         if not trx_ocgrp_claims.empty and "OCGRP" in trx_ocgrp_claims.columns:
             qoq_trx_ocgrp = pd.DataFrame({"Quarter": trx_ocgrp_claims.index})
@@ -1428,8 +1428,8 @@ def render_brand_page(brand_key_page):
             render_styled_table(qoq_trx_ocgrp, "OCGRP TRX QoQ Growth Summary (NPA)")
 
         nbrx_ocgrp_claims = pivot_market_share(nbrx_data, "NBRX CLAIMS")
-        nbrx_ocgrp_growth = pivot_market_share(nbrx_data, "NBRX CLAIMS QOQ GROWTH PCT")
-        nbrx_ocgrp_stly = pivot_market_share(nbrx_data, "NBRX CLAIMS GROWTH PCT STLY")
+        nbrx_ocgrp_growth = pivot_market_share(nbrx_data, "NBRX QOQ GROWTH PCT")
+        nbrx_ocgrp_stly = pivot_market_share(nbrx_data, "NBRX STLY GROWTH PCT")
 
         if not nbrx_ocgrp_claims.empty and "OCGRP" in nbrx_ocgrp_claims.columns:
             qoq_nbrx_ocgrp = pd.DataFrame({"Quarter": nbrx_ocgrp_claims.index})
