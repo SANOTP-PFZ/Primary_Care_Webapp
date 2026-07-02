@@ -333,8 +333,8 @@ def render_brand_page(brand_key_page):
             st.markdown(f'<div class="section-title">NBRX Claims Trend <span style="font-size:13px; color:#0093D0; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
             render_trend_chart(nbrx_claims, "NBRX Claims", [brand_name], is_percentage=False)
 
-        # Raw Data Tables
-        st.markdown('<div class="section-title">Raw Data Tables</div>', unsafe_allow_html=True)
+        # QoQ Summaries
+        st.markdown('<div class="section-title">QoQ Summaries</div>', unsafe_allow_html=True)
 
         def render_styled_table_zavz(df_to_render, title):
             if df_to_render.empty:
@@ -356,29 +356,32 @@ def render_brand_page(brand_key_page):
                 html += '</tbody></table>'
                 st.markdown(html, unsafe_allow_html=True)
 
-        if not trx_claims.empty:
-            display_df = trx_claims.reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
-            for col in display_df.columns[1:]:
-                display_df[col] = display_df[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-            render_styled_table_zavz(display_df, "TRX Claims")
-
-        if not nbrx_claims.empty:
-            display_df = nbrx_claims.reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
-            for col in display_df.columns[1:]:
-                display_df[col] = display_df[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-            render_styled_table_zavz(display_df, "NBRX Claims")
-
         if not trx_growth.empty:
             display_df = trx_growth.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
             for col in display_df.columns[1:]:
                 display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            render_styled_table_zavz(display_df, "TRX Claims Growth (% vs STLY)")
+            render_styled_table_zavz(display_df, "TRX Claims Growth vs STLY (NPA)")
 
         if not nbrx_growth.empty:
             display_df = nbrx_growth.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
             for col in display_df.columns[1:]:
                 display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            render_styled_table_zavz(display_df, "NBRX Claims Growth (% vs STLY)")
+            render_styled_table_zavz(display_df, "NBRX Claims Growth vs STLY (NPA)")
+
+        # Raw Data Tables
+        st.markdown('<div class="section-title">Raw Data Tables</div>', unsafe_allow_html=True)
+
+        if not trx_claims.empty:
+            display_df = trx_claims.reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
+            for col in display_df.columns[1:]:
+                display_df[col] = display_df[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            render_styled_table_zavz(display_df, "TRX Claims (NPA)")
+
+        if not nbrx_claims.empty:
+            display_df = nbrx_claims.reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
+            for col in display_df.columns[1:]:
+                display_df[col] = display_df[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            render_styled_table_zavz(display_df, "NBRX Claims (NPA)")
 
         # Downloads
         st.markdown('<div class="section-title">Download Reports</div>', unsafe_allow_html=True)
@@ -603,8 +606,8 @@ def render_brand_page(brand_key_page):
             st.markdown(f'<div class="section-title">Patients Trend <span style="font-size:13px; color:#0093D0; font-weight:500;">(LAAD)</span></div>', unsafe_allow_html=True)
             render_trend_chart(patients, "Patients", [brand_name], is_percentage=False)
 
-        # Raw Data Tables
-        st.markdown('<div class="section-title">Raw Data Tables</div>', unsafe_allow_html=True)
+        # QoQ Summaries
+        st.markdown('<div class="section-title">QoQ Summaries</div>', unsafe_allow_html=True)
 
         def render_styled_table_bey(df_to_render, title):
             if df_to_render.empty:
@@ -626,29 +629,32 @@ def render_brand_page(brand_key_page):
                 html += '</tbody></table>'
                 st.markdown(html, unsafe_allow_html=True)
 
-        if not claims.empty:
-            display_df = claims.reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
-            for col in display_df.columns[1:]:
-                display_df[col] = display_df[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-            render_styled_table_bey(display_df, "Claims")
-
-        if not patients.empty:
-            display_df = patients.reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
-            for col in display_df.columns[1:]:
-                display_df[col] = display_df[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-            render_styled_table_bey(display_df, "Patients")
-
         if not claims_growth.empty:
             display_df = claims_growth.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
             for col in display_df.columns[1:]:
                 display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            render_styled_table_bey(display_df, "Claims Growth (% vs STLY)")
+            render_styled_table_bey(display_df, "Claims Growth vs STLY (LAAD)")
 
         if not patients_growth.empty:
             display_df = patients_growth.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
             for col in display_df.columns[1:]:
                 display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            render_styled_table_bey(display_df, "Patients Growth (% vs STLY)")
+            render_styled_table_bey(display_df, "Patients Growth vs STLY (LAAD)")
+
+        # Raw Data Tables
+        st.markdown('<div class="section-title">Raw Data Tables</div>', unsafe_allow_html=True)
+
+        if not claims.empty:
+            display_df = claims.reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
+            for col in display_df.columns[1:]:
+                display_df[col] = display_df[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            render_styled_table_bey(display_df, "Claims (LAAD)")
+
+        if not patients.empty:
+            display_df = patients.reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
+            for col in display_df.columns[1:]:
+                display_df[col] = display_df[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            render_styled_table_bey(display_df, "Patients (LAAD)")
 
         # Downloads
         st.markdown('<div class="section-title">Download Reports</div>', unsafe_allow_html=True)
@@ -1435,6 +1441,73 @@ def render_brand_page(brand_key_page):
             qoq_nbrx_ocgrp["STLY Growth %"] = qoq_nbrx_ocgrp["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
             render_styled_table(qoq_nbrx_ocgrp, "OCGRP NBRX QoQ Growth Summary (NPA)")
 
+    # --- Eliquis QoQ Summaries ---
+    if brand_key_page == "eliquis":
+        st.markdown('<div class="section-title">QoQ Summaries</div>', unsafe_allow_html=True)
+
+        # STLY Diff Tables
+        if not trx_diff.empty:
+            display_df = trx_diff.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
+            for col in display_df.columns[1:]:
+                display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-")
+            render_styled_table(display_df, "TRX Market Share Difference vs STLY (NPA)")
+
+        if not nbrx_diff.empty:
+            display_df = nbrx_diff.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
+            for col in display_df.columns[1:]:
+                display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-")
+            render_styled_table(display_df, "NBRX Market Share Difference vs STLY (NPA)")
+
+        # Eliquis QOQ Tables
+        trx_eli_claims = pivot_market_share(trx_data, "TRX CLAIMS")
+        trx_eli_growth = pivot_market_share(trx_data, "TRX CLAIMS QOQ GROWTH PCT")
+        trx_eli_stly = pivot_market_share(trx_data, "TRX CLAIMS GROWTH PCT STLY")
+
+        if not trx_eli_claims.empty and "ELIQUIS" in trx_eli_claims.columns:
+            qoq_trx_eli = pd.DataFrame({"Quarter": trx_eli_claims.index})
+            qoq_trx_eli["TRX Claims"] = trx_eli_claims["ELIQUIS"].values
+            qoq_trx_eli["Prev Qtr Growth %"] = trx_eli_growth["ELIQUIS"].values if (not trx_eli_growth.empty and "ELIQUIS" in trx_eli_growth.columns) else None
+            qoq_trx_eli["STLY Growth %"] = trx_eli_stly["ELIQUIS"].values if (not trx_eli_stly.empty and "ELIQUIS" in trx_eli_stly.columns) else None
+            qoq_trx_eli["TRX Claims"] = qoq_trx_eli["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            qoq_trx_eli["Prev Qtr Growth %"] = qoq_trx_eli["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            qoq_trx_eli["STLY Growth %"] = qoq_trx_eli["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table(qoq_trx_eli, "Eliquis TRX QoQ Growth Summary (NPA)")
+
+        nbrx_eli_claims = pivot_market_share(nbrx_data, "NBRX CLAIMS")
+        nbrx_eli_growth = pivot_market_share(nbrx_data, "NBRX CLAIMS QOQ GROWTH PCT")
+        nbrx_eli_stly = pivot_market_share(nbrx_data, "NBRX CLAIMS GROWTH PCT STLY")
+
+        if not nbrx_eli_claims.empty and "ELIQUIS" in nbrx_eli_claims.columns:
+            qoq_nbrx_eli = pd.DataFrame({"Quarter": nbrx_eli_claims.index})
+            qoq_nbrx_eli["NBRX Claims"] = nbrx_eli_claims["ELIQUIS"].values
+            qoq_nbrx_eli["Prev Qtr Growth %"] = nbrx_eli_growth["ELIQUIS"].values if (not nbrx_eli_growth.empty and "ELIQUIS" in nbrx_eli_growth.columns) else None
+            qoq_nbrx_eli["STLY Growth %"] = nbrx_eli_stly["ELIQUIS"].values if (not nbrx_eli_stly.empty and "ELIQUIS" in nbrx_eli_stly.columns) else None
+            qoq_nbrx_eli["NBRX Claims"] = qoq_nbrx_eli["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            qoq_nbrx_eli["Prev Qtr Growth %"] = qoq_nbrx_eli["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            qoq_nbrx_eli["STLY Growth %"] = qoq_nbrx_eli["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table(qoq_nbrx_eli, "Eliquis NBRX QoQ Growth Summary (NPA)")
+
+        # OAC Market QOQ Tables
+        if not trx_eli_claims.empty and "OAC" in trx_eli_claims.columns:
+            qoq_trx_oac = pd.DataFrame({"Quarter": trx_eli_claims.index})
+            qoq_trx_oac["TRX Claims"] = trx_eli_claims["OAC"].values
+            qoq_trx_oac["Prev Qtr Growth %"] = trx_eli_growth["OAC"].values if (not trx_eli_growth.empty and "OAC" in trx_eli_growth.columns) else None
+            qoq_trx_oac["STLY Growth %"] = trx_eli_stly["OAC"].values if (not trx_eli_stly.empty and "OAC" in trx_eli_stly.columns) else None
+            qoq_trx_oac["TRX Claims"] = qoq_trx_oac["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            qoq_trx_oac["Prev Qtr Growth %"] = qoq_trx_oac["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            qoq_trx_oac["STLY Growth %"] = qoq_trx_oac["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table(qoq_trx_oac, "OAC TRX QoQ Growth Summary (NPA)")
+
+        if not nbrx_eli_claims.empty and "OAC" in nbrx_eli_claims.columns:
+            qoq_nbrx_oac = pd.DataFrame({"Quarter": nbrx_eli_claims.index})
+            qoq_nbrx_oac["NBRX Claims"] = nbrx_eli_claims["OAC"].values
+            qoq_nbrx_oac["Prev Qtr Growth %"] = nbrx_eli_growth["OAC"].values if (not nbrx_eli_growth.empty and "OAC" in nbrx_eli_growth.columns) else None
+            qoq_nbrx_oac["STLY Growth %"] = nbrx_eli_stly["OAC"].values if (not nbrx_eli_stly.empty and "OAC" in nbrx_eli_stly.columns) else None
+            qoq_nbrx_oac["NBRX Claims"] = qoq_nbrx_oac["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            qoq_nbrx_oac["Prev Qtr Growth %"] = qoq_nbrx_oac["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            qoq_nbrx_oac["STLY Growth %"] = qoq_nbrx_oac["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+            render_styled_table(qoq_nbrx_oac, "OAC NBRX QoQ Growth Summary (NPA)")
+
     # --- Raw Data Tables ---
     st.markdown('<div class="section-title">Raw Data Tables</div>', unsafe_allow_html=True)
 
@@ -1462,8 +1535,8 @@ def render_brand_page(brand_key_page):
             display_df[col] = display_df[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
         render_styled_table(display_df, "NBRX Claims (NPA)")
 
-    # For non-Nurtec brands, STLY diff tables go under Raw Data Tables
-    if brand_key_page != "nurtec":
+    # For non-Nurtec/Eliquis brands, STLY diff tables go under Raw Data Tables
+    if brand_key_page not in ("nurtec", "eliquis"):
         if not trx_diff.empty:
             display_df = trx_diff.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
             for col in display_df.columns[1:]:
@@ -1475,57 +1548,6 @@ def render_brand_page(brand_key_page):
             for col in display_df.columns[1:]:
                 display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-")
             render_styled_table(display_df, "NBRX Market Share Difference vs STLY (NPA)")
-
-    # --- Eliquis QOQ Tables ---
-    if brand_key_page == "eliquis":
-        trx_eli_claims = pivot_market_share(trx_data, "TRX CLAIMS")
-        trx_eli_growth = pivot_market_share(trx_data, "TRX CLAIMS QOQ GROWTH PCT")
-        trx_eli_stly = pivot_market_share(trx_data, "TRX CLAIMS GROWTH PCT STLY")
-
-        if not trx_eli_claims.empty and "ELIQUIS" in trx_eli_claims.columns:
-            qoq_trx_eli = pd.DataFrame({"Quarter": trx_eli_claims.index})
-            qoq_trx_eli["TRX Claims"] = trx_eli_claims["ELIQUIS"].values
-            qoq_trx_eli["Prev Qtr Growth %"] = trx_eli_growth["ELIQUIS"].values if (not trx_eli_growth.empty and "ELIQUIS" in trx_eli_growth.columns) else None
-            qoq_trx_eli["STLY Growth %"] = trx_eli_stly["ELIQUIS"].values if (not trx_eli_stly.empty and "ELIQUIS" in trx_eli_stly.columns) else None
-            qoq_trx_eli["TRX Claims"] = qoq_trx_eli["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-            qoq_trx_eli["Prev Qtr Growth %"] = qoq_trx_eli["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            qoq_trx_eli["STLY Growth %"] = qoq_trx_eli["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            render_styled_table(qoq_trx_eli, "Eliquis TRX QOQ Summary")
-
-        nbrx_eli_claims = pivot_market_share(nbrx_data, "NBRX CLAIMS")
-        nbrx_eli_growth = pivot_market_share(nbrx_data, "NBRX CLAIMS QOQ GROWTH PCT")
-        nbrx_eli_stly = pivot_market_share(nbrx_data, "NBRX CLAIMS GROWTH PCT STLY")
-
-        if not nbrx_eli_claims.empty and "ELIQUIS" in nbrx_eli_claims.columns:
-            qoq_nbrx_eli = pd.DataFrame({"Quarter": nbrx_eli_claims.index})
-            qoq_nbrx_eli["NBRX Claims"] = nbrx_eli_claims["ELIQUIS"].values
-            qoq_nbrx_eli["Prev Qtr Growth %"] = nbrx_eli_growth["ELIQUIS"].values if (not nbrx_eli_growth.empty and "ELIQUIS" in nbrx_eli_growth.columns) else None
-            qoq_nbrx_eli["STLY Growth %"] = nbrx_eli_stly["ELIQUIS"].values if (not nbrx_eli_stly.empty and "ELIQUIS" in nbrx_eli_stly.columns) else None
-            qoq_nbrx_eli["NBRX Claims"] = qoq_nbrx_eli["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-            qoq_nbrx_eli["Prev Qtr Growth %"] = qoq_nbrx_eli["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            qoq_nbrx_eli["STLY Growth %"] = qoq_nbrx_eli["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            render_styled_table(qoq_nbrx_eli, "Eliquis NBRX QOQ Summary")
-
-        # OAC Market QOQ Tables
-        if not trx_eli_claims.empty and "OAC" in trx_eli_claims.columns:
-            qoq_trx_oac = pd.DataFrame({"Quarter": trx_eli_claims.index})
-            qoq_trx_oac["TRX Claims"] = trx_eli_claims["OAC"].values
-            qoq_trx_oac["Prev Qtr Growth %"] = trx_eli_growth["OAC"].values if (not trx_eli_growth.empty and "OAC" in trx_eli_growth.columns) else None
-            qoq_trx_oac["STLY Growth %"] = trx_eli_stly["OAC"].values if (not trx_eli_stly.empty and "OAC" in trx_eli_stly.columns) else None
-            qoq_trx_oac["TRX Claims"] = qoq_trx_oac["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-            qoq_trx_oac["Prev Qtr Growth %"] = qoq_trx_oac["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            qoq_trx_oac["STLY Growth %"] = qoq_trx_oac["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            render_styled_table(qoq_trx_oac, "OAC TRX QOQ Summary")
-
-        if not nbrx_eli_claims.empty and "OAC" in nbrx_eli_claims.columns:
-            qoq_nbrx_oac = pd.DataFrame({"Quarter": nbrx_eli_claims.index})
-            qoq_nbrx_oac["NBRX Claims"] = nbrx_eli_claims["OAC"].values
-            qoq_nbrx_oac["Prev Qtr Growth %"] = nbrx_eli_growth["OAC"].values if (not nbrx_eli_growth.empty and "OAC" in nbrx_eli_growth.columns) else None
-            qoq_nbrx_oac["STLY Growth %"] = nbrx_eli_stly["OAC"].values if (not nbrx_eli_stly.empty and "OAC" in nbrx_eli_stly.columns) else None
-            qoq_nbrx_oac["NBRX Claims"] = qoq_nbrx_oac["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-            qoq_nbrx_oac["Prev Qtr Growth %"] = qoq_nbrx_oac["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            qoq_nbrx_oac["STLY Growth %"] = qoq_nbrx_oac["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            render_styled_table(qoq_nbrx_oac, "OAC NBRX QOQ Summary")
 
     # --- Downloads ---
     st.markdown('<div class="section-title">Download Reports</div>', unsafe_allow_html=True)
