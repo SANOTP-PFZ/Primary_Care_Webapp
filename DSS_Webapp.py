@@ -1603,9 +1603,11 @@ def render_brand_page(brand_key_page):
 
         if not trx_abr_claims.empty and "ABRYSVO" in trx_abr_claims.columns:
             qoq_trx_abr = pd.DataFrame({"Quarter": trx_abr_claims.index})
-            qoq_trx_abr["TRX Claims"] = trx_abr_claims["ABRYSVO"].values
-            qoq_trx_abr["Prev Qtr Growth %"] = trx_abr_growth["ABRYSVO"].values if (not trx_abr_growth.empty and "ABRYSVO" in trx_abr_growth.columns) else None
-            qoq_trx_abr["STLY Growth %"] = trx_abr_stly["ABRYSVO"].values if (not trx_abr_stly.empty and "ABRYSVO" in trx_abr_stly.columns) else None
+            qoq_trx_abr.index = trx_abr_claims.index
+            qoq_trx_abr["TRX Claims"] = trx_abr_claims["ABRYSVO"]
+            qoq_trx_abr["Prev Qtr Growth %"] = trx_abr_growth["ABRYSVO"].reindex(trx_abr_claims.index) if (not trx_abr_growth.empty and "ABRYSVO" in trx_abr_growth.columns) else None
+            qoq_trx_abr["STLY Growth %"] = trx_abr_stly["ABRYSVO"].reindex(trx_abr_claims.index) if (not trx_abr_stly.empty and "ABRYSVO" in trx_abr_stly.columns) else None
+            qoq_trx_abr = qoq_trx_abr.reset_index(drop=True)
             qoq_trx_abr["TRX Claims"] = qoq_trx_abr["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             qoq_trx_abr["Prev Qtr Growth %"] = qoq_trx_abr["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
             qoq_trx_abr["STLY Growth %"] = qoq_trx_abr["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
@@ -1617,9 +1619,11 @@ def render_brand_page(brand_key_page):
 
         if not nbrx_abr_claims.empty and "ABRYSVO" in nbrx_abr_claims.columns:
             qoq_nbrx_abr = pd.DataFrame({"Quarter": nbrx_abr_claims.index})
-            qoq_nbrx_abr["NBRX Claims"] = nbrx_abr_claims["ABRYSVO"].values
-            qoq_nbrx_abr["Prev Qtr Growth %"] = nbrx_abr_growth["ABRYSVO"].values if (not nbrx_abr_growth.empty and "ABRYSVO" in nbrx_abr_growth.columns) else None
-            qoq_nbrx_abr["STLY Growth %"] = nbrx_abr_stly["ABRYSVO"].values if (not nbrx_abr_stly.empty and "ABRYSVO" in nbrx_abr_stly.columns) else None
+            qoq_nbrx_abr.index = nbrx_abr_claims.index
+            qoq_nbrx_abr["NBRX Claims"] = nbrx_abr_claims["ABRYSVO"]
+            qoq_nbrx_abr["Prev Qtr Growth %"] = nbrx_abr_growth["ABRYSVO"].reindex(nbrx_abr_claims.index) if (not nbrx_abr_growth.empty and "ABRYSVO" in nbrx_abr_growth.columns) else None
+            qoq_nbrx_abr["STLY Growth %"] = nbrx_abr_stly["ABRYSVO"].reindex(nbrx_abr_claims.index) if (not nbrx_abr_stly.empty and "ABRYSVO" in nbrx_abr_stly.columns) else None
+            qoq_nbrx_abr = qoq_nbrx_abr.reset_index(drop=True)
             qoq_nbrx_abr["NBRX Claims"] = qoq_nbrx_abr["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             qoq_nbrx_abr["Prev Qtr Growth %"] = qoq_nbrx_abr["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
             qoq_nbrx_abr["STLY Growth %"] = qoq_nbrx_abr["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
@@ -1628,9 +1632,11 @@ def render_brand_page(brand_key_page):
         # RSV Market QOQ Tables
         if not trx_abr_claims.empty and "RSV" in trx_abr_claims.columns:
             qoq_trx_rsv = pd.DataFrame({"Quarter": trx_abr_claims.index})
-            qoq_trx_rsv["TRX Claims"] = trx_abr_claims["RSV"].values
-            qoq_trx_rsv["Prev Qtr Growth %"] = trx_abr_growth["RSV"].values if (not trx_abr_growth.empty and "RSV" in trx_abr_growth.columns) else None
-            qoq_trx_rsv["STLY Growth %"] = trx_abr_stly["RSV"].values if (not trx_abr_stly.empty and "RSV" in trx_abr_stly.columns) else None
+            qoq_trx_rsv.index = trx_abr_claims.index
+            qoq_trx_rsv["TRX Claims"] = trx_abr_claims["RSV"]
+            qoq_trx_rsv["Prev Qtr Growth %"] = trx_abr_growth["RSV"].reindex(trx_abr_claims.index) if (not trx_abr_growth.empty and "RSV" in trx_abr_growth.columns) else None
+            qoq_trx_rsv["STLY Growth %"] = trx_abr_stly["RSV"].reindex(trx_abr_claims.index) if (not trx_abr_stly.empty and "RSV" in trx_abr_stly.columns) else None
+            qoq_trx_rsv = qoq_trx_rsv.reset_index(drop=True)
             qoq_trx_rsv["TRX Claims"] = qoq_trx_rsv["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             qoq_trx_rsv["Prev Qtr Growth %"] = qoq_trx_rsv["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
             qoq_trx_rsv["STLY Growth %"] = qoq_trx_rsv["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
@@ -1638,9 +1644,11 @@ def render_brand_page(brand_key_page):
 
         if not nbrx_abr_claims.empty and "RSV" in nbrx_abr_claims.columns:
             qoq_nbrx_rsv = pd.DataFrame({"Quarter": nbrx_abr_claims.index})
-            qoq_nbrx_rsv["NBRX Claims"] = nbrx_abr_claims["RSV"].values
-            qoq_nbrx_rsv["Prev Qtr Growth %"] = nbrx_abr_growth["RSV"].values if (not nbrx_abr_growth.empty and "RSV" in nbrx_abr_growth.columns) else None
-            qoq_nbrx_rsv["STLY Growth %"] = nbrx_abr_stly["RSV"].values if (not nbrx_abr_stly.empty and "RSV" in nbrx_abr_stly.columns) else None
+            qoq_nbrx_rsv.index = nbrx_abr_claims.index
+            qoq_nbrx_rsv["NBRX Claims"] = nbrx_abr_claims["RSV"]
+            qoq_nbrx_rsv["Prev Qtr Growth %"] = nbrx_abr_growth["RSV"].reindex(nbrx_abr_claims.index) if (not nbrx_abr_growth.empty and "RSV" in nbrx_abr_growth.columns) else None
+            qoq_nbrx_rsv["STLY Growth %"] = nbrx_abr_stly["RSV"].reindex(nbrx_abr_claims.index) if (not nbrx_abr_stly.empty and "RSV" in nbrx_abr_stly.columns) else None
+            qoq_nbrx_rsv = qoq_nbrx_rsv.reset_index(drop=True)
             qoq_nbrx_rsv["NBRX Claims"] = qoq_nbrx_rsv["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             qoq_nbrx_rsv["Prev Qtr Growth %"] = qoq_nbrx_rsv["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
             qoq_nbrx_rsv["STLY Growth %"] = qoq_nbrx_rsv["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
