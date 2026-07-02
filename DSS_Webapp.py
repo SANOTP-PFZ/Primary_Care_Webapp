@@ -1,4 +1,4 @@
-"""
+﻿"""
 Primary Care Monthly Report Dashboard - Dataiku DSS Streamlit Webapp
 All data loaded dynamically from Dataiku dataset via pandas.
 """
@@ -1337,11 +1337,18 @@ def render_brand_page(brand_key_page):
                     except TypeError:
                         st.plotly_chart(fig_contrib, use_container_width=True)
 
-    def render_styled_table(df_to_render, title):
+    def render_styled_table(df_to_render, title, source=None):
         """Render a DataFrame as a styled HTML table with blue headers and dark data."""
         if df_to_render.empty:
             return
-        with st.expander(title, expanded=False):
+        # Build expander label with styled source tag
+        if source:
+            expander_label = title.replace(f" ({source})", "")
+        else:
+            expander_label = title
+        with st.expander(expander_label, expanded=False):
+            if source:
+                st.markdown(f'<span style="font-size:12px; color:#0093D0; font-weight:500;">({source})</span>', unsafe_allow_html=True)
             html = '<table style="width:100%; border-collapse:collapse; font-family:Noto Sans,sans-serif; margin:10px 0;">'
             # Header
             html += '<thead><tr>'
@@ -1369,13 +1376,13 @@ def render_brand_page(brand_key_page):
             display_df = trx_diff.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
             for col in display_df.columns[1:]:
                 display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-")
-            render_styled_table(display_df, "TRX Market Share Difference vs STLY (NPA)")
+            render_styled_table(display_df, "TRX Market Share Difference vs STLY", source="NPA")
 
         if not nbrx_diff.empty:
             display_df = nbrx_diff.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
             for col in display_df.columns[1:]:
                 display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-")
-            render_styled_table(display_df, "NBRX Market Share Difference vs STLY (NPA)")
+            render_styled_table(display_df, "NBRX Market Share Difference vs STLY", source="NPA")
 
         # Nurtec QOQ Tables
         trx_qoq_claims = pivot_market_share(trx_data, "TRX CLAIMS")
@@ -1390,7 +1397,7 @@ def render_brand_page(brand_key_page):
             qoq_trx_df["TRX Claims"] = qoq_trx_df["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             qoq_trx_df["Prev Qtr Growth %"] = qoq_trx_df["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
             qoq_trx_df["STLY Growth %"] = qoq_trx_df["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            render_styled_table(qoq_trx_df, "Nurtec TRX QoQ Growth Summary (NPA)")
+            render_styled_table(qoq_trx_df, "Nurtec TRX QoQ Growth Summary", source="NPA")
 
         nbrx_qoq_claims = pivot_market_share(nbrx_data, "NBRX CLAIMS")
         nbrx_qoq_growth = pivot_market_share(nbrx_data, "NBRX CLAIMS QOQ GROWTH PCT")
@@ -1404,7 +1411,7 @@ def render_brand_page(brand_key_page):
             qoq_nbrx_df["NBRX Claims"] = qoq_nbrx_df["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             qoq_nbrx_df["Prev Qtr Growth %"] = qoq_nbrx_df["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
             qoq_nbrx_df["STLY Growth %"] = qoq_nbrx_df["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            render_styled_table(qoq_nbrx_df, "Nurtec NBRX QoQ Growth Summary (NPA)")
+            render_styled_table(qoq_nbrx_df, "Nurtec NBRX QoQ Growth Summary", source="NPA")
 
         # OCGRP Market QOQ Tables
         trx_ocgrp_claims = pivot_market_share(trx_data, "TRX CLAIMS")
@@ -1419,7 +1426,7 @@ def render_brand_page(brand_key_page):
             qoq_trx_ocgrp["TRX Claims"] = qoq_trx_ocgrp["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             qoq_trx_ocgrp["Prev Qtr Growth %"] = qoq_trx_ocgrp["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
             qoq_trx_ocgrp["STLY Growth %"] = qoq_trx_ocgrp["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            render_styled_table(qoq_trx_ocgrp, "OCGRP TRX QoQ Growth Summary (NPA)")
+            render_styled_table(qoq_trx_ocgrp, "OCGRP TRX QoQ Growth Summary", source="NPA")
 
         nbrx_ocgrp_claims = pivot_market_share(nbrx_data, "NBRX CLAIMS")
         nbrx_ocgrp_growth = pivot_market_share(nbrx_data, "NBRX CLAIMS QOQ GROWTH PCT")
@@ -1433,7 +1440,7 @@ def render_brand_page(brand_key_page):
             qoq_nbrx_ocgrp["NBRX Claims"] = qoq_nbrx_ocgrp["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             qoq_nbrx_ocgrp["Prev Qtr Growth %"] = qoq_nbrx_ocgrp["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
             qoq_nbrx_ocgrp["STLY Growth %"] = qoq_nbrx_ocgrp["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            render_styled_table(qoq_nbrx_ocgrp, "OCGRP NBRX QoQ Growth Summary (NPA)")
+            render_styled_table(qoq_nbrx_ocgrp, "OCGRP NBRX QoQ Growth Summary", source="NPA")
 
     # --- Raw Data Tables ---
     st.markdown('<div class="section-title">Raw Data Tables</div>', unsafe_allow_html=True)
@@ -1442,25 +1449,25 @@ def render_brand_page(brand_key_page):
         display_df = trx_ms.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
         for col in display_df.columns[1:]:
             display_df[col] = display_df[col].apply(lambda x: f"{x:.2f}%" if pd.notna(x) else "-")
-        render_styled_table(display_df, "TRX Market Share (NPA)")
+        render_styled_table(display_df, "TRX Market Share", source="NPA")
 
     if not nbrx_ms.empty:
         display_df = nbrx_ms.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
         for col in display_df.columns[1:]:
             display_df[col] = display_df[col].apply(lambda x: f"{x:.2f}%" if pd.notna(x) else "-")
-        render_styled_table(display_df, "NBRX Market Share (NPA)")
+        render_styled_table(display_df, "NBRX Market Share", source="NPA")
 
     if not trx_claims.empty:
         display_df = trx_claims.reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
         for col in display_df.columns[1:]:
             display_df[col] = display_df[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-        render_styled_table(display_df, "TRX Claims (NPA)")
+        render_styled_table(display_df, "TRX Claims", source="NPA")
 
     if not nbrx_claims.empty:
         display_df = nbrx_claims.reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
         for col in display_df.columns[1:]:
             display_df[col] = display_df[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-        render_styled_table(display_df, "NBRX Claims (NPA)")
+        render_styled_table(display_df, "NBRX Claims", source="NPA")
 
     # For non-Nurtec brands, STLY diff tables go under Raw Data Tables
     if brand_key_page != "nurtec":
@@ -1468,13 +1475,13 @@ def render_brand_page(brand_key_page):
             display_df = trx_diff.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
             for col in display_df.columns[1:]:
                 display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-")
-            render_styled_table(display_df, "TRX Market Share Difference vs STLY (NPA)")
+            render_styled_table(display_df, "TRX Market Share Difference vs STLY", source="NPA")
 
         if not nbrx_diff.empty:
             display_df = nbrx_diff.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
             for col in display_df.columns[1:]:
                 display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-")
-            render_styled_table(display_df, "NBRX Market Share Difference vs STLY (NPA)")
+            render_styled_table(display_df, "NBRX Market Share Difference vs STLY", source="NPA")
 
     # --- Eliquis QOQ Tables ---
     if brand_key_page == "eliquis":
