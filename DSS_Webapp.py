@@ -1384,7 +1384,7 @@ def render_brand_page(brand_key_page):
             render_styled_table(display_df, "NBRX Market Share Difference vs STLY (NPA)")
 
         # Nurtec QOQ Tables
-        nurtec_market_data = df[df["MARKET"] == "OCGRP"].copy()
+        nurtec_market_data = df[df["BRAND"].isin(["NURTEC", "OCGRP"])].copy()
         trx_qoq_claims = pivot_market_share(trx_data, "TRX CLAIMS")
         trx_qoq_growth = pivot_market_share(nurtec_market_data, "TRX QOQ GROWTH PCT")
         trx_qoq_stly = pivot_market_share(nurtec_market_data, "TRX STLY GROWTH PCT")
@@ -1460,7 +1460,7 @@ def render_brand_page(brand_key_page):
             render_styled_table(display_df, "NBRX Market Share Difference vs STLY (NPA)")
 
         # Eliquis QOQ Tables
-        eli_market_data = df[df["MARKET"] == "OAC"].copy()
+        eli_market_data = df[df["BRAND"].isin(["ELIQUIS", "OAC"])].copy()
         trx_eli_claims = pivot_market_share(trx_data, "TRX CLAIMS")
         trx_eli_growth = pivot_market_share(eli_market_data, "TRX QOQ GROWTH PCT")
         trx_eli_stly = pivot_market_share(eli_market_data, "TRX STLY GROWTH PCT")
@@ -1528,7 +1528,7 @@ def render_brand_page(brand_key_page):
             render_styled_table(display_df, "NBRX Market Share Difference vs STLY (NPA)")
 
         # Prevnar QOQ Tables
-        prevnar_market_data = df[df["MARKET"] == "PCV"].copy()
+        prevnar_market_data = df[df["BRAND"].isin(["PREVNAR", "PCV"])].copy()
         trx_prev_claims = pivot_market_share(trx_data, "TRX CLAIMS")
         trx_prev_growth = pivot_market_share(prevnar_market_data, "TRX QOQ GROWTH PCT")
         trx_prev_stly = pivot_market_share(prevnar_market_data, "TRX STLY GROWTH PCT")
@@ -1596,7 +1596,7 @@ def render_brand_page(brand_key_page):
             render_styled_table(display_df, "NBRX Market Share Difference vs STLY (NPA)")
 
         # Abrysvo QOQ Tables
-        abrysvo_market_data = df[df["MARKET"] == "RSV"].copy()
+        abrysvo_market_data = df[df["BRAND"].isin(["ABRYSVO", "RSV"])].copy()
         trx_abr_claims = pivot_market_share(trx_data, "TRX CLAIMS")
         trx_abr_growth = pivot_market_share(abrysvo_market_data, "TRX QOQ GROWTH PCT")
         trx_abr_stly = pivot_market_share(abrysvo_market_data, "TRX STLY GROWTH PCT")
