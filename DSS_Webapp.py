@@ -1410,47 +1410,47 @@ def render_brand_page(brand_key_page):
 
         st.markdown('<div class="section-title">QoQ Growth Summaries</div>', unsafe_allow_html=True)
 
-        # TRX QoQ Growth Summary (combined Nurtec + OCGRP)
+        # TRX QoQ Growth Summary (Nurtec + OCGRP side by side)
         nurtec_market_data = df[df["BRAND"].isin(["NURTEC", "OCGRP"])].copy()
         trx_qoq_claims = pivot_market_share(trx_data, "TRX CLAIMS")
         trx_qoq_growth = pivot_market_share(nurtec_market_data, "TRX QOQ GROWTH PCT")
         trx_qoq_stly = pivot_market_share(nurtec_market_data, "TRX STLY GROWTH PCT")
 
-        trx_rows = []
-        for brand in ["NURTEC", "OCGRP"]:
-            if not trx_qoq_claims.empty and brand in trx_qoq_claims.columns:
-                brand_df = pd.DataFrame({"Quarter": trx_qoq_claims.index})
-                brand_df["Brand"] = brand
-                brand_df["TRX Claims"] = trx_qoq_claims[brand].values
-                brand_df["Prev Qtr Growth %"] = trx_qoq_growth[brand].values if (not trx_qoq_growth.empty and brand in trx_qoq_growth.columns) else None
-                brand_df["STLY Growth %"] = trx_qoq_stly[brand].values if (not trx_qoq_stly.empty and brand in trx_qoq_stly.columns) else None
-                brand_df["TRX Claims"] = brand_df["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-                brand_df["Prev Qtr Growth %"] = brand_df["Prev Qtr Growth %"].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
-                brand_df["STLY Growth %"] = brand_df["STLY Growth %"].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
-                trx_rows.append(brand_df)
-        if trx_rows:
-            combined_trx = pd.concat(trx_rows, ignore_index=True)
+        if not trx_qoq_claims.empty:
+            combined_trx = pd.DataFrame({"Quarter": trx_qoq_claims.index})
+            if "NURTEC" in trx_qoq_claims.columns:
+                combined_trx["Nurtec TRX Claims"] = trx_qoq_claims["NURTEC"].values
+                combined_trx["Nurtec Prev Qtr Growth %"] = trx_qoq_growth["NURTEC"].values if (not trx_qoq_growth.empty and "NURTEC" in trx_qoq_growth.columns) else None
+                combined_trx["Nurtec STLY Growth %"] = trx_qoq_stly["NURTEC"].values if (not trx_qoq_stly.empty and "NURTEC" in trx_qoq_stly.columns) else None
+            if "OCGRP" in trx_qoq_claims.columns:
+                combined_trx["OCGRP TRX Claims"] = trx_qoq_claims["OCGRP"].values
+                combined_trx["OCGRP Prev Qtr Growth %"] = trx_qoq_growth["OCGRP"].values if (not trx_qoq_growth.empty and "OCGRP" in trx_qoq_growth.columns) else None
+                combined_trx["OCGRP STLY Growth %"] = trx_qoq_stly["OCGRP"].values if (not trx_qoq_stly.empty and "OCGRP" in trx_qoq_stly.columns) else None
+            for col in [c for c in combined_trx.columns if "TRX Claims" in c]:
+                combined_trx[col] = combined_trx[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            for col in [c for c in combined_trx.columns if "Growth %" in c]:
+                combined_trx[col] = combined_trx[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table(combined_trx, "TRX QoQ Growth Summary (NPA)")
 
-        # NBRX QoQ Growth Summary (combined Nurtec + OCGRP)
+        # NBRX QoQ Growth Summary (Nurtec + OCGRP side by side)
         nbrx_qoq_claims = pivot_market_share(nbrx_data, "NBRX CLAIMS")
         nbrx_qoq_growth = pivot_market_share(nurtec_market_data, "NBRX QOQ GROWTH PCT")
         nbrx_qoq_stly = pivot_market_share(nurtec_market_data, "NBRX STLY GROWTH PCT")
 
-        nbrx_rows = []
-        for brand in ["NURTEC", "OCGRP"]:
-            if not nbrx_qoq_claims.empty and brand in nbrx_qoq_claims.columns:
-                brand_df = pd.DataFrame({"Quarter": nbrx_qoq_claims.index})
-                brand_df["Brand"] = brand
-                brand_df["NBRX Claims"] = nbrx_qoq_claims[brand].values
-                brand_df["Prev Qtr Growth %"] = nbrx_qoq_growth[brand].values if (not nbrx_qoq_growth.empty and brand in nbrx_qoq_growth.columns) else None
-                brand_df["STLY Growth %"] = nbrx_qoq_stly[brand].values if (not nbrx_qoq_stly.empty and brand in nbrx_qoq_stly.columns) else None
-                brand_df["NBRX Claims"] = brand_df["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-                brand_df["Prev Qtr Growth %"] = brand_df["Prev Qtr Growth %"].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
-                brand_df["STLY Growth %"] = brand_df["STLY Growth %"].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
-                nbrx_rows.append(brand_df)
-        if nbrx_rows:
-            combined_nbrx = pd.concat(nbrx_rows, ignore_index=True)
+        if not nbrx_qoq_claims.empty:
+            combined_nbrx = pd.DataFrame({"Quarter": nbrx_qoq_claims.index})
+            if "NURTEC" in nbrx_qoq_claims.columns:
+                combined_nbrx["Nurtec NBRX Claims"] = nbrx_qoq_claims["NURTEC"].values
+                combined_nbrx["Nurtec Prev Qtr Growth %"] = nbrx_qoq_growth["NURTEC"].values if (not nbrx_qoq_growth.empty and "NURTEC" in nbrx_qoq_growth.columns) else None
+                combined_nbrx["Nurtec STLY Growth %"] = nbrx_qoq_stly["NURTEC"].values if (not nbrx_qoq_stly.empty and "NURTEC" in nbrx_qoq_stly.columns) else None
+            if "OCGRP" in nbrx_qoq_claims.columns:
+                combined_nbrx["OCGRP NBRX Claims"] = nbrx_qoq_claims["OCGRP"].values
+                combined_nbrx["OCGRP Prev Qtr Growth %"] = nbrx_qoq_growth["OCGRP"].values if (not nbrx_qoq_growth.empty and "OCGRP" in nbrx_qoq_growth.columns) else None
+                combined_nbrx["OCGRP STLY Growth %"] = nbrx_qoq_stly["OCGRP"].values if (not nbrx_qoq_stly.empty and "OCGRP" in nbrx_qoq_stly.columns) else None
+            for col in [c for c in combined_nbrx.columns if "NBRX Claims" in c]:
+                combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            for col in [c for c in combined_nbrx.columns if "Growth %" in c]:
+                combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table(combined_nbrx, "NBRX QoQ Growth Summary (NPA)")
 
     # --- Eliquis QoQ Summaries ---
