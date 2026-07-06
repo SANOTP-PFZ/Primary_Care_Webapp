@@ -420,27 +420,27 @@ def render_brand_page(brand_key_page):
         def generate_excel_zavz():
             output = BytesIO()
             with pd.ExcelWriter(output, engine="openpyxl") as writer:
-                # STLY Growth tables (as displayed)
+                # STLY Growth tables
                 if not trx_claims.empty and "ZAVZPRET" in trx_claims.columns:
                     stly_trx = pd.DataFrame({"Quarter": trx_claims.index})
-                    stly_trx["TRX Claims"] = trx_claims["ZAVZPRET"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-                    stly_trx["STLY Growth %"] = trx_growth["ZAVZPRET"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if "ZAVZPRET" in trx_growth.columns else "-"
+                    stly_trx["TRX Claims"] = trx_claims["ZAVZPRET"].values
+                    stly_trx["STLY Growth %"] = trx_growth["ZAVZPRET"].values if "ZAVZPRET" in trx_growth.columns else None
                     stly_trx.to_excel(writer, sheet_name="TRX Claims Growth STLY", index=False)
                 if not nbrx_claims.empty and "ZAVZPRET" in nbrx_claims.columns:
                     stly_nbrx = pd.DataFrame({"Quarter": nbrx_claims.index})
-                    stly_nbrx["NBRX Claims"] = nbrx_claims["ZAVZPRET"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-                    stly_nbrx["STLY Growth %"] = nbrx_growth["ZAVZPRET"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if "ZAVZPRET" in nbrx_growth.columns else "-"
+                    stly_nbrx["NBRX Claims"] = nbrx_claims["ZAVZPRET"].values
+                    stly_nbrx["STLY Growth %"] = nbrx_growth["ZAVZPRET"].values if "ZAVZPRET" in nbrx_growth.columns else None
                     stly_nbrx.to_excel(writer, sheet_name="NBRX Claims Growth STLY", index=False)
-                # QoQ Growth tables (as displayed)
+                # QoQ Growth tables
                 if not trx_claims.empty and "ZAVZPRET" in trx_claims.columns:
                     qoq_trx = pd.DataFrame({"Quarter": trx_claims.index})
-                    qoq_trx["TRX Claims"] = trx_claims["ZAVZPRET"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-                    qoq_trx["QoQ Growth %"] = trx_qoq_growth["ZAVZPRET"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not trx_qoq_growth.empty and "ZAVZPRET" in trx_qoq_growth.columns) else "-"
+                    qoq_trx["TRX Claims"] = trx_claims["ZAVZPRET"].values
+                    qoq_trx["QoQ Growth %"] = trx_qoq_growth["ZAVZPRET"].values if (not trx_qoq_growth.empty and "ZAVZPRET" in trx_qoq_growth.columns) else None
                     qoq_trx.to_excel(writer, sheet_name="TRX Claims Growth QoQ", index=False)
                 if not nbrx_claims.empty and "ZAVZPRET" in nbrx_claims.columns:
                     qoq_nbrx = pd.DataFrame({"Quarter": nbrx_claims.index})
-                    qoq_nbrx["NBRX Claims"] = nbrx_claims["ZAVZPRET"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-                    qoq_nbrx["QoQ Growth %"] = nbrx_qoq_growth["ZAVZPRET"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not nbrx_qoq_growth.empty and "ZAVZPRET" in nbrx_qoq_growth.columns) else "-"
+                    qoq_nbrx["NBRX Claims"] = nbrx_claims["ZAVZPRET"].values
+                    qoq_nbrx["QoQ Growth %"] = nbrx_qoq_growth["ZAVZPRET"].values if (not nbrx_qoq_growth.empty and "ZAVZPRET" in nbrx_qoq_growth.columns) else None
                     qoq_nbrx.to_excel(writer, sheet_name="NBRX Claims Growth QoQ", index=False)
                 # Raw tables
                 if not trx_claims.empty:
@@ -765,21 +765,21 @@ def render_brand_page(brand_key_page):
         def generate_excel_bey():
             output = BytesIO()
             with pd.ExcelWriter(output, engine="openpyxl") as writer:
-                # STLY Growth Summary (as displayed)
+                # STLY Growth Summary
                 if not claims.empty and "BEYFORTUS" in claims.columns:
                     stly = pd.DataFrame({"Quarter": claims.index})
-                    stly["Claims"] = claims["BEYFORTUS"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-                    stly["Patients"] = patients["BEYFORTUS"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-") if (not patients.empty and "BEYFORTUS" in patients.columns) else "-"
-                    stly["STLY Claims Growth %"] = claims_growth["BEYFORTUS"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not claims_growth.empty and "BEYFORTUS" in claims_growth.columns) else "-"
-                    stly["STLY Patients Growth %"] = patients_growth["BEYFORTUS"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not patients_growth.empty and "BEYFORTUS" in patients_growth.columns) else "-"
+                    stly["Claims"] = claims["BEYFORTUS"].values
+                    stly["Patients"] = patients["BEYFORTUS"].values if (not patients.empty and "BEYFORTUS" in patients.columns) else None
+                    stly["STLY Claims Growth %"] = claims_growth["BEYFORTUS"].values if (not claims_growth.empty and "BEYFORTUS" in claims_growth.columns) else None
+                    stly["STLY Patients Growth %"] = patients_growth["BEYFORTUS"].values if (not patients_growth.empty and "BEYFORTUS" in patients_growth.columns) else None
                     stly.to_excel(writer, sheet_name="STLY Growth Summary", index=False)
-                # QoQ Growth Summary (as displayed)
+                # QoQ Growth Summary
                 if not claims.empty and "BEYFORTUS" in claims.columns:
                     qoq = pd.DataFrame({"Quarter": claims.index})
-                    qoq["Claims"] = claims["BEYFORTUS"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-                    qoq["Patients"] = patients["BEYFORTUS"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-") if (not patients.empty and "BEYFORTUS" in patients.columns) else "-"
-                    qoq["QoQ Claims Growth %"] = qoq_claims_growth["BEYFORTUS"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not qoq_claims_growth.empty and "BEYFORTUS" in qoq_claims_growth.columns) else "-"
-                    qoq["QoQ Patients Growth %"] = qoq_patients_growth["BEYFORTUS"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not qoq_patients_growth.empty and "BEYFORTUS" in qoq_patients_growth.columns) else "-"
+                    qoq["Claims"] = claims["BEYFORTUS"].values
+                    qoq["Patients"] = patients["BEYFORTUS"].values if (not patients.empty and "BEYFORTUS" in patients.columns) else None
+                    qoq["QoQ Claims Growth %"] = qoq_claims_growth["BEYFORTUS"].values if (not qoq_claims_growth.empty and "BEYFORTUS" in qoq_claims_growth.columns) else None
+                    qoq["QoQ Patients Growth %"] = qoq_patients_growth["BEYFORTUS"].values if (not qoq_patients_growth.empty and "BEYFORTUS" in qoq_patients_growth.columns) else None
                     qoq.to_excel(writer, sheet_name="QoQ Growth Summary", index=False)
                 # Raw tables
                 if not claims.empty:
@@ -2113,20 +2113,24 @@ def render_brand_page(brand_key_page):
 
             if not trx_ms.empty and brand_name in trx_ms.columns:
                 ms_trx = pd.DataFrame({"Quarter": trx_ms.index})
-                ms_trx[f"{display_name} Market Share"] = trx_ms[brand_name].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
-                ms_trx["Previous Quarter Market Share"] = trx_pq_ms_xl[brand_name].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-") if (not trx_pq_ms_xl.empty and brand_name in trx_pq_ms_xl.columns) else "-"
-                ms_trx["STLY Market Share"] = (trx_ms[brand_name] - trx_diff[brand_name]).apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-") if (not trx_diff.empty and brand_name in trx_diff.columns) else "-"
-                ms_trx["Market Share Difference STLY"] = trx_diff[brand_name].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-") if (not trx_diff.empty and brand_name in trx_diff.columns) else "-"
-                ms_trx["Market Share Difference Previous Quarter"] = trx_ms_diff_pq_xl[brand_name].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-") if (not trx_ms_diff_pq_xl.empty and brand_name in trx_ms_diff_pq_xl.columns) else "-"
+                ms_trx[f"{display_name} Market Share"] = trx_ms[brand_name].values
+                ms_trx["Previous Quarter Market Share"] = trx_pq_ms_xl[brand_name].values if (not trx_pq_ms_xl.empty and brand_name in trx_pq_ms_xl.columns) else None
+                ms_trx["STLY Market Share"] = (trx_ms[brand_name] - trx_diff[brand_name]).values if (not trx_diff.empty and brand_name in trx_diff.columns) else None
+                ms_trx["Market Share Difference STLY"] = trx_diff[brand_name].values if (not trx_diff.empty and brand_name in trx_diff.columns) else None
+                ms_trx["Market Share Difference Previous Quarter"] = trx_ms_diff_pq_xl[brand_name].values if (not trx_ms_diff_pq_xl.empty and brand_name in trx_ms_diff_pq_xl.columns) else None
+                for col in ms_trx.columns[1:]:
+                    ms_trx[col] = ms_trx[col].apply(lambda x: round(x, 2) if pd.notna(x) else None)
                 ms_trx.to_excel(writer, sheet_name="TRX MS Difference", index=False)
 
             if not nbrx_ms.empty and brand_name in nbrx_ms.columns:
                 ms_nbrx = pd.DataFrame({"Quarter": nbrx_ms.index})
-                ms_nbrx[f"{display_name} Market Share"] = nbrx_ms[brand_name].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
-                ms_nbrx["Previous Quarter Market Share"] = nbrx_pq_ms_xl[brand_name].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-") if (not nbrx_pq_ms_xl.empty and brand_name in nbrx_pq_ms_xl.columns) else "-"
-                ms_nbrx["STLY Market Share"] = (nbrx_ms[brand_name] - nbrx_diff[brand_name]).apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-") if (not nbrx_diff.empty and brand_name in nbrx_diff.columns) else "-"
-                ms_nbrx["Market Share Difference STLY"] = nbrx_diff[brand_name].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-") if (not nbrx_diff.empty and brand_name in nbrx_diff.columns) else "-"
-                ms_nbrx["Market Share Difference Previous Quarter"] = nbrx_ms_diff_pq_xl[brand_name].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-") if (not nbrx_ms_diff_pq_xl.empty and brand_name in nbrx_ms_diff_pq_xl.columns) else "-"
+                ms_nbrx[f"{display_name} Market Share"] = nbrx_ms[brand_name].values
+                ms_nbrx["Previous Quarter Market Share"] = nbrx_pq_ms_xl[brand_name].values if (not nbrx_pq_ms_xl.empty and brand_name in nbrx_pq_ms_xl.columns) else None
+                ms_nbrx["STLY Market Share"] = (nbrx_ms[brand_name] - nbrx_diff[brand_name]).values if (not nbrx_diff.empty and brand_name in nbrx_diff.columns) else None
+                ms_nbrx["Market Share Difference STLY"] = nbrx_diff[brand_name].values if (not nbrx_diff.empty and brand_name in nbrx_diff.columns) else None
+                ms_nbrx["Market Share Difference Previous Quarter"] = nbrx_ms_diff_pq_xl[brand_name].values if (not nbrx_ms_diff_pq_xl.empty and brand_name in nbrx_ms_diff_pq_xl.columns) else None
+                for col in ms_nbrx.columns[1:]:
+                    ms_nbrx[col] = ms_nbrx[col].apply(lambda x: round(x, 2) if pd.notna(x) else None)
                 ms_nbrx.to_excel(writer, sheet_name="NBRX MS Difference", index=False)
 
             # Growth Summary tables (brand + market side-by-side as displayed)
@@ -2139,13 +2143,13 @@ def render_brand_page(brand_key_page):
             if not trx_g_claims.empty:
                 gs_trx = pd.DataFrame({"Quarter": trx_g_claims.index})
                 if brand_name in trx_g_claims.columns:
-                    gs_trx[f"{display_name} TRX Claims"] = trx_g_claims[brand_name].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-                    gs_trx[f"{display_name} Prev Qtr Growth %"] = trx_g_growth[brand_name].reindex(trx_g_claims.index).apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not trx_g_growth.empty and brand_name in trx_g_growth.columns) else "-"
-                    gs_trx[f"{display_name} STLY Growth %"] = trx_g_stly[brand_name].reindex(trx_g_claims.index).apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not trx_g_stly.empty and brand_name in trx_g_stly.columns) else "-"
+                    gs_trx[f"{display_name} TRX Claims"] = trx_g_claims[brand_name].values
+                    gs_trx[f"{display_name} Prev Qtr Growth %"] = trx_g_growth[brand_name].reindex(trx_g_claims.index).values if (not trx_g_growth.empty and brand_name in trx_g_growth.columns) else None
+                    gs_trx[f"{display_name} STLY Growth %"] = trx_g_stly[brand_name].reindex(trx_g_claims.index).values if (not trx_g_stly.empty and brand_name in trx_g_stly.columns) else None
                 if market_brand in trx_g_claims.columns:
-                    gs_trx[f"{market_brand} TRX Claims"] = trx_g_claims[market_brand].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-                    gs_trx[f"{market_brand} Prev Qtr Growth %"] = trx_g_growth[market_brand].reindex(trx_g_claims.index).apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not trx_g_growth.empty and market_brand in trx_g_growth.columns) else "-"
-                    gs_trx[f"{market_brand} STLY Growth %"] = trx_g_stly[market_brand].reindex(trx_g_claims.index).apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not trx_g_stly.empty and market_brand in trx_g_stly.columns) else "-"
+                    gs_trx[f"{market_brand} TRX Claims"] = trx_g_claims[market_brand].values
+                    gs_trx[f"{market_brand} Prev Qtr Growth %"] = trx_g_growth[market_brand].reindex(trx_g_claims.index).values if (not trx_g_growth.empty and market_brand in trx_g_growth.columns) else None
+                    gs_trx[f"{market_brand} STLY Growth %"] = trx_g_stly[market_brand].reindex(trx_g_claims.index).values if (not trx_g_stly.empty and market_brand in trx_g_stly.columns) else None
                 gs_trx.to_excel(writer, sheet_name="TRX Growth Summary", index=False)
 
             nbrx_g_claims = pivot_market_share(nbrx_data, "NBRX CLAIMS")
@@ -2155,13 +2159,13 @@ def render_brand_page(brand_key_page):
             if not nbrx_g_claims.empty:
                 gs_nbrx = pd.DataFrame({"Quarter": nbrx_g_claims.index})
                 if brand_name in nbrx_g_claims.columns:
-                    gs_nbrx[f"{display_name} NBRX Claims"] = nbrx_g_claims[brand_name].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-                    gs_nbrx[f"{display_name} Prev Qtr Growth %"] = nbrx_g_growth[brand_name].reindex(nbrx_g_claims.index).apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not nbrx_g_growth.empty and brand_name in nbrx_g_growth.columns) else "-"
-                    gs_nbrx[f"{display_name} STLY Growth %"] = nbrx_g_stly[brand_name].reindex(nbrx_g_claims.index).apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not nbrx_g_stly.empty and brand_name in nbrx_g_stly.columns) else "-"
+                    gs_nbrx[f"{display_name} NBRX Claims"] = nbrx_g_claims[brand_name].values
+                    gs_nbrx[f"{display_name} Prev Qtr Growth %"] = nbrx_g_growth[brand_name].reindex(nbrx_g_claims.index).values if (not nbrx_g_growth.empty and brand_name in nbrx_g_growth.columns) else None
+                    gs_nbrx[f"{display_name} STLY Growth %"] = nbrx_g_stly[brand_name].reindex(nbrx_g_claims.index).values if (not nbrx_g_stly.empty and brand_name in nbrx_g_stly.columns) else None
                 if market_brand in nbrx_g_claims.columns:
-                    gs_nbrx[f"{market_brand} NBRX Claims"] = nbrx_g_claims[market_brand].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-                    gs_nbrx[f"{market_brand} Prev Qtr Growth %"] = nbrx_g_growth[market_brand].reindex(nbrx_g_claims.index).apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not nbrx_g_growth.empty and market_brand in nbrx_g_growth.columns) else "-"
-                    gs_nbrx[f"{market_brand} STLY Growth %"] = nbrx_g_stly[market_brand].reindex(nbrx_g_claims.index).apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not nbrx_g_stly.empty and market_brand in nbrx_g_stly.columns) else "-"
+                    gs_nbrx[f"{market_brand} NBRX Claims"] = nbrx_g_claims[market_brand].values
+                    gs_nbrx[f"{market_brand} Prev Qtr Growth %"] = nbrx_g_growth[market_brand].reindex(nbrx_g_claims.index).values if (not nbrx_g_growth.empty and market_brand in nbrx_g_growth.columns) else None
+                    gs_nbrx[f"{market_brand} STLY Growth %"] = nbrx_g_stly[market_brand].reindex(nbrx_g_claims.index).values if (not nbrx_g_stly.empty and market_brand in nbrx_g_stly.columns) else None
                 gs_nbrx.to_excel(writer, sheet_name="NBRX Growth Summary", index=False)
 
             # Raw tables (all brands in market)
