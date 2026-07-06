@@ -349,13 +349,13 @@ def render_brand_page(brand_key_page):
                 html = '<table style="width:100%; border-collapse:collapse; font-family:Noto Sans,sans-serif; margin:10px 0;">'
                 html += '<thead><tr>'
                 for col in df_to_render.columns:
-                    html += f'<th style="background:#0093D0; color:#FFFFFF; padding:10px 14px; text-align:right; font-size:12px; font-weight:600;">{col}</th>'
+                    html += f'<th style="background:#0093D0; color:#FFFFFF; padding:10px 14px; text-align:center; font-size:12px; font-weight:600;">{col}</th>'
                 html += '</tr></thead><tbody>'
                 for idx, row in df_to_render.iterrows():
                     bg = "#F8FAFD" if idx % 2 == 0 else "#FFFFFF"
                     html += f'<tr style="background:{bg};">'
                     for j, val in enumerate(row):
-                        align = "left" if j == 0 else "right"
+                        align = "center"
                         font_weight = "600" if j == 0 else "400"
                         html += f'<td style="padding:9px 14px; text-align:{align}; font-size:12px; color:#2C3E50; font-weight:{font_weight}; border-bottom:1px solid #EEF2F7;">{val}</td>'
                     html += '</tr>'
@@ -622,13 +622,13 @@ def render_brand_page(brand_key_page):
                 html = '<table style="width:100%; border-collapse:collapse; font-family:Noto Sans,sans-serif; margin:10px 0;">'
                 html += '<thead><tr>'
                 for col in df_to_render.columns:
-                    html += f'<th style="background:#0093D0; color:#FFFFFF; padding:10px 14px; text-align:right; font-size:12px; font-weight:600;">{col}</th>'
+                    html += f'<th style="background:#0093D0; color:#FFFFFF; padding:10px 14px; text-align:center; font-size:12px; font-weight:600;">{col}</th>'
                 html += '</tr></thead><tbody>'
                 for idx, row in df_to_render.iterrows():
                     bg = "#F8FAFD" if idx % 2 == 0 else "#FFFFFF"
                     html += f'<tr style="background:{bg};">'
                     for j, val in enumerate(row):
-                        align = "left" if j == 0 else "right"
+                        align = "center"
                         font_weight = "600" if j == 0 else "400"
                         html += f'<td style="padding:9px 14px; text-align:{align}; font-size:12px; color:#2C3E50; font-weight:{font_weight}; border-bottom:1px solid #EEF2F7;">{val}</td>'
                     html += '</tr>'
@@ -1358,14 +1358,14 @@ def render_brand_page(brand_key_page):
             # Header
             html += '<thead><tr>'
             for col in df_to_render.columns:
-                html += f'<th style="background:#0093D0; color:#FFFFFF; padding:10px 14px; text-align:right; font-size:12px; font-weight:600;">{col}</th>'
+                html += f'<th style="background:#0093D0; color:#FFFFFF; padding:10px 14px; text-align:center; font-size:12px; font-weight:600;">{col}</th>'
             html += '</tr></thead><tbody>'
             # Rows
             for idx, row in df_to_render.iterrows():
                 bg = "#F8FAFD" if idx % 2 == 0 else "#FFFFFF"
                 html += f'<tr style="background:{bg};">'
                 for j, val in enumerate(row):
-                    align = "left" if j == 0 else "right"
+                    align = "center"
                     font_weight = "600" if j == 0 else "400"
                     html += f'<td style="padding:9px 14px; text-align:{align}; font-size:12px; color:#2C3E50; font-weight:{font_weight}; border-bottom:1px solid #EEF2F7;">{val}</td>'
                 html += '</tr>'
