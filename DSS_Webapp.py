@@ -1370,18 +1370,35 @@ def render_brand_page(brand_key_page):
     if brand_key_page == "nurtec":
         st.markdown('<div class="section-title">QoQ Summaries</div>', unsafe_allow_html=True)
 
-        # STLY Diff Tables
-        if not trx_diff.empty:
-            display_df = trx_diff.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
-            for col in display_df.columns[1:]:
-                display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-")
-            render_styled_table(display_df, "TRX Market Share Difference vs STLY (NPA)")
+        # TRX Market Share Difference Table (Nurtec only)
+        trx_pq_ms = pivot_market_share(trx_data, "TRX PQ MARKET SHARE")
+        trx_ms_diff_pq = pivot_market_share(trx_data, "TRX MS DIFF VS PQ")
+        if not trx_ms.empty and "NURTEC" in trx_ms.columns:
+            nurtec_trx_ms = trx_ms["NURTEC"]
+            stly_trx_table = pd.DataFrame({"Quarter": nurtec_trx_ms.index})
+            stly_trx_table["Nurtec Market Share"] = nurtec_trx_ms.values
+            stly_trx_table["Previous Quarter Market Share"] = trx_pq_ms["NURTEC"].values if (not trx_pq_ms.empty and "NURTEC" in trx_pq_ms.columns) else None
+            stly_trx_table["STLY Market Share"] = (nurtec_trx_ms - trx_diff["NURTEC"]).values if (not trx_diff.empty and "NURTEC" in trx_diff.columns) else None
+            stly_trx_table["Market Share Difference STLY"] = trx_diff["NURTEC"].values if (not trx_diff.empty and "NURTEC" in trx_diff.columns) else None
+            stly_trx_table["Market Share Difference"] = trx_ms_diff_pq["NURTEC"].values if (not trx_ms_diff_pq.empty and "NURTEC" in trx_ms_diff_pq.columns) else None
+            for col in stly_trx_table.columns[1:]:
+                stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
+            render_styled_table(stly_trx_table, "TRX Market Share Difference vs STLY (NPA)")
 
-        if not nbrx_diff.empty:
-            display_df = nbrx_diff.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
-            for col in display_df.columns[1:]:
-                display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-")
-            render_styled_table(display_df, "NBRX Market Share Difference vs STLY (NPA)")
+        # NBRX Market Share Difference Table (Nurtec only)
+        nbrx_pq_ms = pivot_market_share(nbrx_data, "NBRX PQ MARKET SHARE")
+        nbrx_ms_diff_pq = pivot_market_share(nbrx_data, "NBRX MS DIFF VS PQ")
+        if not nbrx_ms.empty and "NURTEC" in nbrx_ms.columns:
+            nurtec_nbrx_ms = nbrx_ms["NURTEC"]
+            stly_nbrx_table = pd.DataFrame({"Quarter": nurtec_nbrx_ms.index})
+            stly_nbrx_table["Nurtec Market Share"] = nurtec_nbrx_ms.values
+            stly_nbrx_table["Previous Quarter Market Share"] = nbrx_pq_ms["NURTEC"].values if (not nbrx_pq_ms.empty and "NURTEC" in nbrx_pq_ms.columns) else None
+            stly_nbrx_table["STLY Market Share"] = (nurtec_nbrx_ms - nbrx_diff["NURTEC"]).values if (not nbrx_diff.empty and "NURTEC" in nbrx_diff.columns) else None
+            stly_nbrx_table["Market Share Difference STLY"] = nbrx_diff["NURTEC"].values if (not nbrx_diff.empty and "NURTEC" in nbrx_diff.columns) else None
+            stly_nbrx_table["Market Share Difference"] = nbrx_ms_diff_pq["NURTEC"].values if (not nbrx_ms_diff_pq.empty and "NURTEC" in nbrx_ms_diff_pq.columns) else None
+            for col in stly_nbrx_table.columns[1:]:
+                stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
+            render_styled_table(stly_nbrx_table, "NBRX Market Share Difference vs STLY (NPA)")
 
         # Nurtec QOQ Tables
         nurtec_market_data = df[df["BRAND"].isin(["NURTEC", "OCGRP"])].copy()
