@@ -1368,7 +1368,7 @@ def render_brand_page(brand_key_page):
 
     # --- QoQ Summaries (for Nurtec: STLY comparison + QoQ summary tables) ---
     if brand_key_page == "nurtec":
-        st.markdown('<div class="section-title">QoQ Summaries</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-title">QoQ Market Share Differences</div>', unsafe_allow_html=True)
 
         # TRX Market Share Difference Table (Nurtec only)
         trx_pq_ms = pivot_market_share(trx_data, "TRX PQ MARKET SHARE")
@@ -1380,9 +1380,13 @@ def render_brand_page(brand_key_page):
             stly_trx_table["Previous Quarter Market Share"] = trx_pq_ms["NURTEC"].values if (not trx_pq_ms.empty and "NURTEC" in trx_pq_ms.columns) else None
             stly_trx_table["STLY Market Share"] = (nurtec_trx_ms - trx_diff["NURTEC"]).values if (not trx_diff.empty and "NURTEC" in trx_diff.columns) else None
             stly_trx_table["Market Share Difference STLY"] = trx_diff["NURTEC"].values if (not trx_diff.empty and "NURTEC" in trx_diff.columns) else None
-            stly_trx_table["Market Share Difference"] = trx_ms_diff_pq["NURTEC"].values if (not trx_ms_diff_pq.empty and "NURTEC" in trx_ms_diff_pq.columns) else None
-            for col in stly_trx_table.columns[1:]:
-                stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
+            stly_trx_table["Market Share Difference Previous Quarter"] = trx_ms_diff_pq["NURTEC"].values if (not trx_ms_diff_pq.empty and "NURTEC" in trx_ms_diff_pq.columns) else None
+            for col in ["Nurtec Market Share", "Previous Quarter Market Share", "STLY Market Share"]:
+                if col in stly_trx_table.columns:
+                    stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
+            for col in ["Market Share Difference STLY", "Market Share Difference Previous Quarter"]:
+                if col in stly_trx_table.columns:
+                    stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
             render_styled_table(stly_trx_table, "TRX Market Share Difference vs STLY (NPA)")
 
         # NBRX Market Share Difference Table (Nurtec only)
@@ -1395,10 +1399,16 @@ def render_brand_page(brand_key_page):
             stly_nbrx_table["Previous Quarter Market Share"] = nbrx_pq_ms["NURTEC"].values if (not nbrx_pq_ms.empty and "NURTEC" in nbrx_pq_ms.columns) else None
             stly_nbrx_table["STLY Market Share"] = (nurtec_nbrx_ms - nbrx_diff["NURTEC"]).values if (not nbrx_diff.empty and "NURTEC" in nbrx_diff.columns) else None
             stly_nbrx_table["Market Share Difference STLY"] = nbrx_diff["NURTEC"].values if (not nbrx_diff.empty and "NURTEC" in nbrx_diff.columns) else None
-            stly_nbrx_table["Market Share Difference"] = nbrx_ms_diff_pq["NURTEC"].values if (not nbrx_ms_diff_pq.empty and "NURTEC" in nbrx_ms_diff_pq.columns) else None
-            for col in stly_nbrx_table.columns[1:]:
-                stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
+            stly_nbrx_table["Market Share Difference Previous Quarter"] = nbrx_ms_diff_pq["NURTEC"].values if (not nbrx_ms_diff_pq.empty and "NURTEC" in nbrx_ms_diff_pq.columns) else None
+            for col in ["Nurtec Market Share", "Previous Quarter Market Share", "STLY Market Share"]:
+                if col in stly_nbrx_table.columns:
+                    stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
+            for col in ["Market Share Difference STLY", "Market Share Difference Previous Quarter"]:
+                if col in stly_nbrx_table.columns:
+                    stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
             render_styled_table(stly_nbrx_table, "NBRX Market Share Difference vs STLY (NPA)")
+
+        st.markdown('<div class="section-title">QoQ Growth Summaries</div>', unsafe_allow_html=True)
 
         # TRX QoQ Growth Summary (combined Nurtec + OCGRP)
         nurtec_market_data = df[df["BRAND"].isin(["NURTEC", "OCGRP"])].copy()
@@ -1415,8 +1425,8 @@ def render_brand_page(brand_key_page):
                 brand_df["Prev Qtr Growth %"] = trx_qoq_growth[brand].values if (not trx_qoq_growth.empty and brand in trx_qoq_growth.columns) else None
                 brand_df["STLY Growth %"] = trx_qoq_stly[brand].values if (not trx_qoq_stly.empty and brand in trx_qoq_stly.columns) else None
                 brand_df["TRX Claims"] = brand_df["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-                brand_df["Prev Qtr Growth %"] = brand_df["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-                brand_df["STLY Growth %"] = brand_df["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+                brand_df["Prev Qtr Growth %"] = brand_df["Prev Qtr Growth %"].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+                brand_df["STLY Growth %"] = brand_df["STLY Growth %"].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
                 trx_rows.append(brand_df)
         if trx_rows:
             combined_trx = pd.concat(trx_rows, ignore_index=True)
@@ -1436,8 +1446,8 @@ def render_brand_page(brand_key_page):
                 brand_df["Prev Qtr Growth %"] = nbrx_qoq_growth[brand].values if (not nbrx_qoq_growth.empty and brand in nbrx_qoq_growth.columns) else None
                 brand_df["STLY Growth %"] = nbrx_qoq_stly[brand].values if (not nbrx_qoq_stly.empty and brand in nbrx_qoq_stly.columns) else None
                 brand_df["NBRX Claims"] = brand_df["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-                brand_df["Prev Qtr Growth %"] = brand_df["Prev Qtr Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-                brand_df["STLY Growth %"] = brand_df["STLY Growth %"].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+                brand_df["Prev Qtr Growth %"] = brand_df["Prev Qtr Growth %"].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+                brand_df["STLY Growth %"] = brand_df["STLY Growth %"].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
                 nbrx_rows.append(brand_df)
         if nbrx_rows:
             combined_nbrx = pd.concat(nbrx_rows, ignore_index=True)
