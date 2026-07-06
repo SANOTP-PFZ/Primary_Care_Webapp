@@ -637,8 +637,8 @@ def render_brand_page(brand_key_page):
             st.markdown(f'<div class="section-title">Patients Trend <span style="font-size:13px; color:#0093D0; font-weight:500;">(LAAD)</span></div>', unsafe_allow_html=True)
             render_trend_chart(patients, "Patients", [brand_name], is_percentage=False)
 
-        # QoQ Summaries
-        st.markdown('<div class="section-title">QoQ Summaries</div>', unsafe_allow_html=True)
+        # STLY Growth Summaries
+        st.markdown('<div class="section-title">STLY Growth Summaries</div>', unsafe_allow_html=True)
 
         def render_styled_table_bey(df_to_render, title):
             if df_to_render.empty:
@@ -660,17 +660,37 @@ def render_brand_page(brand_key_page):
                 html += '</tbody></table>'
                 st.markdown(html, unsafe_allow_html=True)
 
-        if not claims_growth.empty:
-            display_df = claims_growth.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
-            for col in display_df.columns[1:]:
-                display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            render_styled_table_bey(display_df, "Claims Growth vs STLY (LAAD)")
+        if not claims.empty and "BEYFORTUS" in claims.columns:
+            stly_df = pd.DataFrame({"Quarter": claims.index})
+            stly_df["Claims"] = claims["BEYFORTUS"].values
+            stly_df["Patients"] = patients["BEYFORTUS"].values if (not patients.empty and "BEYFORTUS" in patients.columns) else None
+            stly_df["STLY Claims Growth %"] = claims_growth["BEYFORTUS"].values if (not claims_growth.empty and "BEYFORTUS" in claims_growth.columns) else None
+            stly_df["STLY Patients Growth %"] = patients_growth["BEYFORTUS"].values if (not patients_growth.empty and "BEYFORTUS" in patients_growth.columns) else None
+            stly_df["Claims"] = stly_df["Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            stly_df["Patients"] = stly_df["Patients"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            for col in ["STLY Claims Growth %", "STLY Patients Growth %"]:
+                if col in stly_df.columns:
+                    stly_df[col] = stly_df[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+            render_styled_table_bey(stly_df, "STLY Growth Summary (LAAD)")
 
-        if not patients_growth.empty:
-            display_df = patients_growth.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
-            for col in display_df.columns[1:]:
-                display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
-            render_styled_table_bey(display_df, "Patients Growth vs STLY (LAAD)")
+        # QoQ Growth Summaries
+        st.markdown('<div class="section-title">QoQ Growth Summaries</div>', unsafe_allow_html=True)
+
+        qoq_claims_growth = pivot_market_share(elaad_data, "QOQ CLAIMS GROWTH PCT")
+        qoq_patients_growth = pivot_market_share(elaad_data, "QOQ PATIENTS GROWTH PCT")
+
+        if not claims.empty and "BEYFORTUS" in claims.columns:
+            qoq_df = pd.DataFrame({"Quarter": claims.index})
+            qoq_df["Claims"] = claims["BEYFORTUS"].values
+            qoq_df["Patients"] = patients["BEYFORTUS"].values if (not patients.empty and "BEYFORTUS" in patients.columns) else None
+            qoq_df["QoQ Claims Growth %"] = qoq_claims_growth["BEYFORTUS"].values if (not qoq_claims_growth.empty and "BEYFORTUS" in qoq_claims_growth.columns) else None
+            qoq_df["QoQ Patients Growth %"] = qoq_patients_growth["BEYFORTUS"].values if (not qoq_patients_growth.empty and "BEYFORTUS" in qoq_patients_growth.columns) else None
+            qoq_df["Claims"] = qoq_df["Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            qoq_df["Patients"] = qoq_df["Patients"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            for col in ["QoQ Claims Growth %", "QoQ Patients Growth %"]:
+                if col in qoq_df.columns:
+                    qoq_df[col] = qoq_df[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+            render_styled_table_bey(qoq_df, "QoQ Growth Summary (LAAD)")
 
         # Raw Data Tables
         st.markdown('<div class="section-title">Raw Data Tables</div>', unsafe_allow_html=True)
@@ -698,9 +718,13 @@ def render_brand_page(brand_key_page):
                 if not patients.empty:
                     patients.to_excel(writer, sheet_name="Patients")
                 if not claims_growth.empty:
-                    claims_growth.round(2).to_excel(writer, sheet_name="Claims Growth vs STLY")
+                    claims_growth.round(2).to_excel(writer, sheet_name="Claims Growth STLY")
                 if not patients_growth.empty:
-                    patients_growth.round(2).to_excel(writer, sheet_name="Patients Growth vs STLY")
+                    patients_growth.round(2).to_excel(writer, sheet_name="Patients Growth STLY")
+                if not qoq_claims_growth.empty:
+                    qoq_claims_growth.round(2).to_excel(writer, sheet_name="Claims Growth QoQ")
+                if not qoq_patients_growth.empty:
+                    qoq_patients_growth.round(2).to_excel(writer, sheet_name="Patients Growth QoQ")
             return output.getvalue()
 
         def generate_pdf_bey():
@@ -789,6 +813,58 @@ def render_brand_page(brand_key_page):
                         row = [qtr] + [f"{v:,.0f}" if pd.notna(v) else "-" for v in patients.loc[qtr]]
                         table_data.append(row)
                     t = Table(table_data, colWidths=[1.5*inch] + [2*inch] * len(patients.columns))
+                    t.setStyle(table_style)
+                    elements.append(t)
+                    elements.append(Spacer(1, 10))
+
+                # STLY Claims Growth Table
+                if not claims_growth.empty:
+                    elements.append(Paragraph("Claims Growth STLY (%)", heading_style))
+                    header = ["Quarter"] + list(claims_growth.columns)
+                    table_data = [header]
+                    for qtr in claims_growth.index:
+                        row = [qtr] + [f"{v:+.2f}%" if pd.notna(v) else "-" for v in claims_growth.loc[qtr]]
+                        table_data.append(row)
+                    t = Table(table_data, colWidths=[1.5*inch] + [2*inch] * len(claims_growth.columns))
+                    t.setStyle(table_style)
+                    elements.append(t)
+                    elements.append(Spacer(1, 10))
+
+                # STLY Patients Growth Table
+                if not patients_growth.empty:
+                    elements.append(Paragraph("Patients Growth STLY (%)", heading_style))
+                    header = ["Quarter"] + list(patients_growth.columns)
+                    table_data = [header]
+                    for qtr in patients_growth.index:
+                        row = [qtr] + [f"{v:+.2f}%" if pd.notna(v) else "-" for v in patients_growth.loc[qtr]]
+                        table_data.append(row)
+                    t = Table(table_data, colWidths=[1.5*inch] + [2*inch] * len(patients_growth.columns))
+                    t.setStyle(table_style)
+                    elements.append(t)
+                    elements.append(Spacer(1, 10))
+
+                # QoQ Claims Growth Table
+                if not qoq_claims_growth.empty:
+                    elements.append(Paragraph("Claims Growth QoQ (%)", heading_style))
+                    header = ["Quarter"] + list(qoq_claims_growth.columns)
+                    table_data = [header]
+                    for qtr in qoq_claims_growth.index:
+                        row = [qtr] + [f"{v:+.2f}%" if pd.notna(v) else "-" for v in qoq_claims_growth.loc[qtr]]
+                        table_data.append(row)
+                    t = Table(table_data, colWidths=[1.5*inch] + [2*inch] * len(qoq_claims_growth.columns))
+                    t.setStyle(table_style)
+                    elements.append(t)
+                    elements.append(Spacer(1, 10))
+
+                # QoQ Patients Growth Table
+                if not qoq_patients_growth.empty:
+                    elements.append(Paragraph("Patients Growth QoQ (%)", heading_style))
+                    header = ["Quarter"] + list(qoq_patients_growth.columns)
+                    table_data = [header]
+                    for qtr in qoq_patients_growth.index:
+                        row = [qtr] + [f"{v:+.2f}%" if pd.notna(v) else "-" for v in qoq_patients_growth.loc[qtr]]
+                        table_data.append(row)
+                    t = Table(table_data, colWidths=[1.5*inch] + [2*inch] * len(qoq_patients_growth.columns))
                     t.setStyle(table_style)
                     elements.append(t)
 
@@ -1975,9 +2051,21 @@ def render_brand_page(brand_key_page):
             if not nbrx_claims.empty:
                 nbrx_claims.to_excel(writer, sheet_name="NBRX Claims")
             if not trx_diff.empty:
-                trx_diff.round(2).to_excel(writer, sheet_name="TRX Diff vs STLY")
+                trx_diff.round(2).to_excel(writer, sheet_name="TRX MS Diff vs STLY")
             if not nbrx_diff.empty:
-                nbrx_diff.round(2).to_excel(writer, sheet_name="NBRX Diff vs STLY")
+                nbrx_diff.round(2).to_excel(writer, sheet_name="NBRX MS Diff vs STLY")
+            trx_pq_ms_xl = pivot_market_share(trx_data, "TRX PQ MARKET SHARE")
+            nbrx_pq_ms_xl = pivot_market_share(nbrx_data, "NBRX PQ MARKET SHARE")
+            trx_ms_diff_pq_xl = pivot_market_share(trx_data, "TRX MS DIFF VS PQ")
+            nbrx_ms_diff_pq_xl = pivot_market_share(nbrx_data, "NBRX MS DIFF VS PQ")
+            if not trx_pq_ms_xl.empty:
+                trx_pq_ms_xl.round(2).to_excel(writer, sheet_name="TRX PQ Market Share")
+            if not nbrx_pq_ms_xl.empty:
+                nbrx_pq_ms_xl.round(2).to_excel(writer, sheet_name="NBRX PQ Market Share")
+            if not trx_ms_diff_pq_xl.empty:
+                trx_ms_diff_pq_xl.round(2).to_excel(writer, sheet_name="TRX MS Diff vs PQ")
+            if not nbrx_ms_diff_pq_xl.empty:
+                nbrx_ms_diff_pq_xl.round(2).to_excel(writer, sheet_name="NBRX MS Diff vs PQ")
         return output.getvalue()
 
     def generate_pdf():
@@ -2099,6 +2187,16 @@ def render_brand_page(brand_key_page):
             # --- NBRX Diff Table ---
             if not nbrx_diff.empty:
                 elements.extend(make_table(nbrx_diff, "NBRX MS Diff vs STLY (pp)"))
+
+            # --- TRX PQ MS Diff Table ---
+            trx_ms_diff_pq_pdf = pivot_market_share(trx_data, "TRX MS DIFF VS PQ")
+            if not trx_ms_diff_pq_pdf.empty:
+                elements.extend(make_table(trx_ms_diff_pq_pdf, "TRX MS Diff vs PQ (pp)"))
+
+            # --- NBRX PQ MS Diff Table ---
+            nbrx_ms_diff_pq_pdf = pivot_market_share(nbrx_data, "NBRX MS DIFF VS PQ")
+            if not nbrx_ms_diff_pq_pdf.empty:
+                elements.extend(make_table(nbrx_ms_diff_pq_pdf, "NBRX MS Diff vs PQ (pp)"))
 
             # --- DDD Metrics (for Abrysvo, Prevnar, Comirnaty) ---
             ddd_brands_pdf = {"abrysvo": "ABRYSVO", "comirnaty": "COMIRNATY", "prevnar": "PREVNAR"}
