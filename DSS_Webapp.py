@@ -86,12 +86,15 @@ BRAND_PAGE_CSS = """
     [data-testid="stAppViewContainer"] { background: #F5F7FA; color: #1A1A2E; }
     [data-testid="stMarkdownContainer"] p { color: #1A1A2E; }
     .stExpander { color: #0093D0; }
-    .stExpander summary span, .stExpander summary p, .stExpander summary { color: #0093D0 !important; font-weight: 600 !important; }
-    .stExpander summary:hover span, .stExpander summary:hover p, .stExpander summary:hover { color: #0093D0 !important; }
-    [data-testid="stExpander"] summary { color: #0093D0 !important; }
-    [data-testid="stExpander"] summary:hover { color: #0093D0 !important; }
+    .stExpander summary span, .stExpander summary p, .stExpander summary { color: #0093D0 !important; font-weight: 600 !important; background: transparent !important; }
+    .stExpander summary:hover span, .stExpander summary:hover p, .stExpander summary:hover { color: #0093D0 !important; background: transparent !important; }
+    [data-testid="stExpander"] { background: transparent !important; border: 1px solid #E6E9EC !important; }
+    [data-testid="stExpander"] summary { color: #0093D0 !important; background: transparent !important; }
+    [data-testid="stExpander"] summary:hover { color: #0093D0 !important; background: transparent !important; }
     [data-testid="stExpander"] summary:hover span { color: #0093D0 !important; }
     [data-testid="stExpander"] summary span { color: #0093D0 !important; }
+    [data-testid="stExpander"] details { background: transparent !important; }
+    [data-testid="stExpander"] details[open] summary { background: transparent !important; }
     .top-ribbon { background: #0093D0; padding: 34px 50px; display: flex; align-items: center; gap: 16px; margin: -1rem -1rem 0 -1rem; width: calc(100% + 2rem); box-shadow: 0 4px 16px rgba(0, 147, 208, 0.25); position: relative; overflow: hidden; }
     .top-ribbon::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: none; }
     .top-ribbon .title { color: #FFFFFF; font-size: 30px; font-weight: 700; letter-spacing: 0.3px; position: relative; z-index: 1; text-shadow: 0 1px 2px rgba(0,0,0,0.15); }
