@@ -1807,6 +1807,93 @@ def render_brand_page(brand_key_page):
                 combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table(combined_nbrx, "NBRX Growth Summary (NPA)")
 
+    # --- Paxlovid QoQ Summaries ---
+    if brand_key_page == "paxlovid":
+        st.markdown('<div class="section-title">QoQ Market Share Differences</div>', unsafe_allow_html=True)
+
+        # TRX Market Share Difference Table (Paxlovid only)
+        trx_pq_ms = pivot_market_share(trx_data, "TRX PQ MARKET SHARE")
+        trx_ms_diff_pq = pivot_market_share(trx_data, "TRX MS DIFF VS PQ")
+        if not trx_ms.empty and "PAXLOVID" in trx_ms.columns:
+            paxlovid_trx_ms = trx_ms["PAXLOVID"]
+            stly_trx_table = pd.DataFrame({"Quarter": paxlovid_trx_ms.index})
+            stly_trx_table["Paxlovid Market Share"] = paxlovid_trx_ms.values
+            stly_trx_table["Previous Quarter Market Share"] = trx_pq_ms["PAXLOVID"].values if (not trx_pq_ms.empty and "PAXLOVID" in trx_pq_ms.columns) else None
+            stly_trx_table["STLY Market Share"] = (paxlovid_trx_ms - trx_diff["PAXLOVID"]).values if (not trx_diff.empty and "PAXLOVID" in trx_diff.columns) else None
+            stly_trx_table["Market Share Difference STLY"] = trx_diff["PAXLOVID"].values if (not trx_diff.empty and "PAXLOVID" in trx_diff.columns) else None
+            stly_trx_table["Market Share Difference Previous Quarter"] = trx_ms_diff_pq["PAXLOVID"].values if (not trx_ms_diff_pq.empty and "PAXLOVID" in trx_ms_diff_pq.columns) else None
+            for col in ["Paxlovid Market Share", "Previous Quarter Market Share", "STLY Market Share"]:
+                if col in stly_trx_table.columns:
+                    stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
+            for col in ["Market Share Difference STLY", "Market Share Difference Previous Quarter"]:
+                if col in stly_trx_table.columns:
+                    stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
+            render_styled_table(stly_trx_table, "TRX Market Share Difference (NPA)")
+
+        # NBRX Market Share Difference Table (Paxlovid only)
+        nbrx_pq_ms = pivot_market_share(nbrx_data, "NBRX PQ MARKET SHARE")
+        nbrx_ms_diff_pq = pivot_market_share(nbrx_data, "NBRX MS DIFF VS PQ")
+        if not nbrx_ms.empty and "PAXLOVID" in nbrx_ms.columns:
+            paxlovid_nbrx_ms = nbrx_ms["PAXLOVID"]
+            stly_nbrx_table = pd.DataFrame({"Quarter": paxlovid_nbrx_ms.index})
+            stly_nbrx_table["Paxlovid Market Share"] = paxlovid_nbrx_ms.values
+            stly_nbrx_table["Previous Quarter Market Share"] = nbrx_pq_ms["PAXLOVID"].values if (not nbrx_pq_ms.empty and "PAXLOVID" in nbrx_pq_ms.columns) else None
+            stly_nbrx_table["STLY Market Share"] = (paxlovid_nbrx_ms - nbrx_diff["PAXLOVID"]).values if (not nbrx_diff.empty and "PAXLOVID" in nbrx_diff.columns) else None
+            stly_nbrx_table["Market Share Difference STLY"] = nbrx_diff["PAXLOVID"].values if (not nbrx_diff.empty and "PAXLOVID" in nbrx_diff.columns) else None
+            stly_nbrx_table["Market Share Difference Previous Quarter"] = nbrx_ms_diff_pq["PAXLOVID"].values if (not nbrx_ms_diff_pq.empty and "PAXLOVID" in nbrx_ms_diff_pq.columns) else None
+            for col in ["Paxlovid Market Share", "Previous Quarter Market Share", "STLY Market Share"]:
+                if col in stly_nbrx_table.columns:
+                    stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
+            for col in ["Market Share Difference STLY", "Market Share Difference Previous Quarter"]:
+                if col in stly_nbrx_table.columns:
+                    stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
+            render_styled_table(stly_nbrx_table, "NBRX Market Share Difference (NPA)")
+
+        st.markdown('<div class="section-title">QoQ Growth Summaries</div>', unsafe_allow_html=True)
+
+        # TRX Growth Summary (Paxlovid + COVID_ORAL side by side)
+        paxlovid_market_data = df[df["BRAND"].isin(["PAXLOVID", "COVID_ORAL"])].copy()
+        trx_pax_claims = pivot_market_share(trx_data, "TRX CLAIMS")
+        trx_pax_growth = pivot_market_share(paxlovid_market_data, "TRX QOQ GROWTH PCT")
+        trx_pax_stly = pivot_market_share(paxlovid_market_data, "TRX STLY GROWTH PCT")
+
+        if not trx_pax_claims.empty:
+            combined_trx = pd.DataFrame({"Quarter": trx_pax_claims.index})
+            if "PAXLOVID" in trx_pax_claims.columns:
+                combined_trx["Paxlovid TRX Claims"] = trx_pax_claims["PAXLOVID"].values
+                combined_trx["Paxlovid Prev Qtr Growth %"] = trx_pax_growth["PAXLOVID"].reindex(trx_pax_claims.index).values if (not trx_pax_growth.empty and "PAXLOVID" in trx_pax_growth.columns) else None
+                combined_trx["Paxlovid STLY Growth %"] = trx_pax_stly["PAXLOVID"].reindex(trx_pax_claims.index).values if (not trx_pax_stly.empty and "PAXLOVID" in trx_pax_stly.columns) else None
+            if "COVID_ORAL" in trx_pax_claims.columns:
+                combined_trx["COVID_ORAL TRX Claims"] = trx_pax_claims["COVID_ORAL"].values
+                combined_trx["COVID_ORAL Prev Qtr Growth %"] = trx_pax_growth["COVID_ORAL"].reindex(trx_pax_claims.index).values if (not trx_pax_growth.empty and "COVID_ORAL" in trx_pax_growth.columns) else None
+                combined_trx["COVID_ORAL STLY Growth %"] = trx_pax_stly["COVID_ORAL"].reindex(trx_pax_claims.index).values if (not trx_pax_stly.empty and "COVID_ORAL" in trx_pax_stly.columns) else None
+            for col in [c for c in combined_trx.columns if "TRX Claims" in c]:
+                combined_trx[col] = combined_trx[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            for col in [c for c in combined_trx.columns if "Growth %" in c]:
+                combined_trx[col] = combined_trx[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+            render_styled_table(combined_trx, "TRX Growth Summary (NPA)")
+
+        # NBRX Growth Summary (Paxlovid + COVID_ORAL side by side)
+        nbrx_pax_claims = pivot_market_share(nbrx_data, "NBRX CLAIMS")
+        nbrx_pax_growth = pivot_market_share(paxlovid_market_data, "NBRX QOQ GROWTH PCT")
+        nbrx_pax_stly = pivot_market_share(paxlovid_market_data, "NBRX STLY GROWTH PCT")
+
+        if not nbrx_pax_claims.empty:
+            combined_nbrx = pd.DataFrame({"Quarter": nbrx_pax_claims.index})
+            if "PAXLOVID" in nbrx_pax_claims.columns:
+                combined_nbrx["Paxlovid NBRX Claims"] = nbrx_pax_claims["PAXLOVID"].values
+                combined_nbrx["Paxlovid Prev Qtr Growth %"] = nbrx_pax_growth["PAXLOVID"].reindex(nbrx_pax_claims.index).values if (not nbrx_pax_growth.empty and "PAXLOVID" in nbrx_pax_growth.columns) else None
+                combined_nbrx["Paxlovid STLY Growth %"] = nbrx_pax_stly["PAXLOVID"].reindex(nbrx_pax_claims.index).values if (not nbrx_pax_stly.empty and "PAXLOVID" in nbrx_pax_stly.columns) else None
+            if "COVID_ORAL" in nbrx_pax_claims.columns:
+                combined_nbrx["COVID_ORAL NBRX Claims"] = nbrx_pax_claims["COVID_ORAL"].values
+                combined_nbrx["COVID_ORAL Prev Qtr Growth %"] = nbrx_pax_growth["COVID_ORAL"].reindex(nbrx_pax_claims.index).values if (not nbrx_pax_growth.empty and "COVID_ORAL" in nbrx_pax_growth.columns) else None
+                combined_nbrx["COVID_ORAL STLY Growth %"] = nbrx_pax_stly["COVID_ORAL"].reindex(nbrx_pax_claims.index).values if (not nbrx_pax_stly.empty and "COVID_ORAL" in nbrx_pax_stly.columns) else None
+            for col in [c for c in combined_nbrx.columns if "NBRX Claims" in c]:
+                combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+            for col in [c for c in combined_nbrx.columns if "Growth %" in c]:
+                combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+            render_styled_table(combined_nbrx, "NBRX Growth Summary (NPA)")
+
     # --- Raw Data Tables ---
     st.markdown('<div class="section-title">Raw Data Tables</div>', unsafe_allow_html=True)
 
@@ -1834,8 +1921,8 @@ def render_brand_page(brand_key_page):
             display_df[col] = display_df[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
         render_styled_table(display_df, "NBRX Claims (NPA)")
 
-    # For non-Nurtec/Eliquis/Prevnar/Abrysvo/Comirnaty brands, STLY diff tables go under Raw Data Tables
-    if brand_key_page not in ("nurtec", "eliquis", "prevnar", "abrysvo", "comirnaty"):
+    # For non-Nurtec/Eliquis/Prevnar/Abrysvo/Comirnaty/Paxlovid brands, STLY diff tables go under Raw Data Tables
+    if brand_key_page not in ("nurtec", "eliquis", "prevnar", "abrysvo", "comirnaty", "paxlovid"):
         if not trx_diff.empty:
             display_df = trx_diff.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
             for col in display_df.columns[1:]:
