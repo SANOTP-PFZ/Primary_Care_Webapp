@@ -85,10 +85,13 @@ BRAND_PAGE_CSS = """
     html, body, [class*="css"] { font-family: 'Noto Sans', 'Inter', 'Segoe UI', system-ui, sans-serif; color: #1A1A2E !important; }
     [data-testid="stAppViewContainer"] { background: #F5F7FA; color: #1A1A2E; }
     [data-testid="stMarkdownContainer"] p { color: #1A1A2E; }
-    .stExpander { color: #1A1A2E; }
-    .stExpander summary:hover span, .stExpander summary:hover p, .stExpander summary:hover { color: #1A1A2E !important; }
-    [data-testid="stExpander"] summary:hover { color: #1A1A2E !important; }
-    [data-testid="stExpander"] summary:hover span { color: #1A1A2E !important; }
+    .stExpander { color: #0093D0; }
+    .stExpander summary span, .stExpander summary p, .stExpander summary { color: #0093D0 !important; font-weight: 600 !important; }
+    .stExpander summary:hover span, .stExpander summary:hover p, .stExpander summary:hover { color: #0093D0 !important; }
+    [data-testid="stExpander"] summary { color: #0093D0 !important; }
+    [data-testid="stExpander"] summary:hover { color: #0093D0 !important; }
+    [data-testid="stExpander"] summary:hover span { color: #0093D0 !important; }
+    [data-testid="stExpander"] summary span { color: #0093D0 !important; }
     .top-ribbon { background: #0093D0; padding: 34px 50px; display: flex; align-items: center; gap: 16px; margin: -1rem -1rem 0 -1rem; width: calc(100% + 2rem); box-shadow: 0 4px 16px rgba(0, 147, 208, 0.25); position: relative; overflow: hidden; }
     .top-ribbon::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: none; }
     .top-ribbon .title { color: #FFFFFF; font-size: 30px; font-weight: 700; letter-spacing: 0.3px; position: relative; z-index: 1; text-shadow: 0 1px 2px rgba(0,0,0,0.15); }
@@ -1387,7 +1390,7 @@ def render_brand_page(brand_key_page):
             for col in ["Market Share Difference STLY", "Market Share Difference Previous Quarter"]:
                 if col in stly_trx_table.columns:
                     stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
-            render_styled_table(stly_trx_table, "TRX Market Share Difference vs STLY (NPA)")
+            render_styled_table(stly_trx_table, "TRX Market Share Difference (NPA)")
 
         # NBRX Market Share Difference Table (Nurtec only)
         nbrx_pq_ms = pivot_market_share(nbrx_data, "NBRX PQ MARKET SHARE")
@@ -1406,7 +1409,7 @@ def render_brand_page(brand_key_page):
             for col in ["Market Share Difference STLY", "Market Share Difference Previous Quarter"]:
                 if col in stly_nbrx_table.columns:
                     stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
-            render_styled_table(stly_nbrx_table, "NBRX Market Share Difference vs STLY (NPA)")
+            render_styled_table(stly_nbrx_table, "NBRX Market Share Difference (NPA)")
 
         st.markdown('<div class="section-title">QoQ Growth Summaries</div>', unsafe_allow_html=True)
 
@@ -1430,7 +1433,7 @@ def render_brand_page(brand_key_page):
                 combined_trx[col] = combined_trx[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             for col in [c for c in combined_trx.columns if "Growth %" in c]:
                 combined_trx[col] = combined_trx[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
-            render_styled_table(combined_trx, "TRX QoQ Growth Summary (NPA)")
+            render_styled_table(combined_trx, "TRX Growth Summary (NPA)")
 
         # NBRX QoQ Growth Summary (Nurtec + OCGRP side by side)
         nbrx_qoq_claims = pivot_market_share(nbrx_data, "NBRX CLAIMS")
@@ -1451,7 +1454,7 @@ def render_brand_page(brand_key_page):
                 combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             for col in [c for c in combined_nbrx.columns if "Growth %" in c]:
                 combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
-            render_styled_table(combined_nbrx, "NBRX QoQ Growth Summary (NPA)")
+            render_styled_table(combined_nbrx, "NBRX Growth Summary (NPA)")
 
     # --- Eliquis QoQ Summaries ---
     if brand_key_page == "eliquis":
