@@ -339,8 +339,8 @@ def render_brand_page(brand_key_page):
             st.markdown(f'<div class="section-title">NBRX Claims Trend <span style="font-size:13px; color:#0093D0; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
             render_trend_chart(nbrx_claims, "NBRX Claims", [brand_name], is_percentage=False)
 
-        # QoQ Summaries
-        st.markdown('<div class="section-title">QoQ Summaries</div>', unsafe_allow_html=True)
+        # Claims Growth STLY
+        st.markdown('<div class="section-title">Claims Growth STLY</div>', unsafe_allow_html=True)
 
         def render_styled_table_zavz(df_to_render, title):
             if df_to_render.empty:
@@ -365,14 +365,31 @@ def render_brand_page(brand_key_page):
         if not trx_growth.empty:
             display_df = trx_growth.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
             for col in display_df.columns[1:]:
-                display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+                display_df[col] = display_df[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table_zavz(display_df, "TRX Claims Growth vs STLY (NPA)")
 
         if not nbrx_growth.empty:
             display_df = nbrx_growth.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
             for col in display_df.columns[1:]:
-                display_df[col] = display_df[col].apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-")
+                display_df[col] = display_df[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table_zavz(display_df, "NBRX Claims Growth vs STLY (NPA)")
+
+        # Claims Growth QoQ
+        st.markdown('<div class="section-title">Claims Growth QoQ</div>', unsafe_allow_html=True)
+
+        trx_qoq_growth = pivot_market_share(trx_data, "TRX QOQ CLAIMS GROWTH PCT")
+        if not trx_qoq_growth.empty:
+            display_df = trx_qoq_growth.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
+            for col in display_df.columns[1:]:
+                display_df[col] = display_df[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+            render_styled_table_zavz(display_df, "TRX Claims Growth QoQ (NPA)")
+
+        nbrx_qoq_growth = pivot_market_share(nbrx_data, "NBRX QOQ CLAIMS GROWTH PCT")
+        if not nbrx_qoq_growth.empty:
+            display_df = nbrx_qoq_growth.round(2).reset_index().rename(columns={"YR_QTR_TXT": "Quarter"})
+            for col in display_df.columns[1:]:
+                display_df[col] = display_df[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+            render_styled_table_zavz(display_df, "NBRX Claims Growth QoQ (NPA)")
 
         # Raw Data Tables
         st.markdown('<div class="section-title">Raw Data Tables</div>', unsafe_allow_html=True)
