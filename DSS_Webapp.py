@@ -2238,6 +2238,21 @@ def render_brand_page(brand_key_page):
                 elems.append(Spacer(1, 10))
                 return elems
 
+            def make_df_table(df_to_render, title_text):
+                """Create a reportlab Table from a pre-built DataFrame with string-formatted values."""
+                elems = []
+                elems.append(Paragraph(title_text, heading_style))
+                header = list(df_to_render.columns)
+                table_data = [header]
+                for _, row in df_to_render.iterrows():
+                    table_data.append([str(v) if pd.notna(v) else "-" for v in row])
+                col_widths = [1.3*inch] * min(len(header), 8)
+                t = Table(table_data, colWidths=col_widths)
+                t.setStyle(table_style)
+                elems.append(t)
+                elems.append(Spacer(1, 10))
+                return elems
+
             output = BytesIO()
             doc = SimpleDocTemplate(output, pagesize=landscape(letter), leftMargin=40, rightMargin=40, topMargin=30, bottomMargin=30)
             elements = []
@@ -2287,31 +2302,75 @@ def render_brand_page(brand_key_page):
                 elements.append(Spacer(1, 5))
                 elements.extend(make_table(nbrx_ms, "NBRX Market Share (%)"))
 
-            # --- TRX Claims Table ---
-            if not trx_claims.empty:
-                elements.extend(make_table(trx_claims, "TRX Claims", fmt=",.0f"))
-
-            # --- NBRX Claims Table ---
-            if not nbrx_claims.empty:
-                elements.extend(make_table(nbrx_claims, "NBRX Claims", fmt=",.0f"))
-
-            # --- TRX Diff Table ---
-            if not trx_diff.empty:
-                elements.extend(make_table(trx_diff, "TRX MS Diff vs STLY (pp)"))
-
-            # --- NBRX Diff Table ---
-            if not nbrx_diff.empty:
-                elements.extend(make_table(nbrx_diff, "NBRX MS Diff vs STLY (pp)"))
-
-            # --- TRX PQ MS Diff Table ---
+            # --- QoQ Market Share Differences (as displayed on webapp) ---
+            trx_pq_ms_pdf = pivot_market_share(trx_data, "TRX PQ MARKET SHARE")
             trx_ms_diff_pq_pdf = pivot_market_share(trx_data, "TRX MS DIFF VS PQ")
-            if not trx_ms_diff_pq_pdf.empty:
-                elements.extend(make_table(trx_ms_diff_pq_pdf, "TRX MS Diff vs PQ (pp)"))
-
-            # --- NBRX PQ MS Diff Table ---
+            nbrx_pq_ms_pdf = pivot_market_share(nbrx_data, "NBRX PQ MARKET SHARE")
             nbrx_ms_diff_pq_pdf = pivot_market_share(nbrx_data, "NBRX MS DIFF VS PQ")
-            if not nbrx_ms_diff_pq_pdf.empty:
-                elements.extend(make_table(nbrx_ms_diff_pq_pdf, "NBRX MS Diff vs PQ (pp)"))
+
+            if not trx_ms.empty and brand_name in trx_ms.columns:
+                ms_trx_pdf = pd.DataFrame({"Quarter": trx_ms.index})
+                ms_trx_pdf[f"{display_name} Market Share"] = trx_ms[brand_name].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
+                ms_trx_pdf["Previous Quarter Market Share"] = trx_pq_ms_pdf[brand_name].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-") if (not trx_pq_ms_pdf.empty and brand_name in trx_pq_ms_pdf.columns) else "-"
+                ms_trx_pdf["STLY Market Share"] = (trx_ms[brand_name] - trx_diff[brand_name]).apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-") if (not trx_diff.empty and brand_name in trx_diff.columns) else "-"
+                ms_trx_pdf["MS Diff STLY"] = trx_diff[brand_name].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-") if (not trx_diff.empty and brand_name in trx_diff.columns) else "-"
+                ms_trx_pdf["MS Diff PQ"] = trx_ms_diff_pq_pdf[brand_name].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-") if (not trx_ms_diff_pq_pdf.empty and brand_name in trx_ms_diff_pq_pdf.columns) else "-"
+                elements.extend(make_df_table(ms_trx_pdf, "TRX Market Share Difference (NPA)"))
+
+            if not nbrx_ms.empty and brand_name in nbrx_ms.columns:
+                ms_nbrx_pdf = pd.DataFrame({"Quarter": nbrx_ms.index})
+                ms_nbrx_pdf[f"{display_name} Market Share"] = nbrx_ms[brand_name].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
+                ms_nbrx_pdf["Previous Quarter Market Share"] = nbrx_pq_ms_pdf[brand_name].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-") if (not nbrx_pq_ms_pdf.empty and brand_name in nbrx_pq_ms_pdf.columns) else "-"
+                ms_nbrx_pdf["STLY Market Share"] = (nbrx_ms[brand_name] - nbrx_diff[brand_name]).apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-") if (not nbrx_diff.empty and brand_name in nbrx_diff.columns) else "-"
+                ms_nbrx_pdf["MS Diff STLY"] = nbrx_diff[brand_name].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-") if (not nbrx_diff.empty and brand_name in nbrx_diff.columns) else "-"
+                ms_nbrx_pdf["MS Diff PQ"] = nbrx_ms_diff_pq_pdf[brand_name].apply(lambda x: f"{x:+.2f}" if pd.notna(x) else "-") if (not nbrx_ms_diff_pq_pdf.empty and brand_name in nbrx_ms_diff_pq_pdf.columns) else "-"
+                elements.extend(make_df_table(ms_nbrx_pdf, "NBRX Market Share Difference (NPA)"))
+
+            # --- QoQ Growth Summaries (as displayed on webapp) ---
+            elements.append(PageBreak())
+            market_brand = market
+            brand_market_data_pdf = df[df["BRAND"].isin([brand_name, market_brand])].copy()
+            trx_g_claims_pdf = pivot_market_share(trx_data, "TRX CLAIMS")
+            trx_g_growth_pdf = pivot_market_share(brand_market_data_pdf, "TRX QOQ GROWTH PCT")
+            trx_g_stly_pdf = pivot_market_share(brand_market_data_pdf, "TRX STLY GROWTH PCT")
+
+            if not trx_g_claims_pdf.empty:
+                gs_trx_pdf = pd.DataFrame({"Quarter": trx_g_claims_pdf.index})
+                if brand_name in trx_g_claims_pdf.columns:
+                    gs_trx_pdf[f"{display_name} TRX Claims"] = trx_g_claims_pdf[brand_name].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+                    gs_trx_pdf[f"{display_name} PQ Growth %"] = trx_g_growth_pdf[brand_name].reindex(trx_g_claims_pdf.index).apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not trx_g_growth_pdf.empty and brand_name in trx_g_growth_pdf.columns) else "-"
+                    gs_trx_pdf[f"{display_name} STLY Growth %"] = trx_g_stly_pdf[brand_name].reindex(trx_g_claims_pdf.index).apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not trx_g_stly_pdf.empty and brand_name in trx_g_stly_pdf.columns) else "-"
+                if market_brand in trx_g_claims_pdf.columns:
+                    gs_trx_pdf[f"{market_brand} TRX Claims"] = trx_g_claims_pdf[market_brand].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+                    gs_trx_pdf[f"{market_brand} PQ Growth %"] = trx_g_growth_pdf[market_brand].reindex(trx_g_claims_pdf.index).apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not trx_g_growth_pdf.empty and market_brand in trx_g_growth_pdf.columns) else "-"
+                    gs_trx_pdf[f"{market_brand} STLY Growth %"] = trx_g_stly_pdf[market_brand].reindex(trx_g_claims_pdf.index).apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not trx_g_stly_pdf.empty and market_brand in trx_g_stly_pdf.columns) else "-"
+                elements.extend(make_df_table(gs_trx_pdf, "TRX Growth Summary (NPA)"))
+
+            nbrx_g_claims_pdf = pivot_market_share(nbrx_data, "NBRX CLAIMS")
+            nbrx_g_growth_pdf = pivot_market_share(brand_market_data_pdf, "NBRX QOQ GROWTH PCT")
+            nbrx_g_stly_pdf = pivot_market_share(brand_market_data_pdf, "NBRX STLY GROWTH PCT")
+
+            if not nbrx_g_claims_pdf.empty:
+                gs_nbrx_pdf = pd.DataFrame({"Quarter": nbrx_g_claims_pdf.index})
+                if brand_name in nbrx_g_claims_pdf.columns:
+                    gs_nbrx_pdf[f"{display_name} NBRX Claims"] = nbrx_g_claims_pdf[brand_name].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+                    gs_nbrx_pdf[f"{display_name} PQ Growth %"] = nbrx_g_growth_pdf[brand_name].reindex(nbrx_g_claims_pdf.index).apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not nbrx_g_growth_pdf.empty and brand_name in nbrx_g_growth_pdf.columns) else "-"
+                    gs_nbrx_pdf[f"{display_name} STLY Growth %"] = nbrx_g_stly_pdf[brand_name].reindex(nbrx_g_claims_pdf.index).apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not nbrx_g_stly_pdf.empty and brand_name in nbrx_g_stly_pdf.columns) else "-"
+                if market_brand in nbrx_g_claims_pdf.columns:
+                    gs_nbrx_pdf[f"{market_brand} NBRX Claims"] = nbrx_g_claims_pdf[market_brand].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
+                    gs_nbrx_pdf[f"{market_brand} PQ Growth %"] = nbrx_g_growth_pdf[market_brand].reindex(nbrx_g_claims_pdf.index).apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not nbrx_g_growth_pdf.empty and market_brand in nbrx_g_growth_pdf.columns) else "-"
+                    gs_nbrx_pdf[f"{market_brand} STLY Growth %"] = nbrx_g_stly_pdf[market_brand].reindex(nbrx_g_claims_pdf.index).apply(lambda x: f"{x:+.2f}%" if pd.notna(x) else "-") if (not nbrx_g_stly_pdf.empty and market_brand in nbrx_g_stly_pdf.columns) else "-"
+                elements.extend(make_df_table(gs_nbrx_pdf, "NBRX Growth Summary (NPA)"))
+
+            # --- Raw Data Tables ---
+            if not trx_ms.empty:
+                elements.extend(make_table(trx_ms, "TRX Market Share (NPA) - Raw"))
+            if not nbrx_ms.empty:
+                elements.extend(make_table(nbrx_ms, "NBRX Market Share (NPA) - Raw"))
+            if not trx_claims.empty:
+                elements.extend(make_table(trx_claims, "TRX Claims (NPA) - Raw", fmt=",.0f"))
+            if not nbrx_claims.empty:
+                elements.extend(make_table(nbrx_claims, "NBRX Claims (NPA) - Raw", fmt=",.0f"))
 
             # --- DDD Metrics (for Abrysvo, Prevnar, Comirnaty) ---
             ddd_brands_pdf = {"abrysvo": "ABRYSVO", "comirnaty": "COMIRNATY", "prevnar": "PREVNAR"}
