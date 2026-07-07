@@ -2239,18 +2239,38 @@ def render_brand_page(brand_key_page):
                 return elems
 
             def make_df_table(df_to_render, title_text):
-                """Create a reportlab Table from a pre-built DataFrame with string-formatted values."""
+                """Create a reportlab Table from a pre-built DataFrame with proper formatting."""
+                from reportlab.lib.enums import TA_CENTER
                 elems = []
                 elems.append(Paragraph(title_text, heading_style))
-                header = list(df_to_render.columns)
+                n_cols = len(df_to_render.columns)
+                available_width = 9.2 * inch
+                col_width = available_width / n_cols
+
+                header_para_style = ParagraphStyle("TblHeader", fontSize=7, fontName="Helvetica-Bold", textColor=colors.white, alignment=TA_CENTER, leading=9)
+                cell_para_style = ParagraphStyle("TblCell", fontSize=7, fontName="Helvetica", alignment=TA_CENTER, leading=9)
+
+                header = [Paragraph(str(col), header_para_style) for col in df_to_render.columns]
                 table_data = [header]
                 for _, row in df_to_render.iterrows():
-                    table_data.append([str(v) if pd.notna(v) else "-" for v in row])
-                col_widths = [1.3*inch] * min(len(header), 8)
-                t = Table(table_data, colWidths=col_widths)
-                t.setStyle(table_style)
+                    table_data.append([Paragraph(str(v) if pd.notna(v) else "-", cell_para_style) for v in row])
+
+                t = Table(table_data, colWidths=[col_width] * n_cols)
+                t.setStyle(TableStyle([
+                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0093D0")),
+                    ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                    ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#D0D8E0")),
+                    ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F0F4F8")]),
+                    ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                    ("TOPPADDING", (0, 0), (-1, 0), 6),
+                    ("BOTTOMPADDING", (0, 0), (-1, 0), 6),
+                    ("TOPPADDING", (0, 1), (-1, -1), 4),
+                    ("BOTTOMPADDING", (0, 1), (-1, -1), 4),
+                    ("LEFTPADDING", (0, 0), (-1, -1), 4),
+                    ("RIGHTPADDING", (0, 0), (-1, -1), 4),
+                ]))
                 elems.append(t)
-                elems.append(Spacer(1, 10))
+                elems.append(Spacer(1, 12))
                 return elems
 
             output = BytesIO()
