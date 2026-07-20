@@ -1,4 +1,4 @@
-"""
+﻿"""
 Primary Care Monthly Report Dashboard - Dataiku DSS Streamlit Webapp
 All data loaded dynamically from Dataiku dataset via pandas.
 """
@@ -76,56 +76,57 @@ def pivot_market_share(df_subset, metric_name):
 
 BRAND_PAGE_CSS = """
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
     #MainMenu {visibility: hidden;}
     header {visibility: hidden;}
     footer {visibility: hidden;}
     [data-testid="stSidebar"] {display: none;}
     .block-container { padding-top: 0rem !important; max-width: 100% !important; }
-    html, body, [class*="css"] { font-family: 'Noto Sans', 'Inter', 'Segoe UI', system-ui, sans-serif; color: #1A1A2E !important; }
-    [data-testid="stAppViewContainer"] { background: #F5F7FA; color: #1A1A2E; }
-    [data-testid="stMarkdownContainer"] p { color: #1A1A2E; }
-    .stExpander { color: #0093D0; }
-    .stExpander summary span, .stExpander summary p, .stExpander summary { color: #0093D0 !important; font-weight: 600 !important; background: transparent !important; }
-    .stExpander summary:hover span, .stExpander summary:hover p, .stExpander summary:hover { color: #0093D0 !important; background: transparent !important; }
-    [data-testid="stExpander"] { background: transparent !important; border: 1px solid #E6E9EC !important; }
-    [data-testid="stExpander"] summary { color: #0093D0 !important; background: transparent !important; }
-    [data-testid="stExpander"] summary:hover { color: #0093D0 !important; background: transparent !important; }
-    [data-testid="stExpander"] summary:hover span { color: #0093D0 !important; }
-    [data-testid="stExpander"] summary span { color: #0093D0 !important; }
+    html, body, [class*="css"] { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; color: #0F172A !important; -webkit-font-smoothing: antialiased; }
+    [data-testid="stAppViewContainer"] { background: radial-gradient(ellipse 80% 60% at 0% 0%, rgba(28,79,192,0.08) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 100% 0%, rgba(65,182,230,0.07) 0%, transparent 55%), #EEF3FB; color: #0F172A; }
+    [data-testid="stMarkdownContainer"] p { color: #0F172A; }
+    .stExpander { color: #1C4FC0; }
+    .stExpander summary span, .stExpander summary p, .stExpander summary { color: #1C4FC0 !important; font-weight: 600 !important; background: transparent !important; }
+    .stExpander summary:hover span, .stExpander summary:hover p, .stExpander summary:hover { color: #163990 !important; background: transparent !important; }
+    [data-testid="stExpander"] { background: transparent !important; border: 1px solid rgba(15,23,42,0.08) !important; border-radius: 12px !important; }
+    [data-testid="stExpander"] summary { color: #1C4FC0 !important; background: transparent !important; }
+    [data-testid="stExpander"] summary:hover { color: #163990 !important; background: transparent !important; }
+    [data-testid="stExpander"] summary:hover span { color: #163990 !important; }
+    [data-testid="stExpander"] summary span { color: #1C4FC0 !important; }
     [data-testid="stExpander"] details { background: transparent !important; }
     [data-testid="stExpander"] details[open] summary { background: transparent !important; }
-    .top-ribbon { background: #0093D0; padding: 34px 50px; display: flex; align-items: center; gap: 16px; margin: -1rem -1rem 0 -1rem; width: calc(100% + 2rem); box-shadow: 0 4px 16px rgba(0, 147, 208, 0.25); position: relative; overflow: hidden; }
-    .top-ribbon::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: none; }
-    .top-ribbon .title { color: #FFFFFF; font-size: 30px; font-weight: 700; letter-spacing: 0.3px; position: relative; z-index: 1; text-shadow: 0 1px 2px rgba(0,0,0,0.15); }
-    .kpi-container { display: flex; gap: 24px; padding: 30px 50px 10px; }
-    .kpi-card { background: #FFFFFF; border: 1px solid #E6E9EC; border-radius: 8px; padding: 24px 32px; flex: 1; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border-top: 3px solid #0093D0; }
-    .kpi-card .kpi-label { color: #616365; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
-    .kpi-card .kpi-value { color: #1A1A1A; font-size: 36px; font-weight: 700; font-variant-numeric: tabular-nums; }
-    .kpi-card .kpi-period { color: #616365; font-size: 12px; font-weight: 400; margin-top: 6px; }
-    .section-title { padding: 20px 50px 5px; color: #1A1A1A; font-size: 18px; font-weight: 700; }
-    .stButton > button, .stDownloadButton > button { background: #FFFFFF !important; border: 1px solid #E6E9EC !important; border-radius: 8px !important; color: #0093D0 !important; font-weight: 600 !important; padding: 8px 20px !important; }
-    .stButton > button:hover, .stDownloadButton > button:hover { background: #F0F4F8 !important; box-shadow: 0 4px 12px rgba(26, 62, 110, 0.1) !important; }
+    .top-ribbon { background: linear-gradient(135deg, #0A1A3D 0%, #163990 100%); padding: 34px 50px; display: flex; align-items: center; gap: 16px; margin: -1rem -1rem 0 -1rem; width: calc(100% + 2rem); box-shadow: 0 6px 20px rgba(10,26,61,0.25); position: relative; overflow: hidden; }
+    .top-ribbon::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #1C4FC0, #41B6E6, #3B6FD9); }
+    .top-ribbon .title { color: #FFFFFF; font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; position: relative; z-index: 1; text-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    .kpi-container { display: flex; gap: 18px; padding: 28px 50px 10px; }
+    .kpi-card { background: rgba(255,255,255,0.75); backdrop-filter: saturate(180%) blur(8px); -webkit-backdrop-filter: saturate(180%) blur(8px); border: 1px solid rgba(15,23,42,0.06); border-radius: 12px; padding: 22px 28px; flex: 1; box-shadow: 0 2px 8px rgba(15,23,42,0.05), 0 1px 2px rgba(15,23,42,0.04); transition: transform 0.25s cubic-bezier(0.16,1,0.3,1), box-shadow 0.25s ease; }
+    .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(15,23,42,0.07), 0 2px 4px rgba(15,23,42,0.04); }
+    .kpi-card .kpi-label { color: #64748B; font-size: 12px; font-weight: 500; margin-bottom: 6px; }
+    .kpi-card .kpi-value { color: #0A1A3D; font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; letter-spacing: -0.02em; }
+    .kpi-card .kpi-period { color: #64748B; font-size: 11px; font-weight: 500; margin-top: 8px; }
+    .section-title { padding: 20px 50px 5px; color: #0A1A3D; font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 700; letter-spacing: -0.015em; }
+    .stButton > button, .stDownloadButton > button { background: rgba(255,255,255,0.7) !important; border: 1px solid rgba(15,23,42,0.08) !important; border-radius: 8px !important; color: #1C4FC0 !important; font-weight: 600 !important; padding: 8px 20px !important; transition: all 0.18s ease !important; }
+    .stButton > button:hover, .stDownloadButton > button:hover { background: #FFFFFF !important; border-color: rgba(28,79,192,0.25) !important; box-shadow: 0 4px 12px rgba(15,23,42,0.08) !important; color: #163990 !important; }
 </style>
 """
 
 HOME_PAGE_CSS = """
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
     #MainMenu {visibility: hidden;}
     header {visibility: hidden;}
     footer {visibility: hidden;}
     [data-testid="stSidebar"] {display: none;}
     .block-container { padding-top: 0rem !important; padding-bottom: 0rem !important; max-width: 100% !important; }
-    html, body, [class*="css"] { font-family: 'Noto Sans', 'Inter', 'Segoe UI', system-ui, sans-serif; color: #1A1A2E !important; }
-    [data-testid="stAppViewContainer"] p, [data-testid="stMarkdownContainer"] p { color: #1A1A2E; }
-    .top-ribbon { background: #0093D0; padding: 34px 50px; display: flex; align-items: center; gap: 16px; margin: -1rem -1rem 0 -1rem; width: calc(100% + 2rem); box-shadow: 0 4px 16px rgba(0, 147, 208, 0.25); position: relative; overflow: hidden; }
-    .top-ribbon::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: none; }
-    .top-ribbon .title { color: #FFFFFF; font-size: 30px; font-weight: 700; letter-spacing: 0.3px; position: relative; z-index: 1; text-shadow: 0 1px 2px rgba(0,0,0,0.15); }
-    [data-testid="stAppViewContainer"] { background: #F5F7FA; }
-    .stButton > button { background: #FFFFFF !important; border: 1px solid #E6E9EC !important; border-radius: 12px !important; padding: 40px 32px !important; color: #1A1A1A !important; font-size: 20px !important; font-weight: 700 !important; font-family: 'Noto Sans', 'Inter', 'Segoe UI', system-ui, sans-serif !important; cursor: pointer !important; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important; min-height: 180px !important; border-top: 3px solid #0093D0 !important; }
+    html, body, [class*="css"] { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; color: #0F172A !important; -webkit-font-smoothing: antialiased; }
+    [data-testid="stAppViewContainer"] p, [data-testid="stMarkdownContainer"] p { color: #0F172A; }
+    .top-ribbon { background: linear-gradient(135deg, #0A1A3D 0%, #163990 100%); padding: 34px 50px; display: flex; align-items: center; gap: 16px; margin: -1rem -1rem 0 -1rem; width: calc(100% + 2rem); box-shadow: 0 6px 20px rgba(10,26,61,0.25); position: relative; overflow: hidden; }
+    .top-ribbon::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #1C4FC0, #41B6E6, #3B6FD9); }
+    .top-ribbon .title { color: #FFFFFF; font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; position: relative; z-index: 1; text-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    [data-testid="stAppViewContainer"] { background: radial-gradient(ellipse 80% 60% at 0% 0%, rgba(28,79,192,0.08) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 100% 0%, rgba(65,182,230,0.07) 0%, transparent 55%), #EEF3FB; }
+    .stButton > button { background: rgba(255,255,255,0.85) !important; border: 1px solid rgba(15,23,42,0.08) !important; border-radius: 14px !important; padding: 40px 32px !important; color: #0A1A3D !important; font-size: 20px !important; font-weight: 700 !important; font-family: 'Manrope', 'Inter', 'Segoe UI', system-ui, sans-serif !important; cursor: pointer !important; transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important; box-shadow: 0 2px 8px rgba(15,23,42,0.05), 0 1px 2px rgba(15,23,42,0.04) !important; min-height: 180px !important; border-top: none !important; position: relative !important; overflow: hidden !important; }
     .stButton > button > div, .stButton > button > div > p, .stButton > button p, .stButton > button span { font-size: 20px !important; font-weight: 700 !important; }
-    .stButton > button:hover { transform: translateY(-4px) !important; box-shadow: 0 16px 40px rgba(26, 62, 110, 0.18), 0 6px 16px rgba(0,0,0,0.08) !important; border-top: 3px solid #00AEEF !important; background: #FAFCFF !important; }
+    .stButton > button:hover { transform: translateY(-3px) !important; box-shadow: 0 18px 40px rgba(15,23,42,0.10), 0 6px 12px rgba(15,23,42,0.06) !important; background: rgba(255,255,255,0.95) !important; border-color: rgba(28,79,192,0.15) !important; }
 </style>
 """
 
@@ -134,13 +135,13 @@ HOME_PAGE_CSS = """
 # HELPERS
 # =====================================================
 
-CHART_COLORS = ["#0093D0", "#D6006E", "#00A950", "#F8971D", "#4A245E", "#F26649", "#75D1E0", "#616365"]
+CHART_COLORS = ["#1C4FC0", "#7C3AED", "#0E7490", "#D946EF", "#047857", "#EF4444", "#41B6E6", "#64748B"]
 
 
 def render_ribbon(title):
     logo_html = ""
     if PFIZER_LOGO_B64:
-        logo_html = f'<img src="data:image/png;base64,{PFIZER_LOGO_B64}" style="height:64px; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.15)); position:relative; z-index:1;" />'
+        logo_html = f'<img src="data:image/png;base64,{PFIZER_LOGO_B64}" style="height:56px; filter:brightness(0) invert(1) drop-shadow(0 2px 4px rgba(0,0,0,0.2)); position:relative; z-index:1;" />'
     st.markdown(f"""
     <div class="top-ribbon">
         {logo_html}
@@ -197,7 +198,7 @@ def render_trend_chart(pivoted_df, title, brands_order=None, is_percentage=True)
                     name=brand,
                     text=text_vals,
                     textposition="top center",
-                    textfont=dict(size=10, color="#0093D0"),
+                    textfont=dict(size=10, color="#1C4FC0"),
                     line=dict(color=CHART_COLORS[0], width=3),
                     marker=dict(size=7),
                     hovertemplate=hover_fmt
@@ -221,25 +222,25 @@ def render_trend_chart(pivoted_df, title, brands_order=None, is_percentage=True)
         margin=dict(l=60, r=30, t=20, b=50),
         plot_bgcolor="#FFFFFF",
         paper_bgcolor="#FFFFFF",
-        font=dict(family="Noto Sans, sans-serif", size=13, color="#1A1A1A"),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#616365")),
+        font=dict(family="Inter, system-ui, sans-serif", size=13, color="#0F172A"),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#64748B")),
         hovermode="x unified"
     )
     fig.update_xaxes(
         showgrid=False,
-        tickfont=dict(size=12, color="#616365"),
-        linecolor="#E6E9EC",
-        tickcolor="#E6E9EC",
+        tickfont=dict(size=12, color="#64748B"),
+        linecolor="rgba(15,23,42,0.08)",
+        tickcolor="rgba(15,23,42,0.08)",
         ticks="outside",
         title_text=""
     )
     fig.update_yaxes(
         showgrid=True,
-        gridcolor="#E6E9EC",
+        gridcolor="rgba(15,23,42,0.06)",
         ticksuffix="%" if is_percentage else "",
-        tickfont=dict(size=12, color="#616365"),
-        linecolor="#E6E9EC",
-        tickcolor="#E6E9EC",
+        tickfont=dict(size=12, color="#64748B"),
+        linecolor="rgba(15,23,42,0.08)",
+        tickcolor="rgba(15,23,42,0.08)",
         ticks="outside",
         title_text="",
         separatethousands=True
@@ -302,14 +303,14 @@ def render_brand_page(brand_key_page):
         trx_growth_html = ""
         if pd.notna(trx_growth_val):
             sign = "+" if trx_growth_val >= 0 else ""
-            color = "#00A950" if trx_growth_val >= 0 else "#CC292B"
+            color = "#10B981" if trx_growth_val >= 0 else "#EF4444"
             arrow = "&#9650;" if trx_growth_val >= 0 else "&#9660;"
             trx_growth_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">{arrow} {sign}{trx_growth_val:.2f}% vs STLY</span>'
 
         nbrx_growth_html = ""
         if pd.notna(nbrx_growth_val):
             sign = "+" if nbrx_growth_val >= 0 else ""
-            color = "#00A950" if nbrx_growth_val >= 0 else "#CC292B"
+            color = "#10B981" if nbrx_growth_val >= 0 else "#EF4444"
             arrow = "&#9650;" if nbrx_growth_val >= 0 else "&#9660;"
             nbrx_growth_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">{arrow} {sign}{nbrx_growth_val:.2f}% vs STLY</span>'
 
@@ -317,12 +318,12 @@ def render_brand_page(brand_key_page):
         st.markdown(f"""
         <div class="kpi-container">
             <div class="kpi-card">
-                <div class="kpi-label">{display_name} TRX Claims <span style="font-size:11px; color:#616365; font-weight:400;">(NPA)</span></div>
+                <div class="kpi-label">{display_name} TRX Claims <span style="font-size:11px; color:#64748B; font-weight:400;">(NPA)</span></div>
                 <div class="kpi-value">{trx_claims_str} {trx_growth_html}</div>
                 <div class="kpi-period">Latest: {latest_qtr}</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-label">{display_name} NBRX Claims <span style="font-size:11px; color:#616365; font-weight:400;">(NPA)</span></div>
+                <div class="kpi-label">{display_name} NBRX Claims <span style="font-size:11px; color:#64748B; font-weight:400;">(NPA)</span></div>
                 <div class="kpi-value">{nbrx_claims_str} {nbrx_growth_html}</div>
                 <div class="kpi-period">Latest: {latest_qtr}</div>
             </div>
@@ -331,12 +332,12 @@ def render_brand_page(brand_key_page):
 
         # TRX Claims Trend
         if not trx_claims.empty:
-            st.markdown(f'<div class="section-title">TRX Claims Trend <span style="font-size:13px; color:#0093D0; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="section-title">TRX Claims Trend <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
             render_trend_chart(trx_claims, "TRX Claims", [brand_name], is_percentage=False)
 
         # NBRX Claims Trend
         if not nbrx_claims.empty:
-            st.markdown(f'<div class="section-title">NBRX Claims Trend <span style="font-size:13px; color:#0093D0; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="section-title">NBRX Claims Trend <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
             render_trend_chart(nbrx_claims, "NBRX Claims", [brand_name], is_percentage=False)
 
         # Claims Growth STLY
@@ -346,10 +347,10 @@ def render_brand_page(brand_key_page):
             if df_to_render.empty:
                 return
             with st.expander(title, expanded=False):
-                html = '<table style="width:100%; border-collapse:collapse; font-family:Noto Sans,sans-serif; margin:10px 0;">'
+                html = '<table style="width:100%; border-collapse:collapse; font-family:Inter,system-ui,sans-serif; margin:10px 0;">'
                 html += '<thead><tr>'
                 for col in df_to_render.columns:
-                    html += f'<th style="background:#0093D0; color:#FFFFFF; padding:10px 14px; text-align:center; font-size:12px; font-weight:600;">{col}</th>'
+                    html += f'<th style="background:#102A5C; color:#FFFFFF; padding:10px 14px; text-align:center; font-size:12px; font-weight:600; letter-spacing:0.03em;">{col}</th>'
                 html += '</tr></thead><tbody>'
                 for idx, row in df_to_render.iterrows():
                     bg = "#F8FAFD" if idx % 2 == 0 else "#FFFFFF"
@@ -357,7 +358,7 @@ def render_brand_page(brand_key_page):
                     for j, val in enumerate(row):
                         align = "center"
                         font_weight = "600" if j == 0 else "400"
-                        html += f'<td style="padding:9px 14px; text-align:{align}; font-size:12px; color:#2C3E50; font-weight:{font_weight}; border-bottom:1px solid #EEF2F7;">{val}</td>'
+                        html += f'<td style="padding:9px 14px; text-align:{align}; font-size:12px; color:#0F172A; font-weight:{font_weight}; border-bottom:1px solid rgba(15,23,42,0.06);">{val}</td>'
                     html += '</tr>'
                 html += '</tbody></table>'
                 st.markdown(html, unsafe_allow_html=True)
@@ -367,7 +368,7 @@ def render_brand_page(brand_key_page):
             stly_trx_df["TRX Claims"] = trx_claims["ZAVZPRET"].values
             stly_trx_df["STLY Growth %"] = trx_growth["ZAVZPRET"].values if "ZAVZPRET" in trx_growth.columns else None
             stly_trx_df["TRX Claims"] = stly_trx_df["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-            stly_trx_df["STLY Growth %"] = stly_trx_df["STLY Growth %"].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+            stly_trx_df["STLY Growth %"] = stly_trx_df["STLY Growth %"].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table_zavz(stly_trx_df, "TRX Claims Growth vs STLY (NPA)")
 
         if not nbrx_growth.empty and not nbrx_claims.empty and "ZAVZPRET" in nbrx_claims.columns:
@@ -375,7 +376,7 @@ def render_brand_page(brand_key_page):
             stly_nbrx_df["NBRX Claims"] = nbrx_claims["ZAVZPRET"].values
             stly_nbrx_df["STLY Growth %"] = nbrx_growth["ZAVZPRET"].values if "ZAVZPRET" in nbrx_growth.columns else None
             stly_nbrx_df["NBRX Claims"] = stly_nbrx_df["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-            stly_nbrx_df["STLY Growth %"] = stly_nbrx_df["STLY Growth %"].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+            stly_nbrx_df["STLY Growth %"] = stly_nbrx_df["STLY Growth %"].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table_zavz(stly_nbrx_df, "NBRX Claims Growth vs STLY (NPA)")
 
         # Claims Growth QoQ
@@ -387,7 +388,7 @@ def render_brand_page(brand_key_page):
             qoq_trx_df["TRX Claims"] = trx_claims["ZAVZPRET"].values
             qoq_trx_df["QoQ Growth %"] = trx_qoq_growth["ZAVZPRET"].values if "ZAVZPRET" in trx_qoq_growth.columns else None
             qoq_trx_df["TRX Claims"] = qoq_trx_df["TRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-            qoq_trx_df["QoQ Growth %"] = qoq_trx_df["QoQ Growth %"].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+            qoq_trx_df["QoQ Growth %"] = qoq_trx_df["QoQ Growth %"].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table_zavz(qoq_trx_df, "TRX Claims Growth QoQ (NPA)")
 
         nbrx_qoq_growth = pivot_market_share(nbrx_data, "NBRX QOQ CLAIMS GROWTH PCT")
@@ -396,7 +397,7 @@ def render_brand_page(brand_key_page):
             qoq_nbrx_df["NBRX Claims"] = nbrx_claims["ZAVZPRET"].values
             qoq_nbrx_df["QoQ Growth %"] = nbrx_qoq_growth["ZAVZPRET"].values if "ZAVZPRET" in nbrx_qoq_growth.columns else None
             qoq_nbrx_df["NBRX Claims"] = qoq_nbrx_df["NBRX Claims"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
-            qoq_nbrx_df["QoQ Growth %"] = qoq_nbrx_df["QoQ Growth %"].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+            qoq_nbrx_df["QoQ Growth %"] = qoq_nbrx_df["QoQ Growth %"].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table_zavz(qoq_nbrx_df, "NBRX Claims Growth QoQ (NPA)")
 
         # Raw Data Tables
@@ -464,12 +465,12 @@ def render_brand_page(brand_key_page):
                 elements = []
                 styles = getSampleStyleSheet()
 
-                title_style = ParagraphStyle("CustomTitle", parent=styles["Title"], fontSize=20, textColor=colors.HexColor("#0093D0"), spaceAfter=6)
-                heading_style = ParagraphStyle("CustomHeading", parent=styles["Heading2"], fontSize=14, textColor=colors.HexColor("#0093D0"), spaceBefore=16, spaceAfter=8)
-                kpi_style = ParagraphStyle("KPI", parent=styles["Normal"], fontSize=12, textColor=colors.HexColor("#0093D0"), spaceAfter=4)
+                title_style = ParagraphStyle("CustomTitle", parent=styles["Title"], fontSize=20, textColor=colors.HexColor("#1C4FC0"), spaceAfter=6)
+                heading_style = ParagraphStyle("CustomHeading", parent=styles["Heading2"], fontSize=14, textColor=colors.HexColor("#1C4FC0"), spaceBefore=16, spaceAfter=8)
+                kpi_style = ParagraphStyle("KPI", parent=styles["Normal"], fontSize=12, textColor=colors.HexColor("#1C4FC0"), spaceAfter=4)
 
                 table_style = TableStyle([
-                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0093D0")),
+                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1C4FC0")),
                     ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
                     ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
                     ("FONTSIZE", (0, 0), (-1, 0), 9),
@@ -496,8 +497,8 @@ def render_brand_page(brand_key_page):
                 # TRX Claims Chart
                 if not trx_claims.empty:
                     fig_trx = go.Figure()
-                    fig_trx.add_trace(go.Scatter(x=trx_claims.index.tolist(), y=trx_claims[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in trx_claims[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#0093D0", width=3), marker=dict(size=7)))
-                    fig_trx.update_layout(title=dict(text="TRX Claims Trend (NPA)", font=dict(size=13, color="#0093D0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
+                    fig_trx.add_trace(go.Scatter(x=trx_claims.index.tolist(), y=trx_claims[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in trx_claims[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#1C4FC0", width=3), marker=dict(size=7)))
+                    fig_trx.update_layout(title=dict(text="TRX Claims Trend (NPA)", font=dict(size=13, color="#1C4FC0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
                     fig_trx.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
                     fig_trx.update_yaxes(tickfont=dict(size=9, color="#000000"), separatethousands=True)
                     trx_img = BytesIO(fig_trx.to_image(format="png", scale=2))
@@ -507,8 +508,8 @@ def render_brand_page(brand_key_page):
                 # NBRX Claims Chart
                 if not nbrx_claims.empty:
                     fig_nbrx = go.Figure()
-                    fig_nbrx.add_trace(go.Scatter(x=nbrx_claims.index.tolist(), y=nbrx_claims[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in nbrx_claims[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#0093D0", width=3), marker=dict(size=7)))
-                    fig_nbrx.update_layout(title=dict(text="NBRX Claims Trend (NPA)", font=dict(size=13, color="#0093D0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
+                    fig_nbrx.add_trace(go.Scatter(x=nbrx_claims.index.tolist(), y=nbrx_claims[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in nbrx_claims[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#1C4FC0", width=3), marker=dict(size=7)))
+                    fig_nbrx.update_layout(title=dict(text="NBRX Claims Trend (NPA)", font=dict(size=13, color="#1C4FC0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
                     fig_nbrx.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
                     fig_nbrx.update_yaxes(tickfont=dict(size=9, color="#000000"), separatethousands=True)
                     nbrx_img = BytesIO(fig_nbrx.to_image(format="png", scale=2))
@@ -652,14 +653,14 @@ def render_brand_page(brand_key_page):
         claims_growth_html = ""
         if pd.notna(claims_growth_val):
             sign = "+" if claims_growth_val >= 0 else ""
-            color = "#00A950" if claims_growth_val >= 0 else "#CC292B"
+            color = "#10B981" if claims_growth_val >= 0 else "#EF4444"
             arrow = "&#9650;" if claims_growth_val >= 0 else "&#9660;"
             claims_growth_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">{arrow} {sign}{claims_growth_val:.2f}% vs STLY</span>'
 
         patients_growth_html = ""
         if pd.notna(patients_growth_val):
             sign = "+" if patients_growth_val >= 0 else ""
-            color = "#00A950" if patients_growth_val >= 0 else "#CC292B"
+            color = "#10B981" if patients_growth_val >= 0 else "#EF4444"
             arrow = "&#9650;" if patients_growth_val >= 0 else "&#9660;"
             patients_growth_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">{arrow} {sign}{patients_growth_val:.2f}% vs STLY</span>'
 
@@ -667,12 +668,12 @@ def render_brand_page(brand_key_page):
         st.markdown(f"""
         <div class="kpi-container">
             <div class="kpi-card">
-                <div class="kpi-label">{display_name} Claims <span style="font-size:11px; color:#616365; font-weight:400;">(LAAD)</span></div>
+                <div class="kpi-label">{display_name} Claims <span style="font-size:11px; color:#64748B; font-weight:400;">(LAAD)</span></div>
                 <div class="kpi-value">{claims_str} {claims_growth_html}</div>
                 <div class="kpi-period">Latest: {latest_qtr}</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-label">{display_name} Patients <span style="font-size:11px; color:#616365; font-weight:400;">(LAAD)</span></div>
+                <div class="kpi-label">{display_name} Patients <span style="font-size:11px; color:#64748B; font-weight:400;">(LAAD)</span></div>
                 <div class="kpi-value">{patients_str} {patients_growth_html}</div>
                 <div class="kpi-period">Latest: {latest_qtr}</div>
             </div>
@@ -681,12 +682,12 @@ def render_brand_page(brand_key_page):
 
         # Claims Trend
         if not claims.empty:
-            st.markdown(f'<div class="section-title">Claims Trend <span style="font-size:13px; color:#0093D0; font-weight:500;">(LAAD)</span></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="section-title">Claims Trend <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(LAAD)</span></div>', unsafe_allow_html=True)
             render_trend_chart(claims, "Claims", [brand_name], is_percentage=False)
 
         # Patients Trend
         if not patients.empty:
-            st.markdown(f'<div class="section-title">Patients Trend <span style="font-size:13px; color:#0093D0; font-weight:500;">(LAAD)</span></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="section-title">Patients Trend <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(LAAD)</span></div>', unsafe_allow_html=True)
             render_trend_chart(patients, "Patients", [brand_name], is_percentage=False)
 
         # STLY Growth Summaries
@@ -696,10 +697,10 @@ def render_brand_page(brand_key_page):
             if df_to_render.empty:
                 return
             with st.expander(title, expanded=False):
-                html = '<table style="width:100%; border-collapse:collapse; font-family:Noto Sans,sans-serif; margin:10px 0;">'
+                html = '<table style="width:100%; border-collapse:collapse; font-family:Inter,system-ui,sans-serif; margin:10px 0;">'
                 html += '<thead><tr>'
                 for col in df_to_render.columns:
-                    html += f'<th style="background:#0093D0; color:#FFFFFF; padding:10px 14px; text-align:center; font-size:12px; font-weight:600;">{col}</th>'
+                    html += f'<th style="background:#102A5C; color:#FFFFFF; padding:10px 14px; text-align:center; font-size:12px; font-weight:600; letter-spacing:0.03em;">{col}</th>'
                 html += '</tr></thead><tbody>'
                 for idx, row in df_to_render.iterrows():
                     bg = "#F8FAFD" if idx % 2 == 0 else "#FFFFFF"
@@ -707,7 +708,7 @@ def render_brand_page(brand_key_page):
                     for j, val in enumerate(row):
                         align = "center"
                         font_weight = "600" if j == 0 else "400"
-                        html += f'<td style="padding:9px 14px; text-align:{align}; font-size:12px; color:#2C3E50; font-weight:{font_weight}; border-bottom:1px solid #EEF2F7;">{val}</td>'
+                        html += f'<td style="padding:9px 14px; text-align:{align}; font-size:12px; color:#0F172A; font-weight:{font_weight}; border-bottom:1px solid rgba(15,23,42,0.06);">{val}</td>'
                     html += '</tr>'
                 html += '</tbody></table>'
                 st.markdown(html, unsafe_allow_html=True)
@@ -722,7 +723,7 @@ def render_brand_page(brand_key_page):
             stly_df["Patients"] = stly_df["Patients"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             for col in ["STLY Claims Growth %", "STLY Patients Growth %"]:
                 if col in stly_df.columns:
-                    stly_df[col] = stly_df[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+                    stly_df[col] = stly_df[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table_bey(stly_df, "STLY Growth Summary (LAAD)")
 
         # QoQ Growth Summaries
@@ -741,7 +742,7 @@ def render_brand_page(brand_key_page):
             qoq_df["Patients"] = qoq_df["Patients"].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             for col in ["QoQ Claims Growth %", "QoQ Patients Growth %"]:
                 if col in qoq_df.columns:
-                    qoq_df[col] = qoq_df[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+                    qoq_df[col] = qoq_df[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table_bey(qoq_df, "QoQ Growth Summary (LAAD)")
 
         # Raw Data Tables
@@ -803,12 +804,12 @@ def render_brand_page(brand_key_page):
                 elements = []
                 styles = getSampleStyleSheet()
 
-                title_style = ParagraphStyle("CustomTitle", parent=styles["Title"], fontSize=20, textColor=colors.HexColor("#0093D0"), spaceAfter=6)
-                heading_style = ParagraphStyle("CustomHeading", parent=styles["Heading2"], fontSize=14, textColor=colors.HexColor("#0093D0"), spaceBefore=16, spaceAfter=8)
-                kpi_style = ParagraphStyle("KPI", parent=styles["Normal"], fontSize=12, textColor=colors.HexColor("#0093D0"), spaceAfter=4)
+                title_style = ParagraphStyle("CustomTitle", parent=styles["Title"], fontSize=20, textColor=colors.HexColor("#1C4FC0"), spaceAfter=6)
+                heading_style = ParagraphStyle("CustomHeading", parent=styles["Heading2"], fontSize=14, textColor=colors.HexColor("#1C4FC0"), spaceBefore=16, spaceAfter=8)
+                kpi_style = ParagraphStyle("KPI", parent=styles["Normal"], fontSize=12, textColor=colors.HexColor("#1C4FC0"), spaceAfter=4)
 
                 table_style = TableStyle([
-                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0093D0")),
+                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1C4FC0")),
                     ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
                     ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
                     ("FONTSIZE", (0, 0), (-1, 0), 9),
@@ -835,8 +836,8 @@ def render_brand_page(brand_key_page):
                 # Claims Chart
                 if not claims.empty and brand_name in claims.columns:
                     fig_c = go.Figure()
-                    fig_c.add_trace(go.Scatter(x=claims.index.tolist(), y=claims[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in claims[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#0093D0", width=3), marker=dict(size=7)))
-                    fig_c.update_layout(title=dict(text="Claims Trend (LAAD)", font=dict(size=13, color="#0093D0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
+                    fig_c.add_trace(go.Scatter(x=claims.index.tolist(), y=claims[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in claims[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#1C4FC0", width=3), marker=dict(size=7)))
+                    fig_c.update_layout(title=dict(text="Claims Trend (LAAD)", font=dict(size=13, color="#1C4FC0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
                     fig_c.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
                     fig_c.update_yaxes(tickfont=dict(size=9, color="#000000"), separatethousands=True)
                     c_img = BytesIO(fig_c.to_image(format="png", scale=2))
@@ -846,8 +847,8 @@ def render_brand_page(brand_key_page):
                 # Patients Chart
                 if not patients.empty and brand_name in patients.columns:
                     fig_p = go.Figure()
-                    fig_p.add_trace(go.Scatter(x=patients.index.tolist(), y=patients[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in patients[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#0093D0", width=3), marker=dict(size=7)))
-                    fig_p.update_layout(title=dict(text="Patients Trend (LAAD)", font=dict(size=13, color="#0093D0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
+                    fig_p.add_trace(go.Scatter(x=patients.index.tolist(), y=patients[brand_name].tolist(), mode="lines+markers+text", name=brand_name, text=[f"{v:,.0f}" if pd.notna(v) else "" for v in patients[brand_name].tolist()], textposition="top center", textfont=dict(size=8), line=dict(color="#1C4FC0", width=3), marker=dict(size=7)))
+                    fig_p.update_layout(title=dict(text="Patients Trend (LAAD)", font=dict(size=13, color="#1C4FC0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"))
                     fig_p.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
                     fig_p.update_yaxes(tickfont=dict(size=9, color="#000000"), separatethousands=True)
                     p_img = BytesIO(fig_p.to_image(format="png", scale=2))
@@ -989,26 +990,26 @@ def render_brand_page(brand_key_page):
     trx_diff_html = ""
     if pd.notna(trx_diff_val):
         sign = "+" if trx_diff_val >= 0 else ""
-        color = "#00A950" if trx_diff_val >= 0 else "#CC292B"
+        color = "#10B981" if trx_diff_val >= 0 else "#EF4444"
         arrow = "&#9650;" if trx_diff_val >= 0 else "&#9660;"
         trx_diff_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">{arrow} {sign}{trx_diff_val:.2f}pp vs STLY</span>'
 
     nbrx_diff_html = ""
     if pd.notna(nbrx_diff_val):
         sign = "+" if nbrx_diff_val >= 0 else ""
-        color = "#00A950" if nbrx_diff_val >= 0 else "#CC292B"
+        color = "#10B981" if nbrx_diff_val >= 0 else "#EF4444"
         arrow = "&#9650;" if nbrx_diff_val >= 0 else "&#9660;"
         nbrx_diff_html = f'<span style="font-size:18px; color:{color}; font-weight:600;">{arrow} {sign}{nbrx_diff_val:.2f}pp vs STLY</span>'
 
     st.markdown(f"""
     <div class="kpi-container">
         <div class="kpi-card">
-            <div class="kpi-label">{display_name} TRX Market Share <span style="font-size:11px; color:#616365; font-weight:400;">(NPA)</span></div>
+            <div class="kpi-label">{display_name} TRX Market Share <span style="font-size:11px; color:#64748B; font-weight:400;">(NPA)</span></div>
             <div class="kpi-value">{trx_str} {trx_diff_html}</div>
             <div class="kpi-period">Latest: {latest_qtr}</div>
         </div>
         <div class="kpi-card">
-            <div class="kpi-label">{display_name} NBRX Market Share <span style="font-size:11px; color:#616365; font-weight:400;">(NPA)</span></div>
+            <div class="kpi-label">{display_name} NBRX Market Share <span style="font-size:11px; color:#64748B; font-weight:400;">(NPA)</span></div>
             <div class="kpi-value">{nbrx_str} {nbrx_diff_html}</div>
             <div class="kpi-period">Latest: {latest_qtr}</div>
         </div>
@@ -1016,12 +1017,12 @@ def render_brand_page(brand_key_page):
     """, unsafe_allow_html=True)
 
     # --- TRX Market Share Trend ---
-    st.markdown(f'<div class="section-title">TRX Market Share Trend \u2014 {market} Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-title">TRX Market Share Trend \u2014 {market} Market <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
     brands_order = [brand_name] + [b for b in trx_ms.columns if b != brand_name]
     render_trend_chart(trx_ms, "TRX Market Share", brands_order)
 
     # --- NBRX Market Share Trend ---
-    st.markdown(f'<div class="section-title">NBRX Market Share Trend \u2014 {market} Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-title">NBRX Market Share Trend \u2014 {market} Market <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(NPA)</span></div>', unsafe_allow_html=True)
     brands_order_nbrx = [brand_name] + [b for b in nbrx_ms.columns if b != brand_name]
     render_trend_chart(nbrx_ms, "NBRX Market Share", brands_order_nbrx)
 
@@ -1046,14 +1047,14 @@ def render_brand_page(brand_key_page):
                 st.markdown(f"""
                 <div class="kpi-container">
                     <div class="kpi-card">
-                        <div class="kpi-label">{config["display_name"]} Shipment Market Share <span style="font-size:11px; color:#616365; font-weight:400;">(DDD)</span></div>
+                        <div class="kpi-label">{config["display_name"]} Shipment Market Share <span style="font-size:11px; color:#64748B; font-weight:400;">(DDD)</span></div>
                         <div class="kpi-value">{ship_str}</div>
                         <div class="kpi-period">Latest: {latest_ship_qtr}</div>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
 
-                st.markdown(f'<div class="section-title">Shipment Market Share Trend \u2014 {ddd_market} Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="section-title">Shipment Market Share Trend \u2014 {ddd_market} Market <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 ddd_brands_order = [ddd_brand] + [b for b in shipment_ms.columns if b != ddd_brand]
                 render_trend_chart(shipment_ms, "Shipment Market Share", ddd_brands_order)
 
@@ -1075,12 +1076,12 @@ def render_brand_page(brand_key_page):
                 st.markdown(f"""
                 <div class="kpi-container">
                     <div class="kpi-card">
-                        <div class="kpi-label">Abrysvo Retail Market Share <span style="font-size:11px; color:#616365; font-weight:400;">(DDD)</span></div>
+                        <div class="kpi-label">Abrysvo Retail Market Share <span style="font-size:11px; color:#64748B; font-weight:400;">(DDD)</span></div>
                         <div class="kpi-value">{retail_str}</div>
                         <div class="kpi-period">Latest: {latest_ddd_qtr}</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-label">Abrysvo Non-Retail Market Share <span style="font-size:11px; color:#616365; font-weight:400;">(DDD)</span></div>
+                        <div class="kpi-label">Abrysvo Non-Retail Market Share <span style="font-size:11px; color:#64748B; font-weight:400;">(DDD)</span></div>
                         <div class="kpi-value">{non_retail_str}</div>
                         <div class="kpi-period">Latest: {latest_ddd_qtr}</div>
                     </div>
@@ -1089,13 +1090,13 @@ def render_brand_page(brand_key_page):
 
             # Retail MS trend - all brands compared
             if not retail_ms.empty:
-                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 RSV Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 RSV Market <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 retail_order = ["ABRYSVO"] + [b for b in retail_ms.columns if b != "ABRYSVO"]
                 render_trend_chart(retail_ms, "Retail Market Share", retail_order)
 
             # Non-Retail MS trend - all brands compared
             if not non_retail_ms.empty:
-                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 RSV Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 RSV Market <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 non_retail_order = ["ABRYSVO"] + [b for b in non_retail_ms.columns if b != "ABRYSVO"]
                 render_trend_chart(non_retail_ms, "Non-Retail Market Share", non_retail_order)
 
@@ -1104,7 +1105,7 @@ def render_brand_page(brand_key_page):
             non_retail_contrib = pivot_market_share(ddd_data, "NON_RETAIL_CONTRIBUTION")
 
             if not retail_contrib.empty or not non_retail_contrib.empty:
-                st.markdown('<div class="section-title">Abrysvo Channel Contribution <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Abrysvo Channel Contribution <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
 
                 # Pie chart for latest quarter + trend chart side by side
                 latest_contrib_qtr = retail_contrib.index[-1] if not retail_contrib.empty else non_retail_contrib.index[-1]
@@ -1119,11 +1120,11 @@ def render_brand_page(brand_key_page):
                     fig_pie = go.Figure(data=[go.Pie(
                         labels=["Retail", "Non-Retail"],
                         values=[abrysvo_retail_c if pd.notna(abrysvo_retail_c) else 0, abrysvo_non_retail_c if pd.notna(abrysvo_non_retail_c) else 0],
-                        marker=dict(colors=["#0093D0", "#F8971D"], line=dict(color="#FFFFFF", width=2)),
+                        marker=dict(colors=["#1C4FC0", "#F8971D"], line=dict(color="#FFFFFF", width=2)),
                         textinfo="text",
                         text=[f"Retail<br>{abrysvo_retail_c:.2f}%" if pd.notna(abrysvo_retail_c) else "Retail<br>N/A", f"Non-Retail<br>{abrysvo_non_retail_c:.2f}%" if pd.notna(abrysvo_non_retail_c) else "Non-Retail<br>N/A"],
                         textposition="outside",
-                        textfont=dict(size=12, color="#1A1A1A"),
+                        textfont=dict(size=12, color="#0F172A"),
                         hovertemplate="%{text}<extra></extra>",
                         hole=0.4,
                         pull=[0.03, 0.03]
@@ -1132,7 +1133,7 @@ def render_brand_page(brand_key_page):
                         template="plotly_white", height=350,
                         margin=dict(l=30, r=30, t=40, b=30),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
-                        title=dict(text=f"Latest: {latest_contrib_qtr}", font=dict(size=13, color="#0093D0")),
+                        title=dict(text=f"Latest: {latest_contrib_qtr}", font=dict(size=13, color="#1C4FC0")),
                         showlegend=False
                     )
                     try:
@@ -1149,7 +1150,7 @@ def render_brand_page(brand_key_page):
                         fig_contrib.add_trace(go.Scatter(
                             x=retail_contrib.index.tolist(), y=retail_contrib["ABRYSVO"].tolist(),
                             mode="lines+markers", name="Retail Contribution",
-                            line=dict(color="#0093D0", width=3), marker=dict(size=7),
+                            line=dict(color="#1C4FC0", width=3), marker=dict(size=7),
                             hovertemplate="<b>Retail Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
                         ))
                     if not non_retail_contrib.empty and "ABRYSVO" in non_retail_contrib.columns:
@@ -1164,12 +1165,12 @@ def render_brand_page(brand_key_page):
                         template="plotly_white", height=350,
                         margin=dict(l=60, r=30, t=20, b=50),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
-                        font=dict(family="Noto Sans, sans-serif", size=13, color="#1A1A1A"),
-                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#616365")),
+                        font=dict(family="Inter, system-ui, sans-serif", size=13, color="#0F172A"),
+                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#64748B")),
                         hovermode="x unified"
                     )
-                    fig_contrib.update_xaxes(showgrid=False, tickfont=dict(size=12, color="#616365"), linecolor="#E6E9EC", tickcolor="#E6E9EC", ticks="outside", title_text="")
-                    fig_contrib.update_yaxes(showgrid=True, gridcolor="#E6E9EC", ticksuffix="%", tickfont=dict(size=12, color="#616365"), linecolor="#E6E9EC", tickcolor="#E6E9EC", ticks="outside", title_text="")
+                    fig_contrib.update_xaxes(showgrid=False, tickfont=dict(size=12, color="#64748B"), linecolor="rgba(15,23,42,0.08)", tickcolor="rgba(15,23,42,0.08)", ticks="outside", title_text="")
+                    fig_contrib.update_yaxes(showgrid=True, gridcolor="rgba(15,23,42,0.06)", ticksuffix="%", tickfont=dict(size=12, color="#64748B"), linecolor="rgba(15,23,42,0.08)", tickcolor="rgba(15,23,42,0.08)", ticks="outside", title_text="")
                     try:
                         st.plotly_chart(fig_contrib, use_container_width=True, theme=None)
                     except TypeError:
@@ -1181,12 +1182,12 @@ def render_brand_page(brand_key_page):
             oa_contrib = pivot_market_share(ddd_data, "OA_CONTRIBUTION")
 
             if not oa_ms.empty:
-                st.markdown('<div class="section-title">OA Market Share Trend \u2014 RSV Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">OA Market Share Trend \u2014 RSV Market <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 oa_order = ["ABRYSVO"] + [b for b in oa_ms.columns if b != "ABRYSVO"]
                 render_trend_chart(oa_ms, "OA Market Share", oa_order)
 
             if not oa_contrib.empty or not ma_contrib.empty:
-                st.markdown('<div class="section-title">Abrysvo OA vs MA Contribution <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Abrysvo OA vs MA Contribution <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
 
                 # Pie chart for latest quarter + trend chart side by side
                 latest_oa_qtr = oa_contrib.index[-1] if not oa_contrib.empty else ma_contrib.index[-1]
@@ -1201,11 +1202,11 @@ def render_brand_page(brand_key_page):
                     fig_pie2 = go.Figure(data=[go.Pie(
                         labels=["OA Contribution", "MA Contribution"],
                         values=[abrysvo_oa_c if pd.notna(abrysvo_oa_c) else 0, abrysvo_ma_c if pd.notna(abrysvo_ma_c) else 0],
-                        marker=dict(colors=["#0093D0", "#00A950"], line=dict(color="#FFFFFF", width=2)),
+                        marker=dict(colors=["#1C4FC0", "#10B981"], line=dict(color="#FFFFFF", width=2)),
                         textinfo="text",
                         text=[f"OA<br>{abrysvo_oa_c:.2f}%" if pd.notna(abrysvo_oa_c) else "OA<br>N/A", f"MA<br>{abrysvo_ma_c:.2f}%" if pd.notna(abrysvo_ma_c) else "MA<br>N/A"],
                         textposition="outside",
-                        textfont=dict(size=12, color="#1A1A1A"),
+                        textfont=dict(size=12, color="#0F172A"),
                         hovertemplate="%{text}<extra></extra>",
                         hole=0.4,
                         pull=[0.03, 0.03]
@@ -1214,7 +1215,7 @@ def render_brand_page(brand_key_page):
                         template="plotly_white", height=350,
                         margin=dict(l=30, r=30, t=40, b=30),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
-                        title=dict(text=f"Latest: {latest_oa_qtr}", font=dict(size=13, color="#0093D0")),
+                        title=dict(text=f"Latest: {latest_oa_qtr}", font=dict(size=13, color="#1C4FC0")),
                         showlegend=False
                     )
                     try:
@@ -1231,14 +1232,14 @@ def render_brand_page(brand_key_page):
                         fig_oa_ma.add_trace(go.Scatter(
                             x=oa_contrib.index.tolist(), y=oa_contrib["ABRYSVO"].tolist(),
                             mode="lines+markers", name="OA Contribution",
-                            line=dict(color="#0093D0", width=3), marker=dict(size=7),
+                            line=dict(color="#1C4FC0", width=3), marker=dict(size=7),
                             hovertemplate="<b>OA Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
                         ))
                     if not ma_contrib.empty and "ABRYSVO" in ma_contrib.columns:
                         fig_oa_ma.add_trace(go.Scatter(
                             x=ma_contrib.index.tolist(), y=ma_contrib["ABRYSVO"].tolist(),
                             mode="lines+markers", name="MA Contribution",
-                            line=dict(color="#00A950", width=3), marker=dict(size=7),
+                            line=dict(color="#10B981", width=3), marker=dict(size=7),
                             hovertemplate="<b>MA Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
                         ))
 
@@ -1246,12 +1247,12 @@ def render_brand_page(brand_key_page):
                         template="plotly_white", height=350,
                         margin=dict(l=60, r=30, t=20, b=50),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
-                        font=dict(family="Noto Sans, sans-serif", size=13, color="#1A1A1A"),
-                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#616365")),
+                        font=dict(family="Inter, system-ui, sans-serif", size=13, color="#0F172A"),
+                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#64748B")),
                         hovermode="x unified"
                     )
-                    fig_oa_ma.update_xaxes(showgrid=False, tickfont=dict(size=12, color="#616365"), linecolor="#E6E9EC", tickcolor="#E6E9EC", ticks="outside", title_text="")
-                    fig_oa_ma.update_yaxes(showgrid=True, gridcolor="#E6E9EC", ticksuffix="%", tickfont=dict(size=12, color="#616365"), linecolor="#E6E9EC", tickcolor="#E6E9EC", ticks="outside", title_text="")
+                    fig_oa_ma.update_xaxes(showgrid=False, tickfont=dict(size=12, color="#64748B"), linecolor="rgba(15,23,42,0.08)", tickcolor="rgba(15,23,42,0.08)", ticks="outside", title_text="")
+                    fig_oa_ma.update_yaxes(showgrid=True, gridcolor="rgba(15,23,42,0.06)", ticksuffix="%", tickfont=dict(size=12, color="#64748B"), linecolor="rgba(15,23,42,0.08)", tickcolor="rgba(15,23,42,0.08)", ticks="outside", title_text="")
                     try:
                         st.plotly_chart(fig_oa_ma, use_container_width=True, theme=None)
                     except TypeError:
@@ -1275,12 +1276,12 @@ def render_brand_page(brand_key_page):
                 st.markdown(f"""
                 <div class="kpi-container">
                     <div class="kpi-card">
-                        <div class="kpi-label">Prevnar Retail Market Share <span style="font-size:11px; color:#616365; font-weight:400;">(DDD)</span></div>
+                        <div class="kpi-label">Prevnar Retail Market Share <span style="font-size:11px; color:#64748B; font-weight:400;">(DDD)</span></div>
                         <div class="kpi-value">{retail_str}</div>
                         <div class="kpi-period">Latest: {latest_ddd_qtr}</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-label">Prevnar Non-Retail Market Share <span style="font-size:11px; color:#616365; font-weight:400;">(DDD)</span></div>
+                        <div class="kpi-label">Prevnar Non-Retail Market Share <span style="font-size:11px; color:#64748B; font-weight:400;">(DDD)</span></div>
                         <div class="kpi-value">{non_retail_str}</div>
                         <div class="kpi-period">Latest: {latest_ddd_qtr}</div>
                     </div>
@@ -1289,13 +1290,13 @@ def render_brand_page(brand_key_page):
 
             # Retail MS trend - all brands compared
             if not retail_ms.empty:
-                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 retail_order = ["PREVNAR"] + [b for b in retail_ms.columns if b != "PREVNAR"]
                 render_trend_chart(retail_ms, "Retail Market Share", retail_order)
 
             # Non-Retail MS trend - all brands compared
             if not non_retail_ms.empty:
-                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 non_retail_order = ["PREVNAR"] + [b for b in non_retail_ms.columns if b != "PREVNAR"]
                 render_trend_chart(non_retail_ms, "Non-Retail Market Share", non_retail_order)
 
@@ -1304,7 +1305,7 @@ def render_brand_page(brand_key_page):
             non_retail_contrib = pivot_market_share(ddd_data, "NON_RETAIL_CONTRIBUTION")
 
             if not retail_contrib.empty or not non_retail_contrib.empty:
-                st.markdown('<div class="section-title">Prevnar Channel Contribution <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Prevnar Channel Contribution <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
 
                 # Pie chart for latest quarter + trend chart side by side
                 latest_contrib_qtr = retail_contrib.index[-1] if not retail_contrib.empty else non_retail_contrib.index[-1]
@@ -1319,11 +1320,11 @@ def render_brand_page(brand_key_page):
                     fig_pie = go.Figure(data=[go.Pie(
                         labels=["Retail", "Non-Retail"],
                         values=[prevnar_retail_c if pd.notna(prevnar_retail_c) else 0, prevnar_non_retail_c if pd.notna(prevnar_non_retail_c) else 0],
-                        marker=dict(colors=["#0093D0", "#F8971D"], line=dict(color="#FFFFFF", width=2)),
+                        marker=dict(colors=["#1C4FC0", "#F8971D"], line=dict(color="#FFFFFF", width=2)),
                         textinfo="text",
                         text=[f"Retail<br>{prevnar_retail_c:.2f}%" if pd.notna(prevnar_retail_c) else "Retail<br>N/A", f"Non-Retail<br>{prevnar_non_retail_c:.2f}%" if pd.notna(prevnar_non_retail_c) else "Non-Retail<br>N/A"],
                         textposition="outside",
-                        textfont=dict(size=12, color="#1A1A1A"),
+                        textfont=dict(size=12, color="#0F172A"),
                         hovertemplate="%{text}<extra></extra>",
                         hole=0.4,
                         pull=[0.03, 0.03]
@@ -1332,7 +1333,7 @@ def render_brand_page(brand_key_page):
                         template="plotly_white", height=350,
                         margin=dict(l=30, r=30, t=40, b=30),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
-                        title=dict(text=f"Latest: {latest_contrib_qtr}", font=dict(size=13, color="#0093D0")),
+                        title=dict(text=f"Latest: {latest_contrib_qtr}", font=dict(size=13, color="#1C4FC0")),
                         showlegend=False
                     )
                     try:
@@ -1349,7 +1350,7 @@ def render_brand_page(brand_key_page):
                         fig_contrib.add_trace(go.Scatter(
                             x=retail_contrib.index.tolist(), y=retail_contrib["PREVNAR"].tolist(),
                             mode="lines+markers", name="Retail Contribution",
-                            line=dict(color="#0093D0", width=3), marker=dict(size=7),
+                            line=dict(color="#1C4FC0", width=3), marker=dict(size=7),
                             hovertemplate="<b>Retail Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
                         ))
                     if not non_retail_contrib.empty and "PREVNAR" in non_retail_contrib.columns:
@@ -1364,12 +1365,12 @@ def render_brand_page(brand_key_page):
                         template="plotly_white", height=350,
                         margin=dict(l=60, r=30, t=20, b=50),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
-                        font=dict(family="Noto Sans, sans-serif", size=13, color="#1A1A1A"),
-                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#616365")),
+                        font=dict(family="Inter, system-ui, sans-serif", size=13, color="#0F172A"),
+                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#64748B")),
                         hovermode="x unified"
                     )
-                    fig_contrib.update_xaxes(showgrid=False, tickfont=dict(size=12, color="#616365"), linecolor="#E6E9EC", tickcolor="#E6E9EC", ticks="outside", title_text="")
-                    fig_contrib.update_yaxes(showgrid=True, gridcolor="#E6E9EC", ticksuffix="%", tickfont=dict(size=12, color="#616365"), linecolor="#E6E9EC", tickcolor="#E6E9EC", ticks="outside", title_text="")
+                    fig_contrib.update_xaxes(showgrid=False, tickfont=dict(size=12, color="#64748B"), linecolor="rgba(15,23,42,0.08)", tickcolor="rgba(15,23,42,0.08)", ticks="outside", title_text="")
+                    fig_contrib.update_yaxes(showgrid=True, gridcolor="rgba(15,23,42,0.06)", ticksuffix="%", tickfont=dict(size=12, color="#64748B"), linecolor="rgba(15,23,42,0.08)", tickcolor="rgba(15,23,42,0.08)", ticks="outside", title_text="")
                     try:
                         st.plotly_chart(fig_contrib, use_container_width=True, theme=None)
                     except TypeError:
@@ -1382,7 +1383,7 @@ def render_brand_page(brand_key_page):
                 ped_ms = ped_ms[ped_brands]
                 ped_ms = ped_ms[ped_ms.index >= "2024Q1"]
                 if not ped_ms.empty:
-                    st.markdown('<div class="section-title">Peds Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                    st.markdown('<div class="section-title">Peds Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                     render_trend_chart(ped_ms, "Peds Market Share", ped_brands)
 
             # --- Prevnar Adult Market Share Trend (2024 onwards) ---
@@ -1392,7 +1393,7 @@ def render_brand_page(brand_key_page):
                 adult_ms = adult_ms[adult_brands]
                 adult_ms = adult_ms[adult_ms.index >= "2024Q1"]
                 if not adult_ms.empty:
-                    st.markdown('<div class="section-title">Adult Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                    st.markdown('<div class="section-title">Adult Market Share Trend \u2014 PCV Market <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                     render_trend_chart(adult_ms, "Adult Market Share", adult_brands)
 
         # --- Comirnaty-specific DDD metrics ---
@@ -1413,12 +1414,12 @@ def render_brand_page(brand_key_page):
                 st.markdown(f"""
                 <div class="kpi-container">
                     <div class="kpi-card">
-                        <div class="kpi-label">Comirnaty Retail Market Share <span style="font-size:11px; color:#616365; font-weight:400;">(DDD)</span></div>
+                        <div class="kpi-label">Comirnaty Retail Market Share <span style="font-size:11px; color:#64748B; font-weight:400;">(DDD)</span></div>
                         <div class="kpi-value">{retail_str}</div>
                         <div class="kpi-period">Latest: {latest_ddd_qtr}</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-label">Comirnaty Non-Retail Market Share <span style="font-size:11px; color:#616365; font-weight:400;">(DDD)</span></div>
+                        <div class="kpi-label">Comirnaty Non-Retail Market Share <span style="font-size:11px; color:#64748B; font-weight:400;">(DDD)</span></div>
                         <div class="kpi-value">{non_retail_str}</div>
                         <div class="kpi-period">Latest: {latest_ddd_qtr}</div>
                     </div>
@@ -1427,13 +1428,13 @@ def render_brand_page(brand_key_page):
 
             # Retail MS trend - all brands compared
             if not retail_ms.empty:
-                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 COVID Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Retail Market Share Trend \u2014 COVID Market <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 retail_order = ["COMIRNATY"] + [b for b in retail_ms.columns if b != "COMIRNATY"]
                 render_trend_chart(retail_ms, "Retail Market Share", retail_order)
 
             # Non-Retail MS trend - all brands compared
             if not non_retail_ms.empty:
-                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 COVID Market <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Non-Retail Market Share Trend \u2014 COVID Market <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
                 non_retail_order = ["COMIRNATY"] + [b for b in non_retail_ms.columns if b != "COMIRNATY"]
                 render_trend_chart(non_retail_ms, "Non-Retail Market Share", non_retail_order)
 
@@ -1442,7 +1443,7 @@ def render_brand_page(brand_key_page):
             non_retail_contrib = pivot_market_share(ddd_data, "NON_RETAIL_CONTRIBUTION")
 
             if not retail_contrib.empty or not non_retail_contrib.empty:
-                st.markdown('<div class="section-title">Comirnaty Channel Contribution <span style="font-size:13px; color:#0093D0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-title">Comirnaty Channel Contribution <span style="font-size:13px; color:#1C4FC0; font-weight:500;">(DDD)</span></div>', unsafe_allow_html=True)
 
                 # Pie chart for latest quarter + trend chart side by side
                 latest_contrib_qtr = retail_contrib.index[-1] if not retail_contrib.empty else non_retail_contrib.index[-1]
@@ -1457,11 +1458,11 @@ def render_brand_page(brand_key_page):
                     fig_pie = go.Figure(data=[go.Pie(
                         labels=["Retail", "Non-Retail"],
                         values=[comirnaty_retail_c if pd.notna(comirnaty_retail_c) else 0, comirnaty_non_retail_c if pd.notna(comirnaty_non_retail_c) else 0],
-                        marker=dict(colors=["#0093D0", "#F8971D"], line=dict(color="#FFFFFF", width=2)),
+                        marker=dict(colors=["#1C4FC0", "#F8971D"], line=dict(color="#FFFFFF", width=2)),
                         textinfo="text",
                         text=[f"Retail<br>{comirnaty_retail_c:.2f}%" if pd.notna(comirnaty_retail_c) else "Retail<br>N/A", f"Non-Retail<br>{comirnaty_non_retail_c:.2f}%" if pd.notna(comirnaty_non_retail_c) else "Non-Retail<br>N/A"],
                         textposition="outside",
-                        textfont=dict(size=12, color="#1A1A1A"),
+                        textfont=dict(size=12, color="#0F172A"),
                         hovertemplate="%{text}<extra></extra>",
                         hole=0.4,
                         pull=[0.03, 0.03]
@@ -1470,7 +1471,7 @@ def render_brand_page(brand_key_page):
                         template="plotly_white", height=350,
                         margin=dict(l=30, r=30, t=40, b=30),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
-                        title=dict(text=f"Latest: {latest_contrib_qtr}", font=dict(size=13, color="#0093D0")),
+                        title=dict(text=f"Latest: {latest_contrib_qtr}", font=dict(size=13, color="#1C4FC0")),
                         showlegend=False
                     )
                     try:
@@ -1487,7 +1488,7 @@ def render_brand_page(brand_key_page):
                         fig_contrib.add_trace(go.Scatter(
                             x=retail_contrib.index.tolist(), y=retail_contrib["COMIRNATY"].tolist(),
                             mode="lines+markers", name="Retail Contribution",
-                            line=dict(color="#0093D0", width=3), marker=dict(size=7),
+                            line=dict(color="#1C4FC0", width=3), marker=dict(size=7),
                             hovertemplate="<b>Retail Contribution</b><br>%{x}<br>%{y:.2f}%<extra></extra>"
                         ))
                     if not non_retail_contrib.empty and "COMIRNATY" in non_retail_contrib.columns:
@@ -1502,27 +1503,27 @@ def render_brand_page(brand_key_page):
                         template="plotly_white", height=350,
                         margin=dict(l=60, r=30, t=20, b=50),
                         plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF",
-                        font=dict(family="Noto Sans, sans-serif", size=13, color="#1A1A1A"),
-                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#616365")),
+                        font=dict(family="Inter, system-ui, sans-serif", size=13, color="#0F172A"),
+                        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, font=dict(size=12, color="#64748B")),
                         hovermode="x unified"
                     )
-                    fig_contrib.update_xaxes(showgrid=False, tickfont=dict(size=12, color="#616365"), linecolor="#E6E9EC", tickcolor="#E6E9EC", ticks="outside", title_text="")
-                    fig_contrib.update_yaxes(showgrid=True, gridcolor="#E6E9EC", ticksuffix="%", tickfont=dict(size=12, color="#616365"), linecolor="#E6E9EC", tickcolor="#E6E9EC", ticks="outside", title_text="")
+                    fig_contrib.update_xaxes(showgrid=False, tickfont=dict(size=12, color="#64748B"), linecolor="rgba(15,23,42,0.08)", tickcolor="rgba(15,23,42,0.08)", ticks="outside", title_text="")
+                    fig_contrib.update_yaxes(showgrid=True, gridcolor="rgba(15,23,42,0.06)", ticksuffix="%", tickfont=dict(size=12, color="#64748B"), linecolor="rgba(15,23,42,0.08)", tickcolor="rgba(15,23,42,0.08)", ticks="outside", title_text="")
                     try:
                         st.plotly_chart(fig_contrib, use_container_width=True, theme=None)
                     except TypeError:
                         st.plotly_chart(fig_contrib, use_container_width=True)
 
     def render_styled_table(df_to_render, title):
-        """Render a DataFrame as a styled HTML table with blue headers and dark data."""
+        """Render a DataFrame as a styled HTML table with navy headers."""
         if df_to_render.empty:
             return
         with st.expander(title, expanded=False):
-            html = '<table style="width:100%; border-collapse:collapse; font-family:Noto Sans,sans-serif; margin:10px 0;">'
+            html = '<table style="width:100%; border-collapse:collapse; font-family:Inter,system-ui,sans-serif; margin:10px 0;">'
             # Header
             html += '<thead><tr>'
             for col in df_to_render.columns:
-                html += f'<th style="background:#0093D0; color:#FFFFFF; padding:10px 14px; text-align:center; font-size:12px; font-weight:600;">{col}</th>'
+                html += f'<th style="background:#102A5C; color:#FFFFFF; padding:10px 14px; text-align:center; font-size:12px; font-weight:600; letter-spacing:0.03em;">{col}</th>'
             html += '</tr></thead><tbody>'
             # Rows
             for idx, row in df_to_render.iterrows():
@@ -1531,7 +1532,7 @@ def render_brand_page(brand_key_page):
                 for j, val in enumerate(row):
                     align = "center"
                     font_weight = "600" if j == 0 else "400"
-                    html += f'<td style="padding:9px 14px; text-align:{align}; font-size:12px; color:#2C3E50; font-weight:{font_weight}; border-bottom:1px solid #EEF2F7;">{val}</td>'
+                    html += f'<td style="padding:9px 14px; text-align:{align}; font-size:12px; color:#0F172A; font-weight:{font_weight}; border-bottom:1px solid rgba(15,23,42,0.06);">{val}</td>'
                 html += '</tr>'
             html += '</tbody></table>'
             st.markdown(html, unsafe_allow_html=True)
@@ -1556,7 +1557,7 @@ def render_brand_page(brand_key_page):
                     stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
             for col in ["Market Share Difference STLY", "Market Share Difference Previous Quarter"]:
                 if col in stly_trx_table.columns:
-                    stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
+                    stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
             render_styled_table(stly_trx_table, "TRX Market Share Difference (NPA)")
 
         # NBRX Market Share Difference Table (Nurtec only)
@@ -1575,7 +1576,7 @@ def render_brand_page(brand_key_page):
                     stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
             for col in ["Market Share Difference STLY", "Market Share Difference Previous Quarter"]:
                 if col in stly_nbrx_table.columns:
-                    stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
+                    stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
             render_styled_table(stly_nbrx_table, "NBRX Market Share Difference (NPA)")
 
         st.markdown('<div class="section-title">QoQ Growth Summaries</div>', unsafe_allow_html=True)
@@ -1599,7 +1600,7 @@ def render_brand_page(brand_key_page):
             for col in [c for c in combined_trx.columns if "TRX Claims" in c]:
                 combined_trx[col] = combined_trx[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             for col in [c for c in combined_trx.columns if "Growth %" in c]:
-                combined_trx[col] = combined_trx[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+                combined_trx[col] = combined_trx[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table(combined_trx, "TRX Growth Summary (NPA)")
 
         # NBRX QoQ Growth Summary (Nurtec + OCGRP side by side)
@@ -1620,7 +1621,7 @@ def render_brand_page(brand_key_page):
             for col in [c for c in combined_nbrx.columns if "NBRX Claims" in c]:
                 combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             for col in [c for c in combined_nbrx.columns if "Growth %" in c]:
-                combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+                combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table(combined_nbrx, "NBRX Growth Summary (NPA)")
 
     # --- Eliquis QoQ Summaries ---
@@ -1643,7 +1644,7 @@ def render_brand_page(brand_key_page):
                     stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
             for col in ["Market Share Difference STLY", "Market Share Difference Previous Quarter"]:
                 if col in stly_trx_table.columns:
-                    stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
+                    stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
             render_styled_table(stly_trx_table, "TRX Market Share Difference (NPA)")
 
         # NBRX Market Share Difference Table (Eliquis only)
@@ -1662,7 +1663,7 @@ def render_brand_page(brand_key_page):
                     stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
             for col in ["Market Share Difference STLY", "Market Share Difference Previous Quarter"]:
                 if col in stly_nbrx_table.columns:
-                    stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
+                    stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
             render_styled_table(stly_nbrx_table, "NBRX Market Share Difference (NPA)")
 
         st.markdown('<div class="section-title">QoQ Growth Summaries</div>', unsafe_allow_html=True)
@@ -1686,7 +1687,7 @@ def render_brand_page(brand_key_page):
             for col in [c for c in combined_trx.columns if "TRX Claims" in c]:
                 combined_trx[col] = combined_trx[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             for col in [c for c in combined_trx.columns if "Growth %" in c]:
-                combined_trx[col] = combined_trx[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+                combined_trx[col] = combined_trx[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table(combined_trx, "TRX Growth Summary (NPA)")
 
         # NBRX Growth Summary (Eliquis + OAC side by side)
@@ -1707,7 +1708,7 @@ def render_brand_page(brand_key_page):
             for col in [c for c in combined_nbrx.columns if "NBRX Claims" in c]:
                 combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             for col in [c for c in combined_nbrx.columns if "Growth %" in c]:
-                combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+                combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table(combined_nbrx, "NBRX Growth Summary (NPA)")
 
     # --- Prevnar QoQ Summaries ---
@@ -1730,7 +1731,7 @@ def render_brand_page(brand_key_page):
                     stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
             for col in ["Market Share Difference STLY", "Market Share Difference Previous Quarter"]:
                 if col in stly_trx_table.columns:
-                    stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
+                    stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
             render_styled_table(stly_trx_table, "TRX Market Share Difference (NPA)")
 
         # NBRX Market Share Difference Table (Prevnar only)
@@ -1749,7 +1750,7 @@ def render_brand_page(brand_key_page):
                     stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
             for col in ["Market Share Difference STLY", "Market Share Difference Previous Quarter"]:
                 if col in stly_nbrx_table.columns:
-                    stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
+                    stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
             render_styled_table(stly_nbrx_table, "NBRX Market Share Difference (NPA)")
 
         st.markdown('<div class="section-title">QoQ Growth Summaries</div>', unsafe_allow_html=True)
@@ -1773,7 +1774,7 @@ def render_brand_page(brand_key_page):
             for col in [c for c in combined_trx.columns if "TRX Claims" in c]:
                 combined_trx[col] = combined_trx[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             for col in [c for c in combined_trx.columns if "Growth %" in c]:
-                combined_trx[col] = combined_trx[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+                combined_trx[col] = combined_trx[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table(combined_trx, "TRX Growth Summary (NPA)")
 
         # NBRX Growth Summary (Prevnar + PCV side by side)
@@ -1794,7 +1795,7 @@ def render_brand_page(brand_key_page):
             for col in [c for c in combined_nbrx.columns if "NBRX Claims" in c]:
                 combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             for col in [c for c in combined_nbrx.columns if "Growth %" in c]:
-                combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+                combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table(combined_nbrx, "NBRX Growth Summary (NPA)")
 
     # --- Abrysvo QoQ Summaries ---
@@ -1817,7 +1818,7 @@ def render_brand_page(brand_key_page):
                     stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
             for col in ["Market Share Difference STLY", "Market Share Difference Previous Quarter"]:
                 if col in stly_trx_table.columns:
-                    stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
+                    stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
             render_styled_table(stly_trx_table, "TRX Market Share Difference (NPA)")
 
         # NBRX Market Share Difference Table (Abrysvo only)
@@ -1836,7 +1837,7 @@ def render_brand_page(brand_key_page):
                     stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
             for col in ["Market Share Difference STLY", "Market Share Difference Previous Quarter"]:
                 if col in stly_nbrx_table.columns:
-                    stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
+                    stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
             render_styled_table(stly_nbrx_table, "NBRX Market Share Difference (NPA)")
 
         st.markdown('<div class="section-title">QoQ Growth Summaries</div>', unsafe_allow_html=True)
@@ -1860,7 +1861,7 @@ def render_brand_page(brand_key_page):
             for col in [c for c in combined_trx.columns if "TRX Claims" in c]:
                 combined_trx[col] = combined_trx[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             for col in [c for c in combined_trx.columns if "Growth %" in c]:
-                combined_trx[col] = combined_trx[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+                combined_trx[col] = combined_trx[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table(combined_trx, "TRX Growth Summary (NPA)")
 
         # NBRX Growth Summary (Abrysvo + RSV side by side)
@@ -1881,7 +1882,7 @@ def render_brand_page(brand_key_page):
             for col in [c for c in combined_nbrx.columns if "NBRX Claims" in c]:
                 combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             for col in [c for c in combined_nbrx.columns if "Growth %" in c]:
-                combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+                combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table(combined_nbrx, "NBRX Growth Summary (NPA)")
 
     # --- Comirnaty QoQ Summaries ---
@@ -1904,7 +1905,7 @@ def render_brand_page(brand_key_page):
                     stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
             for col in ["Market Share Difference STLY", "Market Share Difference Previous Quarter"]:
                 if col in stly_trx_table.columns:
-                    stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
+                    stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
             render_styled_table(stly_trx_table, "TRX Market Share Difference (NPA)")
 
         # NBRX Market Share Difference Table (Comirnaty only)
@@ -1923,7 +1924,7 @@ def render_brand_page(brand_key_page):
                     stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
             for col in ["Market Share Difference STLY", "Market Share Difference Previous Quarter"]:
                 if col in stly_nbrx_table.columns:
-                    stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
+                    stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
             render_styled_table(stly_nbrx_table, "NBRX Market Share Difference (NPA)")
 
         st.markdown('<div class="section-title">QoQ Growth Summaries</div>', unsafe_allow_html=True)
@@ -1947,7 +1948,7 @@ def render_brand_page(brand_key_page):
             for col in [c for c in combined_trx.columns if "TRX Claims" in c]:
                 combined_trx[col] = combined_trx[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             for col in [c for c in combined_trx.columns if "Growth %" in c]:
-                combined_trx[col] = combined_trx[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+                combined_trx[col] = combined_trx[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table(combined_trx, "TRX Growth Summary (NPA)")
 
         # NBRX Growth Summary (Comirnaty + COVID_VACCINES side by side)
@@ -1968,7 +1969,7 @@ def render_brand_page(brand_key_page):
             for col in [c for c in combined_nbrx.columns if "NBRX Claims" in c]:
                 combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             for col in [c for c in combined_nbrx.columns if "Growth %" in c]:
-                combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+                combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table(combined_nbrx, "NBRX Growth Summary (NPA)")
 
     # --- Paxlovid QoQ Summaries ---
@@ -1991,7 +1992,7 @@ def render_brand_page(brand_key_page):
                     stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
             for col in ["Market Share Difference STLY", "Market Share Difference Previous Quarter"]:
                 if col in stly_trx_table.columns:
-                    stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
+                    stly_trx_table[col] = stly_trx_table[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
             render_styled_table(stly_trx_table, "TRX Market Share Difference (NPA)")
 
         # NBRX Market Share Difference Table (Paxlovid only)
@@ -2010,7 +2011,7 @@ def render_brand_page(brand_key_page):
                     stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f"{x:.2f}" if pd.notna(x) else "-")
             for col in ["Market Share Difference STLY", "Market Share Difference Previous Quarter"]:
                 if col in stly_nbrx_table.columns:
-                    stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
+                    stly_nbrx_table[col] = stly_nbrx_table[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}" if pd.notna(x) else "-")))
             render_styled_table(stly_nbrx_table, "NBRX Market Share Difference (NPA)")
 
         st.markdown('<div class="section-title">QoQ Growth Summaries</div>', unsafe_allow_html=True)
@@ -2034,7 +2035,7 @@ def render_brand_page(brand_key_page):
             for col in [c for c in combined_trx.columns if "TRX Claims" in c]:
                 combined_trx[col] = combined_trx[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             for col in [c for c in combined_trx.columns if "Growth %" in c]:
-                combined_trx[col] = combined_trx[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+                combined_trx[col] = combined_trx[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table(combined_trx, "TRX Growth Summary (NPA)")
 
         # NBRX Growth Summary (Paxlovid + COVID_ORAL side by side)
@@ -2055,7 +2056,7 @@ def render_brand_page(brand_key_page):
             for col in [c for c in combined_nbrx.columns if "NBRX Claims" in c]:
                 combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f"{x:,.0f}" if pd.notna(x) else "-")
             for col in [c for c in combined_nbrx.columns if "Growth %" in c]:
-                combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f'<span style="color:#00A950; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#CC292B; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
+                combined_nbrx[col] = combined_nbrx[col].apply(lambda x: f'<span style="color:#10B981; font-weight:600;">&#9650; +{x:.2f}%</span>' if pd.notna(x) and x > 0 else (f'<span style="color:#EF4444; font-weight:600;">&#9660; {x:.2f}%</span>' if pd.notna(x) and x < 0 else (f"{x:.2f}%" if pd.notna(x) else "-")))
             render_styled_table(combined_nbrx, "NBRX Growth Summary (NPA)")
 
     # --- Raw Data Tables ---
@@ -2203,20 +2204,20 @@ def render_brand_page(brand_key_page):
                             fig.add_trace(go.Scatter(x=pivoted_df.index.tolist(), y=y_vals, mode="lines+markers+text", name=brand, text=text_vals, textposition="top center", textfont=dict(size=9, color=CHART_COLORS[0]), line=dict(color=CHART_COLORS[0], width=3), marker=dict(size=7)))
                         else:
                             fig.add_trace(go.Scatter(x=pivoted_df.index.tolist(), y=y_vals, mode="lines+markers", name=brand, line=dict(color=CHART_COLORS[i % len(CHART_COLORS)], width=2), marker=dict(size=5)))
-                fig.update_layout(title=dict(text=chart_title, font=dict(size=13, color="#0093D0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"), legend=dict(orientation="h", y=-0.2, font=dict(size=9, color="#000000")))
+                fig.update_layout(title=dict(text=chart_title, font=dict(size=13, color="#1C4FC0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"), legend=dict(orientation="h", y=-0.2, font=dict(size=9, color="#000000")))
                 fig.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
                 fig.update_yaxes(ticksuffix="%", tickfont=dict(size=9, color="#000000"))
                 img_buf = BytesIO(fig.to_image(format="png", scale=2))
                 return img_buf
 
-            def make_dual_line_image(data1, data2, label1, label2, chart_title, color1="#0093D0", color2="#F8971D"):
+            def make_dual_line_image(data1, data2, label1, label2, chart_title, color1="#1C4FC0", color2="#F8971D"):
                 """Render a dual-line Plotly chart and return as BytesIO PNG."""
                 fig = go.Figure()
                 if data1 is not None:
                     fig.add_trace(go.Scatter(x=data1.index.tolist(), y=data1.tolist(), mode="lines+markers", name=label1, line=dict(color=color1, width=3), marker=dict(size=7)))
                 if data2 is not None:
                     fig.add_trace(go.Scatter(x=data2.index.tolist(), y=data2.tolist(), mode="lines+markers", name=label2, line=dict(color=color2, width=3), marker=dict(size=7)))
-                fig.update_layout(title=dict(text=chart_title, font=dict(size=13, color="#0093D0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"), legend=dict(orientation="h", y=-0.2, font=dict(size=9, color="#000000")))
+                fig.update_layout(title=dict(text=chart_title, font=dict(size=13, color="#1C4FC0")), template="plotly_white", height=350, width=900, margin=dict(l=50, r=30, t=40, b=60), plot_bgcolor="white", paper_bgcolor="white", font=dict(size=10, color="#000000"), legend=dict(orientation="h", y=-0.2, font=dict(size=9, color="#000000")))
                 fig.update_xaxes(tickfont=dict(size=9, color="#000000"), tickangle=-45)
                 fig.update_yaxes(ticksuffix="%", tickfont=dict(size=9, color="#000000"))
                 img_buf = BytesIO(fig.to_image(format="png", scale=2))
@@ -2257,7 +2258,7 @@ def render_brand_page(brand_key_page):
 
                 t = Table(table_data, colWidths=[col_width] * n_cols)
                 t.setStyle(TableStyle([
-                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0093D0")),
+                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1C4FC0")),
                     ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
                     ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#D0D8E0")),
                     ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F0F4F8")]),
@@ -2278,12 +2279,12 @@ def render_brand_page(brand_key_page):
             elements = []
             styles = getSampleStyleSheet()
 
-            title_style = ParagraphStyle("CustomTitle", parent=styles["Title"], fontSize=20, textColor=colors.HexColor("#0093D0"), spaceAfter=6)
-            heading_style = ParagraphStyle("CustomHeading", parent=styles["Heading2"], fontSize=14, textColor=colors.HexColor("#0093D0"), spaceBefore=16, spaceAfter=8)
-            kpi_style = ParagraphStyle("KPI", parent=styles["Normal"], fontSize=12, textColor=colors.HexColor("#0093D0"), spaceAfter=4)
+            title_style = ParagraphStyle("CustomTitle", parent=styles["Title"], fontSize=20, textColor=colors.HexColor("#1C4FC0"), spaceAfter=6)
+            heading_style = ParagraphStyle("CustomHeading", parent=styles["Heading2"], fontSize=14, textColor=colors.HexColor("#1C4FC0"), spaceBefore=16, spaceAfter=8)
+            kpi_style = ParagraphStyle("KPI", parent=styles["Normal"], fontSize=12, textColor=colors.HexColor("#1C4FC0"), spaceAfter=4)
 
             table_style = TableStyle([
-                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0093D0")),
+                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1C4FC0")),
                 ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
                 ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
                 ("FONTSIZE", (0, 0), (-1, 0), 9),
@@ -2457,7 +2458,7 @@ def render_brand_page(brand_key_page):
                         if not oa_contrib_pdf.empty and ddd_brand_pdf in oa_contrib_pdf.columns:
                             oa_data = oa_contrib_pdf[ddd_brand_pdf]
                             ma_data = ma_contrib_pdf[ddd_brand_pdf] if (not ma_contrib_pdf.empty and ddd_brand_pdf in ma_contrib_pdf.columns) else None
-                            oa_ma_img = make_dual_line_image(oa_data, ma_data, "OA Contribution", "MA Contribution", f"{display_name} OA vs MA Contribution (DDD)", "#0093D0", "#00A950")
+                            oa_ma_img = make_dual_line_image(oa_data, ma_data, "OA Contribution", "MA Contribution", f"{display_name} OA vs MA Contribution (DDD)", "#1C4FC0", "#10B981")
                             elements.append(Image(oa_ma_img, width=7.5*inch, height=2.8*inch))
                             elements.append(Spacer(1, 10))
 
@@ -2531,18 +2532,18 @@ def render_home():
 
     st.markdown(f"""
     <div style="padding: 0 50px;">
-        <div style="background: #FFFFFF; border-radius: 14px; padding: 24px 32px; box-shadow: 0 2px 12px rgba(26, 62, 110, 0.06); border: 1px solid #E6E9EC; border-left: 4px solid #0093D0;">
-            <div style="font-size: 16px; font-weight: 700; color: #1A1A1A; margin-bottom: 16px; font-family: 'Noto Sans', sans-serif;">Data Summary</div>
-            <table style="width: 100%; border-collapse: collapse; font-family: 'Noto Sans', sans-serif;">
-                <thead><tr style="border-bottom: 2px solid #E8EDF3;">
-                    <th style="text-align: left; padding: 10px 16px; font-size: 13px; font-weight: 600; color: #616365; text-transform: uppercase; letter-spacing: 0.5px;">Data Source</th>
-                    <th style="text-align: left; padding: 10px 16px; font-size: 13px; font-weight: 600; color: #616365; text-transform: uppercase; letter-spacing: 0.5px;">Data Availability</th>
+        <div style="background: rgba(255,255,255,0.75); backdrop-filter: saturate(180%) blur(8px); border-radius: 14px; padding: 24px 32px; box-shadow: 0 2px 8px rgba(15,23,42,0.05), 0 1px 2px rgba(15,23,42,0.04); border: 1px solid rgba(15,23,42,0.06); border-left: 4px solid #1C4FC0;">
+            <div style="font-size: 16px; font-weight: 700; color: #0A1A3D; margin-bottom: 16px; font-family: 'Manrope', sans-serif; letter-spacing: -0.015em;">Data Summary</div>
+            <table style="width: 100%; border-collapse: collapse; font-family: 'Inter', system-ui, sans-serif;">
+                <thead><tr style="border-bottom: 2px solid rgba(15,23,42,0.08);">
+                    <th style="text-align: left; padding: 10px 16px; font-size: 12px; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 0.06em;">Data Source</th>
+                    <th style="text-align: left; padding: 10px 16px; font-size: 12px; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 0.06em;">Data Availability</th>
                 </tr></thead>
                 <tbody>
-                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">NPA</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Till {max_date}</td></tr>
-                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">DDD</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Till {max_date}</td></tr>
-                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">LAAD</td><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50;">Till {max_date}</td></tr>
-                    <tr style="border-bottom: 1px solid #F0F3F7;"><td style="padding: 12px 16px; font-size: 14px; color: #2C3E50; font-weight: 600;">Refreshed On</td><td style="padding: 12px 16px; font-size: 14px; color: #0093D0; font-weight: 600;">{refresh_ts}</td></tr>
+                    <tr style="border-bottom: 1px solid rgba(15,23,42,0.05);"><td style="padding: 12px 16px; font-size: 14px; color: #0F172A;">NPA</td><td style="padding: 12px 16px; font-size: 14px; color: #0F172A;">Till {max_date}</td></tr>
+                    <tr style="border-bottom: 1px solid rgba(15,23,42,0.05);"><td style="padding: 12px 16px; font-size: 14px; color: #0F172A;">DDD</td><td style="padding: 12px 16px; font-size: 14px; color: #0F172A;">Till {max_date}</td></tr>
+                    <tr style="border-bottom: 1px solid rgba(15,23,42,0.05);"><td style="padding: 12px 16px; font-size: 14px; color: #0F172A;">LAAD</td><td style="padding: 12px 16px; font-size: 14px; color: #0F172A;">Till {max_date}</td></tr>
+                    <tr style="border-bottom: 1px solid rgba(15,23,42,0.05);"><td style="padding: 12px 16px; font-size: 14px; color: #0F172A; font-weight: 600;">Refreshed On</td><td style="padding: 12px 16px; font-size: 14px; color: #1C4FC0; font-weight: 600;">{refresh_ts}</td></tr>
                 </tbody>
             </table>
         </div>
@@ -2574,8 +2575,8 @@ def render_home():
         st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
 
     st.markdown("""
-    <div style="text-align: center; padding: 14px 0; border-top: 1px solid rgba(26, 62, 110, 0.08); margin-top: 40px;">
-        <span style="color: #616365; font-size: 12px;">Developed by ZS Primary Care Team</span>
+    <div style="text-align: center; padding: 14px 0; border-top: 1px solid rgba(15,23,42,0.06); margin-top: 40px;">
+        <span style="color: #64748B; font-size: 12px; font-weight: 500;">Developed by ZS Primary Care Team</span>
     </div>
     """, unsafe_allow_html=True)
 
