@@ -1,4 +1,4 @@
-﻿"""
+"""
 Primary Care Monthly Report Dashboard - Dataiku DSS Streamlit Webapp
 All data loaded dynamically from Dataiku dataset via pandas.
 """
