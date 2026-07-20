@@ -138,6 +138,16 @@ HOME_PAGE_CSS = """
 CHART_COLORS = ["#1C4FC0", "#7C3AED", "#0E7490", "#D946EF", "#047857", "#EF4444", "#41B6E6", "#64748B"]
 
 
+def render_download_link(data, file_name, label, mime):
+    """Render a base64 HTML download link (works inside Dataiku DSS proxy)."""
+    import base64
+    if data is None:
+        return
+    b64 = base64.b64encode(data).decode()
+    href = f'<a href="data:{mime};base64,{b64}" download="{file_name}" style="display:inline-flex;align-items:center;gap:0.4rem;padding:8px 20px;border-radius:8px;background:rgba(255,255,255,0.7);border:1px solid rgba(15,23,42,0.08);color:#1C4FC0;font-size:0.82rem;font-weight:600;text-decoration:none;font-family:Inter,system-ui,sans-serif;transition:all 0.18s ease;" onmouseover="this.style.background=\'#FFFFFF\';this.style.boxShadow=\'0 4px 12px rgba(15,23,42,0.08)\';" onmouseout="this.style.background=\'rgba(255,255,255,0.7)\';this.style.boxShadow=\'none\';">{label}</a>'
+    st.markdown(href, unsafe_allow_html=True)
+
+
 def render_ribbon(title):
     logo_html = ""
     if PFIZER_LOGO_B64:
@@ -604,20 +614,20 @@ def render_brand_page(brand_key_page):
 
         col1, col2, col3 = st.columns([1, 1, 3])
         with col1:
-            st.download_button(
-                label="\U0001f4e5 Download Excel",
-                data=generate_excel_zavz(),
-                file_name="zavzpret_report.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            render_download_link(
+                generate_excel_zavz(),
+                "zavzpret_report.xlsx",
+                "\U0001f4e5 Download Excel",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
         with col2:
             pdf_data = generate_pdf_zavz()
             if pdf_data:
-                st.download_button(
-                    label="\U0001f4c4 Download PDF",
-                    data=pdf_data,
-                    file_name="zavzpret_report.pdf",
-                    mime="application/pdf"
+                render_download_link(
+                    pdf_data,
+                    "zavzpret_report.pdf",
+                    "\U0001f4c4 Download PDF",
+                    "application/pdf"
                 )
             else:
                 st.info("PDF export requires `reportlab` and `kaleido` packages.")
@@ -939,20 +949,20 @@ def render_brand_page(brand_key_page):
 
         col1, col2, col3 = st.columns([1, 1, 3])
         with col1:
-            st.download_button(
-                label="\U0001f4e5 Download Excel",
-                data=generate_excel_bey(),
-                file_name="beyfortus_report.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            render_download_link(
+                generate_excel_bey(),
+                "beyfortus_report.xlsx",
+                "\U0001f4e5 Download Excel",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
         with col2:
             pdf_data = generate_pdf_bey()
             if pdf_data:
-                st.download_button(
-                    label="\U0001f4c4 Download PDF",
-                    data=pdf_data,
-                    file_name="beyfortus_report.pdf",
-                    mime="application/pdf"
+                render_download_link(
+                    pdf_data,
+                    "beyfortus_report.pdf",
+                    "\U0001f4c4 Download PDF",
+                    "application/pdf"
                 )
             else:
                 st.info("PDF export requires `reportlab` and `kaleido` packages.")
@@ -2469,20 +2479,20 @@ def render_brand_page(brand_key_page):
 
     col1, col2, col3 = st.columns([1, 1, 3])
     with col1:
-        st.download_button(
-            label="\U0001f4e5 Download Excel",
-            data=generate_excel(),
-            file_name=f"{display_name.lower()}_report.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        render_download_link(
+            generate_excel(),
+            f"{display_name.lower()}_report.xlsx",
+            "\U0001f4e5 Download Excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
     with col2:
         pdf_data = generate_pdf()
         if pdf_data:
-            st.download_button(
-                label="\U0001f4c4 Download PDF",
-                data=pdf_data,
-                file_name=f"{display_name.lower()}_report.pdf",
-                mime="application/pdf"
+            render_download_link(
+                pdf_data,
+                f"{display_name.lower()}_report.pdf",
+                "\U0001f4c4 Download PDF",
+                "application/pdf"
             )
         else:
             st.info("PDF export requires `reportlab` and `matplotlib` packages in your code environment.")
