@@ -395,7 +395,7 @@ def render_download_link(data, file_name, label, mime):
 def render_ribbon(title):
     logo_html = ""
     if PFIZER_LOGO_B64:
-        logo_html = f'<img src="data:image/png;base64,{PFIZER_LOGO_B64}" style="height:32px; drop-shadow(0 1px 2px rgba(0,0,0,0.1));" />'
+        logo_html = f'<img src="data:image/png;base64,{PFIZER_LOGO_B64}" style="height:28px; max-width:120px; object-fit:contain; filter:drop-shadow(0 1px 2px rgba(0,0,0,0.08));" />'
     st.markdown(f"""
     <div class="hub-header">
         <div class="hub-header-left">
