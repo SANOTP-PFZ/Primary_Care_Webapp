@@ -77,56 +77,300 @@ def pivot_market_share(df_subset, metric_name):
 BRAND_PAGE_CSS = """
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+    :root {
+        --bg: #EEF3FB;
+        --surface: #FFFFFF;
+        --surface-2: #F8FAFD;
+        --text-1: #0F172A;
+        --text-2: #1C4FC0;
+        --text-3: #64748B;
+        --text-soft: #475569;
+        --border: rgba(15, 23, 42, 0.08);
+        --border-hover: rgba(28, 79, 192, 0.35);
+        --accent: #41B6E6;
+        --accent-soft: rgba(65, 182, 230, 0.10);
+        --navy-700: #163990;
+        --navy-800: #102A5C;
+        --navy-900: #0A1A3D;
+        --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+        --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.04);
+        --shadow-md: 0 6px 16px rgba(15, 23, 42, 0.07), 0 2px 4px rgba(15, 23, 42, 0.04);
+        --shadow-lg: 0 18px 40px rgba(15, 23, 42, 0.10), 0 6px 12px rgba(15, 23, 42, 0.06);
+        --shadow-panel: 0 8px 24px rgba(15, 23, 42, 0.07), 0 2px 6px rgba(15, 23, 42, 0.04);
+        --radius: 14px;
+        --radius-lg: 18px;
+        --ease: cubic-bezier(0.4, 0, 0.2, 1);
+        --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; }
+    body, .stApp { font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
+    h1, h2, h3, h4 { font-family: 'Manrope', 'Inter', system-ui, sans-serif; letter-spacing: -0.015em; }
+
     #MainMenu {visibility: hidden;}
     header {visibility: hidden;}
     footer {visibility: hidden;}
     [data-testid="stSidebar"] {display: none;}
-    .block-container { padding-top: 0rem !important; max-width: 100% !important; }
-    html, body, [class*="css"] { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; color: #0F172A !important; -webkit-font-smoothing: antialiased; }
-    [data-testid="stAppViewContainer"] { background: radial-gradient(ellipse 80% 60% at 0% 0%, rgba(28,79,192,0.08) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 100% 0%, rgba(65,182,230,0.07) 0%, transparent 55%), #EEF3FB; color: #0F172A; }
-    [data-testid="stMarkdownContainer"] p { color: #0F172A; }
-    .stExpander { color: #1C4FC0; }
-    .stExpander summary span, .stExpander summary p, .stExpander summary { color: #1C4FC0 !important; font-weight: 600 !important; background: transparent !important; }
-    .stExpander summary:hover span, .stExpander summary:hover p, .stExpander summary:hover { color: #163990 !important; background: transparent !important; }
-    [data-testid="stExpander"] { background: transparent !important; border: 1px solid rgba(15,23,42,0.08) !important; border-radius: 12px !important; }
-    [data-testid="stExpander"] summary { color: #1C4FC0 !important; background: transparent !important; }
-    [data-testid="stExpander"] summary:hover { color: #163990 !important; background: transparent !important; }
-    [data-testid="stExpander"] summary:hover span { color: #163990 !important; }
-    [data-testid="stExpander"] summary span { color: #1C4FC0 !important; }
+    .block-container { padding-top: 1rem !important; max-width: 100% !important; padding-left: 3rem !important; padding-right: 3rem !important; }
+    html, body, [class*="css"] { font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; color: var(--text-1) !important; -webkit-font-smoothing: antialiased; }
+
+    .stApp, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
+        background:
+            radial-gradient(ellipse 80% 60% at 0% 0%, rgba(28,79,192,0.06) 0%, transparent 60%),
+            radial-gradient(ellipse 70% 50% at 100% 0%, rgba(65,182,230,0.05) 0%, transparent 55%),
+            radial-gradient(ellipse 60% 50% at 50% 100%, rgba(124,58,237,0.03) 0%, transparent 60%),
+            var(--bg) !important;
+        color: var(--text-1);
+    }
+    [data-testid="stMarkdownContainer"] p { color: var(--text-1); }
+
+    /* Expanders */
+    .stExpander { color: var(--text-2); }
+    .stExpander summary span, .stExpander summary p, .stExpander summary { color: var(--text-2) !important; font-weight: 600 !important; background: transparent !important; }
+    .stExpander summary:hover span, .stExpander summary:hover p, .stExpander summary:hover { color: var(--navy-700) !important; background: transparent !important; }
+    [data-testid="stExpander"] { background: rgba(255, 255, 255, 0.55) !important; backdrop-filter: saturate(180%) blur(14px) !important; -webkit-backdrop-filter: saturate(180%) blur(14px) !important; border: 1px solid var(--border) !important; border-radius: var(--radius) !important; box-shadow: var(--shadow-xs) !important; transition: box-shadow 0.18s var(--ease), border-color 0.18s var(--ease) !important; }
+    [data-testid="stExpander"]:hover { box-shadow: var(--shadow-sm) !important; border-color: var(--border-hover) !important; }
+    [data-testid="stExpander"] summary { color: var(--text-2) !important; background: transparent !important; }
+    [data-testid="stExpander"] summary:hover { color: var(--navy-700) !important; background: transparent !important; }
+    [data-testid="stExpander"] summary:hover span { color: var(--navy-700) !important; }
+    [data-testid="stExpander"] summary span { color: var(--text-2) !important; }
     [data-testid="stExpander"] details { background: transparent !important; }
     [data-testid="stExpander"] details[open] summary { background: transparent !important; }
-    .top-ribbon { background: linear-gradient(135deg, #0A1A3D 0%, #163990 100%); padding: 34px 50px; display: flex; align-items: center; gap: 16px; margin: -1rem -1rem 0 -1rem; width: calc(100% + 2rem); box-shadow: 0 6px 20px rgba(10,26,61,0.25); position: relative; overflow: hidden; }
-    .top-ribbon::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #1C4FC0, #41B6E6, #3B6FD9); }
-    .top-ribbon .title { color: #FFFFFF; font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; position: relative; z-index: 1; text-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+
+    /* Header — Glassmorphism floating bar */
+    .hub-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 24px;
+        border-radius: var(--radius-lg);
+        background: rgba(255, 255, 255, 0.62);
+        backdrop-filter: saturate(180%) blur(22px);
+        -webkit-backdrop-filter: saturate(180%) blur(22px);
+        margin: 1rem 0 20px 0;
+        box-shadow: var(--shadow-panel);
+        border: 1px solid var(--border);
+    }
+    .hub-header-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .hub-title {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 800;
+        font-size: 22px;
+        color: var(--navy-900);
+        letter-spacing: -0.025em;
+    }
+
+    /* KPI Cards — Glassmorphism */
     .kpi-container { display: flex; gap: 18px; padding: 28px 50px 10px; }
-    .kpi-card { background: rgba(255,255,255,0.75); backdrop-filter: saturate(180%) blur(8px); -webkit-backdrop-filter: saturate(180%) blur(8px); border: 1px solid rgba(15,23,42,0.06); border-radius: 12px; padding: 22px 28px; flex: 1; box-shadow: 0 2px 8px rgba(15,23,42,0.05), 0 1px 2px rgba(15,23,42,0.04); transition: transform 0.25s cubic-bezier(0.16,1,0.3,1), box-shadow 0.25s ease; }
-    .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(15,23,42,0.07), 0 2px 4px rgba(15,23,42,0.04); }
-    .kpi-card .kpi-label { color: #64748B; font-size: 12px; font-weight: 500; margin-bottom: 6px; }
-    .kpi-card .kpi-value { color: #0A1A3D; font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; letter-spacing: -0.02em; }
-    .kpi-card .kpi-period { color: #64748B; font-size: 11px; font-weight: 500; margin-top: 8px; }
-    .section-title { padding: 20px 50px 5px; color: #0A1A3D; font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 700; letter-spacing: -0.015em; }
-    .stButton > button, .stDownloadButton > button { background: rgba(255,255,255,0.7) !important; border: 1px solid rgba(15,23,42,0.08) !important; border-radius: 8px !important; color: #1C4FC0 !important; font-weight: 600 !important; padding: 8px 20px !important; transition: all 0.18s ease !important; }
-    .stButton > button:hover, .stDownloadButton > button:hover { background: #FFFFFF !important; border-color: rgba(28,79,192,0.25) !important; box-shadow: 0 4px 12px rgba(15,23,42,0.08) !important; color: #163990 !important; }
+    .kpi-card {
+        background: rgba(255,255,255,0.55);
+        backdrop-filter: saturate(180%) blur(14px);
+        -webkit-backdrop-filter: saturate(180%) blur(14px);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 22px 28px;
+        flex: 1;
+        box-shadow: var(--shadow-sm);
+        transition: transform 0.28s var(--ease-out), box-shadow 0.28s var(--ease), border-color 0.18s var(--ease);
+        position: relative;
+        overflow: hidden;
+    }
+    .kpi-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(135deg, rgba(255,255,255,0) 55%, rgba(65,182,230,0.05) 80%, rgba(28,79,192,0.07) 100%);
+        opacity: 0;
+        transition: opacity 0.28s var(--ease);
+        pointer-events: none;
+    }
+    .kpi-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--border-hover); }
+    .kpi-card:hover::after { opacity: 1; }
+    .kpi-card .kpi-label { color: var(--text-3); font-size: 12px; font-weight: 500; margin-bottom: 6px; }
+    .kpi-card .kpi-value { color: var(--navy-900); font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; letter-spacing: -0.02em; }
+    .kpi-card .kpi-period { color: var(--text-3); font-size: 11px; font-weight: 500; margin-top: 8px; }
+
+    /* Section Titles */
+    .section-title { padding: 20px 50px 5px; color: var(--navy-900); font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 700; letter-spacing: -0.015em; }
+
+    /* Buttons — Pill style */
+    .stButton > button, .stDownloadButton > button {
+        background: rgba(255,255,255,0.7) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 999px !important;
+        color: var(--text-2) !important;
+        font-weight: 600 !important;
+        padding: 8px 20px !important;
+        font-size: 13px !important;
+        box-shadow: var(--shadow-xs) !important;
+        transition: all 0.18s var(--ease) !important;
+    }
+    .stButton > button:hover, .stDownloadButton > button:hover {
+        background: #FFFFFF !important;
+        border-color: var(--border-hover) !important;
+        box-shadow: var(--shadow-sm) !important;
+        color: var(--navy-700) !important;
+        transform: translateY(-1px) !important;
+    }
+
+    /* Fixed footer */
+    .brand-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        color: var(--text-3);
+        font-size: 11px;
+        font-weight: 500;
+        padding: 8px 0;
+        background: rgba(238, 243, 251, 0.85);
+        backdrop-filter: saturate(180%) blur(16px);
+        -webkit-backdrop-filter: saturate(180%) blur(16px);
+        border-top: 1px solid var(--border);
+        z-index: 999;
+    }
 </style>
 """
 
 HOME_PAGE_CSS = """
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+    :root {
+        --bg: #EEF3FB;
+        --surface: #FFFFFF;
+        --surface-2: #F8FAFD;
+        --text-1: #0F172A;
+        --text-2: #1C4FC0;
+        --text-3: #64748B;
+        --text-soft: #475569;
+        --border: rgba(15, 23, 42, 0.08);
+        --border-hover: rgba(28, 79, 192, 0.35);
+        --accent: #41B6E6;
+        --accent-soft: rgba(65, 182, 230, 0.10);
+        --navy-700: #163990;
+        --navy-800: #102A5C;
+        --navy-900: #0A1A3D;
+        --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+        --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.04);
+        --shadow-md: 0 6px 16px rgba(15, 23, 42, 0.07), 0 2px 4px rgba(15, 23, 42, 0.04);
+        --shadow-lg: 0 18px 40px rgba(15, 23, 42, 0.10), 0 6px 12px rgba(15, 23, 42, 0.06);
+        --shadow-panel: 0 8px 24px rgba(15, 23, 42, 0.07), 0 2px 6px rgba(15, 23, 42, 0.04);
+        --radius: 14px;
+        --radius-lg: 18px;
+        --ease: cubic-bezier(0.4, 0, 0.2, 1);
+        --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; }
+    body, .stApp { font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
+    h1, h2, h3, h4 { font-family: 'Manrope', 'Inter', system-ui, sans-serif; letter-spacing: -0.015em; }
+
     #MainMenu {visibility: hidden;}
     header {visibility: hidden;}
     footer {visibility: hidden;}
     [data-testid="stSidebar"] {display: none;}
-    .block-container { padding-top: 0rem !important; padding-bottom: 0rem !important; max-width: 100% !important; }
-    html, body, [class*="css"] { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; color: #0F172A !important; -webkit-font-smoothing: antialiased; }
-    [data-testid="stAppViewContainer"] p, [data-testid="stMarkdownContainer"] p { color: #0F172A; }
-    .top-ribbon { background: linear-gradient(135deg, #0A1A3D 0%, #163990 100%); padding: 34px 50px; display: flex; align-items: center; gap: 16px; margin: -1rem -1rem 0 -1rem; width: calc(100% + 2rem); box-shadow: 0 6px 20px rgba(10,26,61,0.25); position: relative; overflow: hidden; }
-    .top-ribbon::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #1C4FC0, #41B6E6, #3B6FD9); }
-    .top-ribbon .title { color: #FFFFFF; font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; position: relative; z-index: 1; text-shadow: 0 1px 3px rgba(0,0,0,0.2); }
-    [data-testid="stAppViewContainer"] { background: radial-gradient(ellipse 80% 60% at 0% 0%, rgba(28,79,192,0.08) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 100% 0%, rgba(65,182,230,0.07) 0%, transparent 55%), #EEF3FB; }
-    .stButton > button { background: rgba(255,255,255,0.85) !important; border: 1px solid rgba(15,23,42,0.08) !important; border-radius: 14px !important; padding: 40px 32px !important; color: #0A1A3D !important; font-size: 20px !important; font-weight: 700 !important; font-family: 'Manrope', 'Inter', 'Segoe UI', system-ui, sans-serif !important; cursor: pointer !important; transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important; box-shadow: 0 2px 8px rgba(15,23,42,0.05), 0 1px 2px rgba(15,23,42,0.04) !important; min-height: 180px !important; border-top: none !important; position: relative !important; overflow: hidden !important; }
+    .block-container { padding-top: 1rem !important; padding-bottom: 0rem !important; max-width: 100% !important; padding-left: 3rem !important; padding-right: 3rem !important; }
+    html, body, [class*="css"] { font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; color: var(--text-1) !important; -webkit-font-smoothing: antialiased; }
+    [data-testid="stAppViewContainer"] p, [data-testid="stMarkdownContainer"] p { color: var(--text-1); }
+
+    .stApp, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
+        background:
+            radial-gradient(ellipse 80% 60% at 0% 0%, rgba(28,79,192,0.06) 0%, transparent 60%),
+            radial-gradient(ellipse 70% 50% at 100% 0%, rgba(65,182,230,0.05) 0%, transparent 55%),
+            radial-gradient(ellipse 60% 50% at 50% 100%, rgba(124,58,237,0.03) 0%, transparent 60%),
+            var(--bg) !important;
+    }
+
+    .hub-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 24px;
+        border-radius: var(--radius-lg);
+        background: rgba(255, 255, 255, 0.62);
+        backdrop-filter: saturate(180%) blur(22px);
+        -webkit-backdrop-filter: saturate(180%) blur(22px);
+        margin: 1rem 0 20px 0;
+        box-shadow: var(--shadow-panel);
+        border: 1px solid var(--border);
+    }
+    .hub-header-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .hub-title {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 800;
+        font-size: 22px;
+        color: var(--navy-900);
+        letter-spacing: -0.025em;
+    }
+
+    .stButton > button {
+        background: rgba(255,255,255,0.55) !important;
+        backdrop-filter: saturate(180%) blur(14px) !important;
+        -webkit-backdrop-filter: saturate(180%) blur(14px) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: var(--radius-lg) !important;
+        padding: 40px 32px !important;
+        color: var(--navy-900) !important;
+        font-size: 20px !important;
+        font-weight: 700 !important;
+        font-family: 'Manrope', 'Inter', system-ui, sans-serif !important;
+        cursor: pointer !important;
+        transition: transform 0.28s var(--ease-out), box-shadow 0.28s var(--ease), border-color 0.18s var(--ease), background 0.18s var(--ease) !important;
+        box-shadow: var(--shadow-sm) !important;
+        min-height: 180px !important;
+        border-top: none !important;
+        position: relative !important;
+        overflow: hidden !important;
+    }
+    .stButton > button::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(135deg, rgba(255,255,255,0) 55%, rgba(65,182,230,0.05) 80%, rgba(28,79,192,0.07) 100%);
+        opacity: 0;
+        transition: opacity 0.28s var(--ease);
+        pointer-events: none;
+    }
     .stButton > button > div, .stButton > button > div > p, .stButton > button p, .stButton > button span { font-size: 20px !important; font-weight: 700 !important; }
-    .stButton > button:hover { transform: translateY(-3px) !important; box-shadow: 0 18px 40px rgba(15,23,42,0.10), 0 6px 12px rgba(15,23,42,0.06) !important; background: rgba(255,255,255,0.95) !important; border-color: rgba(28,79,192,0.15) !important; }
+    .stButton > button:hover {
+        transform: translateY(-4px) scale(1.02) !important;
+        box-shadow: var(--shadow-lg) !important;
+        background: rgba(255,255,255,0.85) !important;
+        border-color: var(--border-hover) !important;
+    }
+    .stButton > button:hover::after { opacity: 1; }
+
+    .home-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        color: var(--text-3);
+        font-size: 11px;
+        font-weight: 500;
+        padding: 8px 0;
+        background: rgba(238, 243, 251, 0.85);
+        backdrop-filter: saturate(180%) blur(16px);
+        -webkit-backdrop-filter: saturate(180%) blur(16px);
+        border-top: 1px solid var(--border);
+        z-index: 999;
+    }
 </style>
 """
 
@@ -135,7 +379,7 @@ HOME_PAGE_CSS = """
 # HELPERS
 # =====================================================
 
-CHART_COLORS = ["#1C4FC0", "#7C3AED", "#0E7490", "#D946EF", "#047857", "#EF4444", "#41B6E6", "#64748B"]
+CHART_COLORS = ["#1C4FC0", "#41B6E6", "#7C3AED", "#0E7490", "#D946EF", "#047857", "#EF4444", "#64748B"]
 
 
 def render_download_link(data, file_name, label, mime):
@@ -144,18 +388,20 @@ def render_download_link(data, file_name, label, mime):
     if data is None:
         return
     b64 = base64.b64encode(data).decode()
-    href = f'<a href="data:{mime};base64,{b64}" download="{file_name}" style="display:inline-flex;align-items:center;gap:0.4rem;padding:8px 20px;border-radius:8px;background:rgba(255,255,255,0.7);border:1px solid rgba(15,23,42,0.08);color:#1C4FC0;font-size:0.82rem;font-weight:600;text-decoration:none;font-family:Inter,system-ui,sans-serif;transition:all 0.18s ease;" onmouseover="this.style.background=\'#FFFFFF\';this.style.boxShadow=\'0 4px 12px rgba(15,23,42,0.08)\';" onmouseout="this.style.background=\'rgba(255,255,255,0.7)\';this.style.boxShadow=\'none\';">{label}</a>'
+    href = f'<a href="data:{mime};base64,{b64}" download="{file_name}" style="display:inline-flex;align-items:center;gap:0.4rem;padding:8px 20px;border-radius:999px;background:rgba(255,255,255,0.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(15,23,42,0.08);color:#1C4FC0;font-size:0.82rem;font-weight:600;text-decoration:none;font-family:Inter,system-ui,sans-serif;transition:all 0.18s cubic-bezier(0.4,0,0.2,1);box-shadow:0 1px 2px rgba(15,23,42,0.04);" onmouseover="this.style.background=\'#FFFFFF\';this.style.boxShadow=\'0 2px 8px rgba(15,23,42,0.05), 0 1px 2px rgba(15,23,42,0.04)\';this.style.borderColor=\'rgba(28,79,192,0.35)\';this.style.transform=\'translateY(-1px)\';" onmouseout="this.style.background=\'rgba(255,255,255,0.7)\';this.style.boxShadow=\'0 1px 2px rgba(15,23,42,0.04)\';this.style.borderColor=\'rgba(15,23,42,0.08)\';this.style.transform=\'none\';">{label}</a>'
     st.markdown(href, unsafe_allow_html=True)
 
 
 def render_ribbon(title):
     logo_html = ""
     if PFIZER_LOGO_B64:
-        logo_html = f'<img src="data:image/png;base64,{PFIZER_LOGO_B64}" style="height:56px; filter:brightness(0) invert(1) drop-shadow(0 2px 4px rgba(0,0,0,0.2)); position:relative; z-index:1;" />'
+        logo_html = f'<img src="data:image/png;base64,{PFIZER_LOGO_B64}" style="height:32px; drop-shadow(0 1px 2px rgba(0,0,0,0.1));" />'
     st.markdown(f"""
-    <div class="top-ribbon">
-        {logo_html}
-        <span class="title">{title}</span>
+    <div class="hub-header">
+        <div class="hub-header-left">
+            {logo_html}
+            <span class="hub-title">{title}</span>
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -2505,7 +2751,7 @@ def render_brand_page(brand_key_page):
 def render_home():
     st.markdown(HOME_PAGE_CSS, unsafe_allow_html=True)
     render_ribbon("Primary Care Monthly Report Dashboard")
-    st.markdown("<div style='height:40px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
 
     # Data Summary with dynamic values
     from datetime import datetime
@@ -2542,7 +2788,7 @@ def render_home():
 
     st.markdown(f"""
     <div style="padding: 0 50px;">
-        <div style="background: rgba(255,255,255,0.75); backdrop-filter: saturate(180%) blur(8px); border-radius: 14px; padding: 24px 32px; box-shadow: 0 2px 8px rgba(15,23,42,0.05), 0 1px 2px rgba(15,23,42,0.04); border: 1px solid rgba(15,23,42,0.06); border-left: 4px solid #1C4FC0;">
+        <div style="background: rgba(255,255,255,0.55); backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: saturate(180%) blur(14px); border-radius: 18px; padding: 24px 32px; box-shadow: 0 2px 8px rgba(15,23,42,0.05), 0 1px 2px rgba(15,23,42,0.04); border: 1px solid rgba(15,23,42,0.08); border-left: 4px solid #1C4FC0; transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1), border-color 0.18s cubic-bezier(0.4,0,0.2,1);">
             <div style="font-size: 16px; font-weight: 700; color: #0A1A3D; margin-bottom: 16px; font-family: 'Manrope', sans-serif; letter-spacing: -0.015em;">Data Summary</div>
             <table style="width: 100%; border-collapse: collapse; font-family: 'Inter', system-ui, sans-serif;">
                 <thead><tr style="border-bottom: 2px solid rgba(15,23,42,0.08);">
@@ -2585,9 +2831,7 @@ def render_home():
         st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
 
     st.markdown("""
-    <div style="text-align: center; padding: 14px 0; border-top: 1px solid rgba(15,23,42,0.06); margin-top: 40px;">
-        <span style="color: #64748B; font-size: 12px; font-weight: 500;">Developed by ZS Primary Care Team</span>
-    </div>
+    <div class="home-footer">Developed by ZS Primary Care Team</div>
     """, unsafe_allow_html=True)
 
 
