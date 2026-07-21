@@ -411,7 +411,7 @@ def render_ribbon(title):
 
 
 def render_back_button():
-    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:6px'></div>", unsafe_allow_html=True)
     st.markdown("""
     <style>
         div[data-testid="stButton"]:first-of-type button {
