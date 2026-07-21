@@ -327,15 +327,15 @@ HOME_PAGE_CSS = """
         -webkit-backdrop-filter: saturate(180%) blur(14px) !important;
         border: 1px solid var(--border) !important;
         border-radius: var(--radius-lg) !important;
-        padding: 22px 24px !important;
+        padding: 28px 28px !important;
         color: var(--navy-900) !important;
-        font-size: 17px !important;
+        font-size: 18px !important;
         font-weight: 700 !important;
         font-family: 'Manrope', 'Inter', system-ui, sans-serif !important;
         cursor: pointer !important;
         transition: transform 0.28s var(--ease-out), box-shadow 0.28s var(--ease), border-color 0.18s var(--ease), background 0.18s var(--ease) !important;
         box-shadow: var(--shadow-sm) !important;
-        min-height: 110px !important;
+        min-height: 140px !important;
         border-top: none !important;
         position: relative !important;
         overflow: hidden !important;
@@ -350,7 +350,7 @@ HOME_PAGE_CSS = """
         transition: opacity 0.28s var(--ease);
         pointer-events: none;
     }
-    .stButton > button > div, .stButton > button > div > p, .stButton > button p, .stButton > button span { font-size: 17px !important; font-weight: 700 !important; }
+    .stButton > button > div, .stButton > button > div > p, .stButton > button p, .stButton > button span { font-size: 18px !important; font-weight: 700 !important; }
     .stButton > button:hover {
         transform: translateY(-4px) scale(1.02) !important;
         box-shadow: var(--shadow-lg) !important;
@@ -2822,9 +2822,9 @@ def render_home():
         {"name": "Beyfortus", "key": "beyfortus"},
     ]
 
-    for row_start in range(0, len(brands), 4):
-        row_brands = brands[row_start:row_start + 4]
-        cols = st.columns(4)
+    for row_start in range(0, len(brands), 3):
+        row_brands = brands[row_start:row_start + 3]
+        cols = st.columns(3)
         for i, brand in enumerate(row_brands):
             with cols[i]:
                 if st.button(brand["name"], key=f'{brand["key"]}_btn', use_container_width=True):
