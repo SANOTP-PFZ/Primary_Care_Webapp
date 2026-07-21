@@ -279,14 +279,9 @@ HOME_PAGE_CSS = """
     header {visibility: hidden;}
     footer {visibility: hidden;}
     [data-testid="stSidebar"] {display: none;}
-    .block-container { padding-top: 0.5rem !important; padding-bottom: 0rem !important; max-width: 100% !important; padding-left: 3rem !important; padding-right: 3rem !important; }
+    .block-container { padding-top: 1rem !important; padding-bottom: 0rem !important; max-width: 100% !important; padding-left: 3rem !important; padding-right: 3rem !important; }
     html, body, [class*="css"] { font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; color: var(--text-1) !important; -webkit-font-smoothing: antialiased; }
     [data-testid="stAppViewContainer"] p, [data-testid="stMarkdownContainer"] p { color: var(--text-1); }
-
-    /* No-scroll: lock landing page to viewport */
-    [data-testid="stMain"] { overflow: hidden !important; }
-    [data-testid="stMainBlockContainer"] { overflow: hidden !important; max-height: 100vh !important; }
-    .block-container { overflow: hidden !important; }
 
     .stApp, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
         background:
@@ -305,7 +300,7 @@ HOME_PAGE_CSS = """
         background: rgba(255, 255, 255, 0.62);
         backdrop-filter: saturate(180%) blur(22px);
         -webkit-backdrop-filter: saturate(180%) blur(22px);
-        margin: 0.5rem 0 10px 0;
+        margin: 1rem 0 20px 0;
         box-shadow: var(--shadow-panel);
         border: 1px solid var(--border);
     }
@@ -328,15 +323,15 @@ HOME_PAGE_CSS = """
         -webkit-backdrop-filter: saturate(180%) blur(14px) !important;
         border: 1px solid var(--border) !important;
         border-radius: var(--radius-lg) !important;
-        padding: 20px 24px !important;
+        padding: 40px 32px !important;
         color: var(--navy-900) !important;
-        font-size: 18px !important;
+        font-size: 20px !important;
         font-weight: 700 !important;
         font-family: 'Manrope', 'Inter', system-ui, sans-serif !important;
         cursor: pointer !important;
         transition: transform 0.28s var(--ease-out), box-shadow 0.28s var(--ease), border-color 0.18s var(--ease), background 0.18s var(--ease) !important;
         box-shadow: var(--shadow-sm) !important;
-        min-height: 100px !important;
+        min-height: 180px !important;
         border-top: none !important;
         position: relative !important;
         overflow: hidden !important;
@@ -351,7 +346,7 @@ HOME_PAGE_CSS = """
         transition: opacity 0.28s var(--ease);
         pointer-events: none;
     }
-    .stButton > button > div, .stButton > button > div > p, .stButton > button p, .stButton > button span { font-size: 18px !important; font-weight: 700 !important; }
+    .stButton > button > div, .stButton > button > div > p, .stButton > button p, .stButton > button span { font-size: 20px !important; font-weight: 700 !important; }
     .stButton > button:hover {
         transform: translateY(-4px) scale(1.02) !important;
         box-shadow: var(--shadow-lg) !important;
@@ -2756,7 +2751,7 @@ def render_brand_page(brand_key_page):
 def render_home():
     st.markdown(HOME_PAGE_CSS, unsafe_allow_html=True)
     render_ribbon("Primary Care Monthly Report Dashboard")
-    st.markdown("<div style='height:6px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
 
     # Data Summary with dynamic values
     from datetime import datetime
@@ -2792,26 +2787,26 @@ def render_home():
         refresh_ts = max_date if max_date != "N/A" else "N/A"
 
     st.markdown(f"""
-    <div style="padding: 0 20px;">
-        <div style="background: rgba(255,255,255,0.55); backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: saturate(180%) blur(14px); border-radius: 14px; padding: 14px 24px; box-shadow: 0 2px 8px rgba(15,23,42,0.05), 0 1px 2px rgba(15,23,42,0.04); border: 1px solid rgba(15,23,42,0.08); border-left: 4px solid #1C4FC0; transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1), border-color 0.18s cubic-bezier(0.4,0,0.2,1);">
-            <div style="font-size: 14px; font-weight: 700; color: #0A1A3D; margin-bottom: 8px; font-family: 'Manrope', sans-serif; letter-spacing: -0.015em;">Data Summary</div>
+    <div style="padding: 0 50px;">
+        <div style="background: rgba(255,255,255,0.55); backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: saturate(180%) blur(14px); border-radius: 18px; padding: 24px 32px; box-shadow: 0 2px 8px rgba(15,23,42,0.05), 0 1px 2px rgba(15,23,42,0.04); border: 1px solid rgba(15,23,42,0.08); border-left: 4px solid #1C4FC0; transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1), border-color 0.18s cubic-bezier(0.4,0,0.2,1);">
+            <div style="font-size: 16px; font-weight: 700; color: #0A1A3D; margin-bottom: 16px; font-family: 'Manrope', sans-serif; letter-spacing: -0.015em;">Data Summary</div>
             <table style="width: 100%; border-collapse: collapse; font-family: 'Inter', system-ui, sans-serif;">
                 <thead><tr style="border-bottom: 2px solid rgba(15,23,42,0.08);">
-                    <th style="text-align: left; padding: 6px 16px; font-size: 11px; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 0.06em;">Data Source</th>
-                    <th style="text-align: left; padding: 6px 16px; font-size: 11px; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 0.06em;">Data Availability</th>
+                    <th style="text-align: left; padding: 10px 16px; font-size: 12px; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 0.06em;">Data Source</th>
+                    <th style="text-align: left; padding: 10px 16px; font-size: 12px; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 0.06em;">Data Availability</th>
                 </tr></thead>
                 <tbody>
-                    <tr style="border-bottom: 1px solid rgba(15,23,42,0.05);"><td style="padding: 6px 16px; font-size: 13px; color: #0F172A;">NPA</td><td style="padding: 6px 16px; font-size: 13px; color: #0F172A;">Till {max_date}</td></tr>
-                    <tr style="border-bottom: 1px solid rgba(15,23,42,0.05);"><td style="padding: 6px 16px; font-size: 13px; color: #0F172A;">DDD</td><td style="padding: 6px 16px; font-size: 13px; color: #0F172A;">Till {max_date}</td></tr>
-                    <tr style="border-bottom: 1px solid rgba(15,23,42,0.05);"><td style="padding: 6px 16px; font-size: 13px; color: #0F172A;">LAAD</td><td style="padding: 6px 16px; font-size: 13px; color: #0F172A;">Till {max_date}</td></tr>
-                    <tr style="border-bottom: 1px solid rgba(15,23,42,0.05);"><td style="padding: 6px 16px; font-size: 13px; color: #0F172A; font-weight: 600;">Refreshed On</td><td style="padding: 6px 16px; font-size: 13px; color: #1C4FC0; font-weight: 600;">{refresh_ts}</td></tr>
+                    <tr style="border-bottom: 1px solid rgba(15,23,42,0.05);"><td style="padding: 12px 16px; font-size: 14px; color: #0F172A;">NPA</td><td style="padding: 12px 16px; font-size: 14px; color: #0F172A;">Till {max_date}</td></tr>
+                    <tr style="border-bottom: 1px solid rgba(15,23,42,0.05);"><td style="padding: 12px 16px; font-size: 14px; color: #0F172A;">DDD</td><td style="padding: 12px 16px; font-size: 14px; color: #0F172A;">Till {max_date}</td></tr>
+                    <tr style="border-bottom: 1px solid rgba(15,23,42,0.05);"><td style="padding: 12px 16px; font-size: 14px; color: #0F172A;">LAAD</td><td style="padding: 12px 16px; font-size: 14px; color: #0F172A;">Till {max_date}</td></tr>
+                    <tr style="border-bottom: 1px solid rgba(15,23,42,0.05);"><td style="padding: 12px 16px; font-size: 14px; color: #0F172A; font-weight: 600;">Refreshed On</td><td style="padding: 12px 16px; font-size: 14px; color: #1C4FC0; font-weight: 600;">{refresh_ts}</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
 
     # Brand cards
     brands = [
@@ -2825,15 +2820,15 @@ def render_home():
         {"name": "Beyfortus", "key": "beyfortus"},
     ]
 
-    for row_start in range(0, len(brands), 4):
-        row_brands = brands[row_start:row_start + 4]
-        cols = st.columns(4)
+    for row_start in range(0, len(brands), 3):
+        row_brands = brands[row_start:row_start + 3]
+        cols = st.columns(3)
         for i, brand in enumerate(row_brands):
             with cols[i]:
                 if st.button(brand["name"], key=f'{brand["key"]}_btn', use_container_width=True):
                     st.session_state["current_page"] = brand["key"]
                     st.rerun()
-    st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
 
     st.markdown("""
     <div class="home-footer">Developed by ZS Primary Care Team</div>
