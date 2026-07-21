@@ -335,7 +335,7 @@ HOME_PAGE_CSS = """
         cursor: pointer !important;
         transition: transform 0.28s var(--ease-out), box-shadow 0.28s var(--ease), border-color 0.18s var(--ease), background 0.18s var(--ease) !important;
         box-shadow: var(--shadow-sm) !important;
-        min-height: 140px !important;
+        min-height: 120px !important;
         border-top: none !important;
         position: relative !important;
         overflow: hidden !important;
